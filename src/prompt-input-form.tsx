@@ -14,6 +14,8 @@ const styles = css`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 2rem;
+  padding-left: 0;
 `;
 
 export function PromptInputForm() {
@@ -48,7 +50,6 @@ function RunPromptButton() {
       }}
       loading={isRunning}
       leftIcon={<IconPlayerPlayFilled size="1rem" />}
-      fullWidth
       size="md"
       loaderProps={{ size: "1rem" }}
     >

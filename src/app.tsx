@@ -28,7 +28,7 @@ export function App() {
       >
         <AppShell
           header={
-            <Header height={60} p="md">
+            <Header height={60} p="md" withBorder={false}>
               <strong>ULTRA:PROMPT</strong>
             </Header>
           }

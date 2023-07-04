@@ -3,20 +3,22 @@ import { css, cx } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
 import { updateRawPrompt, usePromptState } from "./prompt-state";
 import { shadow } from "./common-style";
+import { Divider } from "./divider";
 
 const styles = css`
+  background: var(--bg-1);
+  border-radius: 4px;
   display: grid;
-  gap: 4rem;
-  grid-template-columns: 1.5fr 1fr;
-  height: 100%;
-  padding: 2rem;
-  width: 100%;
+  gap: 2rem;
+  grid-template-columns: 1fr auto 1fr;
+  height: calc(100% - 4rem);
+  margin: 2rem;
+  width: calc(100% - 4rem);
 `;
 
 const textareaStyles = css`
-  background: var(--bg-1);
+  background: none;
   border: none;
-  border-radius: 4px;
   display: block;
   font-family: inherit;
   font-size: inherit;
@@ -33,15 +35,19 @@ export function PromptView() {
   const _promptState = useSnapshot(promptState, { sync: true });
 
   return (
-    <div className={styles}>
+    <div className={cx(styles, shadow)}>
       <textarea
-        className={cx(textareaStyles, shadow)}
+        className={textareaStyles}
         value={_promptState.raw}
         onChange={(e) => {
           updateRawPrompt(promptState, e.currentTarget.value);
         }}
       />
-      <PromptInputForm />
+      <Divider />
+      <div>
+        <PromptInputForm />
+        <Divider h />
+      </div>
     </div>
   );
 }

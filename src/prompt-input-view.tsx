@@ -1,27 +1,24 @@
 import { ref, useSnapshot } from "valtio";
 import { usePromptState } from "./prompt-state";
 import { PromptInput } from "./input";
-import { css, cx } from "@emotion/css";
-import { shadow } from "./common-style";
+import { css } from "@emotion/css";
 import { FileInput, Textarea } from "@mantine/core";
 
 const styles = css`
-  background: var(--bg-1);
-  border-radius: 4px;
+  align-items: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 1rem;
-  padding: 1rem;
   width: 100%;
 
   > label {
     display: flex;
     justify-content: space-between;
+    width: 40%;
+  }
 
-    em {
-      font-style: italic;
-      opacity: 0.5;
-    }
+  > label + * {
+    width: 100%;
   }
 `;
 
@@ -33,9 +30,9 @@ export function PromptInputView({ input }: { input: PromptInput }) {
   const dataType = input.dataTypes[0];
 
   return (
-    <div className={cx(styles, shadow)}>
+    <div className={styles}>
       <label>
-        <strong>{input.name}</strong> <em>{dataType}</em>
+        <strong>{input.name}</strong>
       </label>
       {dataType === "file" ? (
         <FileInput
