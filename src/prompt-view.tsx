@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
 import { css, cx } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
-import { usePromptState } from "./prompt-state";
+import { updateRawPrompt, usePromptState } from "./prompt-state";
 import { shadow } from "./common-style";
 
 const styles = css`
@@ -38,7 +38,7 @@ export function PromptView() {
         className={cx(textareaStyles, shadow)}
         value={_promptState.raw}
         onChange={(e) => {
-          promptState.raw = e.target.value;
+          updateRawPrompt(promptState, e.currentTarget.value);
         }}
       />
       <PromptInputForm />

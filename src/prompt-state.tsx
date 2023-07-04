@@ -1,6 +1,6 @@
 import { proxy } from "valtio";
-import { derive } from "valtio/utils";
 import { parsePrompt } from "./prompt-parser";
+import { ParseNode } from "./ast";
 
 const examplePrompt = `
 Consider the following excerpts:
@@ -17,6 +17,8 @@ Let's start.
 export type BasePromptState = {
   raw: string;
   inputs: Record<string, InputState>;
+  parsed: ParseNode[];
+  parseError?: string;
 };
 
 export type InputState =
@@ -29,19 +31,28 @@ export type InputState =
       value: File;
     };
 
-const rawState = proxy<BasePromptState>({
+const promptState = proxy<BasePromptState>({
   raw: examplePrompt,
   inputs: {},
+  parsed: parsePrompt(examplePrompt),
 });
-
-const promptState = derive(
-  { parsed: (get) => parsePrompt(get(rawState).raw) },
-  { proxy: rawState }
-);
 
 export type PromptState = typeof promptState;
 
 // TODO Convert to context-based state
 export function usePromptState() {
   return promptState;
+}
+
+export function updateRawPrompt(promptState: PromptState, raw: string) {
+  promptState.raw = raw;
+  delete promptState.parseError;
+
+  try {
+    promptState.parsed = parsePrompt(raw);
+  } catch (e) {
+    if (e instanceof Error) {
+      promptState.parseError = e.message;
+    }
+  }
 }
