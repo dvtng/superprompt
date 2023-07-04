@@ -7,7 +7,6 @@ import { css } from "@emotion/css";
 import { Button } from "@mantine/core";
 import { runPrompt } from "./run-prompt";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
-import { shadow } from "./common-style";
 
 const styles = css`
   align-items: start;
@@ -39,12 +38,9 @@ export function RunPromptButton() {
 
   return (
     <Button
-      className={shadow}
-      color="violet"
       onClick={() => runPrompt(promptState)}
       loading={_promptState.isRunning}
       leftIcon={<IconPlayerPlayFilled size="1rem" />}
-      size="md"
       loaderProps={{ size: "1rem" }}
     >
       Run

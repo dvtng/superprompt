@@ -2,7 +2,7 @@ import { ref, useSnapshot } from "valtio";
 import { usePromptState } from "./prompt-state";
 import { PromptInput } from "./input";
 import { css } from "@emotion/css";
-import { FileInput, Textarea } from "@mantine/core";
+import { FileInput, Input } from "@mantine/core";
 
 const styles = css`
   align-items: center;
@@ -36,7 +36,7 @@ export function PromptInputView({ input }: { input: PromptInput }) {
       </label>
       {dataType === "file" ? (
         <FileInput
-          placeholder="Pick file"
+          placeholder="Choose a file"
           accept="text/plain"
           value={
             inputState && inputState.dataType === "file"
@@ -53,8 +53,8 @@ export function PromptInputView({ input }: { input: PromptInput }) {
           }}
         />
       ) : (
-        <Textarea
-          placeholder={input.name}
+        <Input
+          placeholder="Enter text"
           value={
             inputState && inputState.dataType === "string"
               ? inputState.value
@@ -66,9 +66,7 @@ export function PromptInputView({ input }: { input: PromptInput }) {
               value: e.currentTarget.value,
             };
           }}
-          minRows={1}
-          maxRows={10}
-          autosize
+          size="sm"
         />
       )}
     </div>
