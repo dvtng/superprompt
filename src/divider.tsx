@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
 
 const dividerStyles = css`
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.07);
 `;
 
 export function Divider({ h = false }: { h?: boolean }) {

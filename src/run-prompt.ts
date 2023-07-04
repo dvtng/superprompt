@@ -1,18 +1,38 @@
+import { OpenAI } from "langchain/llms/openai";
 import { PlaceholderNode } from "./ast";
 import { FUNCTIONS } from "./function";
 import { PromptState } from "./prompt-state";
+import { getOpenAiKey } from "./api-key";
 
-export async function getCompletedPrompt(prompt: PromptState) {
-  let completedPrompt = "";
+export async function runPrompt(promptState: PromptState) {
+  try {
+    promptState.isRunning = true;
+    const filledPrompt = await getFilledPrompt(promptState);
+    promptState.filledPrompt = filledPrompt;
+    const model = new OpenAI({
+      openAIApiKey: getOpenAiKey(),
+      modelName: "gpt-3.5-turbo",
+      temperature: 0,
+    });
+    promptState.output = await model.predict(filledPrompt);
+  } catch (e) {
+    // TODO
+  } finally {
+    promptState.isRunning = false;
+  }
+}
+
+export async function getFilledPrompt(prompt: PromptState) {
+  let filledPrompt = "";
   for (const node of prompt.parsed) {
     if (node.type === "placeholder") {
-      completedPrompt += await evalPlaceholder(prompt, node);
+      filledPrompt += await evalPlaceholder(prompt, node);
     } else {
-      completedPrompt += node.value;
+      filledPrompt += node.value;
     }
   }
-  console.log(completedPrompt);
-  return completedPrompt;
+  console.log(filledPrompt);
+  return filledPrompt;
 }
 
 async function evalPlaceholder(

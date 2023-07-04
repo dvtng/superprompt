@@ -1,11 +1,11 @@
 import { useSnapshot } from "valtio";
 import { usePromptState } from "./prompt-state";
 import { PromptInputView } from "./prompt-input-view";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getInputs } from "./input";
 import { css } from "@emotion/css";
 import { Button } from "@mantine/core";
-import { getCompletedPrompt } from "./run-prompt";
+import { runPrompt } from "./run-prompt";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { shadow } from "./common-style";
 
@@ -13,9 +13,8 @@ const styles = css`
   align-items: start;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 2rem;
-  padding-left: 0;
+  gap: 0.5rem;
+  padding-top: 2rem;
 `;
 
 export function PromptInputForm() {
@@ -30,25 +29,20 @@ export function PromptInputForm() {
       {inputs.map((input) => (
         <PromptInputView key={input.name} input={input} />
       ))}
-      <RunPromptButton />
     </div>
   );
 }
 
-function RunPromptButton() {
+export function RunPromptButton() {
   const promptState = usePromptState();
-  const [isRunning, setIsRunning] = useState(false);
+  const _promptState = useSnapshot(promptState);
 
   return (
     <Button
       className={shadow}
       color="violet"
-      onClick={async () => {
-        setIsRunning(true);
-        await getCompletedPrompt(promptState);
-        setIsRunning(false);
-      }}
-      loading={isRunning}
+      onClick={() => runPrompt(promptState)}
+      loading={_promptState.isRunning}
       leftIcon={<IconPlayerPlayFilled size="1rem" />}
       size="md"
       loaderProps={{ size: "1rem" }}

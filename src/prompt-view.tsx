@@ -1,9 +1,10 @@
 import { useSnapshot } from "valtio";
 import { css, cx } from "@emotion/css";
-import { PromptInputForm } from "./prompt-input-form";
+import { PromptInputForm, RunPromptButton } from "./prompt-input-form";
 import { updateRawPrompt, usePromptState } from "./prompt-state";
 import { shadow } from "./common-style";
 import { Divider } from "./divider";
+import { PromptProgress } from "./prompt-progress";
 
 const styles = css`
   background: var(--bg-1);
@@ -44,9 +45,24 @@ export function PromptView() {
         }}
       />
       <Divider />
-      <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "2rem",
+          paddingRight: "2rem",
+        }}
+      >
         <PromptInputForm />
+        <div>
+          <RunPromptButton />
+        </div>
         <Divider h />
+        {_promptState.isRunning ? (
+          <PromptProgress />
+        ) : _promptState.output ? (
+          <div>{_promptState.output}</div>
+        ) : null}
       </div>
     </div>
   );

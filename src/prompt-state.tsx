@@ -19,6 +19,9 @@ export type BasePromptState = {
   inputs: Record<string, InputState>;
   parsed: ParseNode[];
   parseError?: string;
+  filledPrompt?: string;
+  isRunning: boolean;
+  output?: string;
 };
 
 export type InputState =
@@ -35,6 +38,7 @@ const promptState = proxy<BasePromptState>({
   raw: examplePrompt,
   inputs: {},
   parsed: parsePrompt(examplePrompt),
+  isRunning: false,
 });
 
 export type PromptState = typeof promptState;
