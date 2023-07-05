@@ -21,7 +21,17 @@ export function AppShell() {
         root: positioningStyles,
       }}
       header={
-        <Header height={60} p="md" withBorder={false} style={positioningStyles}>
+        <Header
+          height={60}
+          p="md"
+          withBorder={false}
+          style={positioningStyles}
+          styles={{
+            root: {
+              backgroundColor: "transparent",
+            },
+          }}
+        >
           <Flex align="center" justify="space-between">
             <Flex gap="xl" align="center">
               <Anchor component={Link} to="/" style={{ color: "inherit" }}>
