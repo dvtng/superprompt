@@ -1,14 +1,11 @@
 import {
-  AppShell,
   ColorScheme,
   ColorSchemeProvider,
-  Flex,
-  Header,
   MantineProvider,
 } from "@mantine/core";
-import { PromptView } from "./prompt-view";
 import { useState } from "react";
-import { ColorSchemeToggle } from "./color-scheme-toggle";
+import { router } from "./router";
+import { RouterProvider } from "react-router-dom";
 
 export function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(() => {
@@ -28,18 +25,7 @@ export function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <AppShell
-          header={
-            <Header height={60} p="md" withBorder={false}>
-              <Flex align="center" justify="space-between">
-                <strong style={{ letterSpacing: 1 }}>{"{superprompt}"}</strong>
-                <ColorSchemeToggle />
-              </Flex>
-            </Header>
-          }
-        >
-          <PromptView />
-        </AppShell>
+        <RouterProvider router={router} />
       </MantineProvider>
     </ColorSchemeProvider>
   );

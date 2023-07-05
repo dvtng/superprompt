@@ -1,12 +1,18 @@
 import { useSnapshot } from "valtio";
 import { css, cx } from "@emotion/css";
 import { PromptInputForm, RunPromptButton } from "./prompt-input-form";
-import { usePromptState } from "./prompt-state";
+import {
+  PromptStateProvider,
+  createPromptState,
+  usePromptState,
+} from "./prompt-state";
 import { shadow } from "./common-style";
 import { Divider } from "./divider";
 import { PromptProgress } from "./prompt-progress";
 import { useMantineTheme } from "@mantine/core";
 import { PromptEditor } from "./prompt-editor";
+import { useState } from "react";
+import { PROMPTS } from "./prompt-data";
 
 const styles = css`
   background: var(--bg-1);
@@ -15,8 +21,7 @@ const styles = css`
   grid-template-columns: 1fr auto 1fr;
   height: calc(100% - 4rem);
   margin: 2rem auto;
-  max-width: 1100px;
-  width: calc(100% - 4rem);
+  width: 100%;
 `;
 
 export function PromptView() {
@@ -41,10 +46,10 @@ export function PromptView() {
           display: "flex",
           flexDirection: "column",
           gap: "2rem",
-          padding: "0 2rem",
+          padding: "2rem",
         }}
       >
-        <PromptInputForm />
+        {_promptState.inputs.length ? <PromptInputForm /> : null}
         <div>
           <RunPromptButton />
         </div>
@@ -56,5 +61,26 @@ export function PromptView() {
         ) : null}
       </div>
     </div>
+  );
+}
+
+export function NewPromptView() {
+  const [promptState] = useState(() => createPromptState(""));
+
+  return (
+    <PromptStateProvider value={promptState}>
+      <PromptView />
+    </PromptStateProvider>
+  );
+}
+
+export function ExistingPromptView({ id }: { id: string }) {
+  const promptDoc = PROMPTS[id];
+  const [promptState] = useState(() => createPromptState(promptDoc.content));
+
+  return (
+    <PromptStateProvider value={promptState}>
+      <PromptView />
+    </PromptStateProvider>
   );
 }

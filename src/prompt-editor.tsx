@@ -4,7 +4,7 @@ import {
   updateRawPrompt,
   usePromptState,
 } from "./prompt-state";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import {
   BaseEditor,
@@ -81,6 +81,13 @@ export function PromptEditor() {
   const [editor] = useState(() => withReact(withHistory(createEditor())));
   const theme = useMantineTheme();
 
+  useEffect(() => {
+    setTimeout(() => {
+      ReactEditor.focus(editor);
+    }, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Slate
       editor={editor}
@@ -112,9 +119,9 @@ export function PromptEditor() {
           if (leaf.identifier) {
             if (leaf.identifier.for === "placeholder") {
               style.color =
-                theme.colors[getColorForInput(leaf.identifier.name)][
-                  theme.colorScheme === "dark" ? 4 : 6
-                ];
+                theme.colors[
+                  getColorForInput(_promptState, leaf.identifier.name)
+                ][theme.colorScheme === "dark" ? 4 : 6];
             } else {
               style.fontStyle = "italic";
             }

@@ -44,7 +44,10 @@ export function PromptInputView({ input }: { input: PromptInput }) {
       <label style={{ fontFamily: theme.fontFamilyMonospace }}>
         <span
           className={dotStyles}
-          style={{ background: theme.colors[getColorForInput(input.name)][4] }}
+          style={{
+            background:
+              theme.colors[getColorForInput(_promptState, input.name)][4],
+          }}
         />{" "}
         {input.name}
       </label>

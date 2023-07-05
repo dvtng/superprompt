@@ -1,19 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import { proxy } from "valtio";
 import { parsePrompt } from "./prompt-parser";
 import { ParseNode } from "./ast";
 import { PromptInput, getInputs } from "./input";
-
-const examplePrompt = `
-Consider the following excerpts:
----
-{book:query(question)}
----
-Pretend to be the character {character_name} from the above excerpts.
-I'm going to ask you questions and I want you to respond as {character_name} would.
-Take care to mimic their personality and mannerisms.
-Let's start.
-{question}
-`.trim();
+import { ReactNode, createContext, useContext } from "react";
 
 export type PromptState = {
   raw: string;
@@ -36,18 +26,43 @@ export type InputState =
       value: File;
     };
 
-const promptState = proxy<PromptState>({
-  raw: "",
-  inputs: [],
-  inputStates: {},
-  parsed: [],
-  isRunning: false,
-});
+export function createPromptState(raw: string) {
+  const promptState = proxy<PromptState>({
+    raw: "",
+    inputs: [],
+    inputStates: {},
+    parsed: [],
+    isRunning: false,
+  });
 
-updateRawPrompt(promptState, examplePrompt);
+  if (raw) {
+    updateRawPrompt(promptState, raw);
+  }
 
-// TODO Convert to context-based state
+  return promptState;
+}
+
+const PromptStateContext = createContext<PromptState | null>(null);
+
+export function PromptStateProvider({
+  value,
+  children,
+}: {
+  value: PromptState;
+  children: ReactNode;
+}) {
+  return (
+    <PromptStateContext.Provider value={value}>
+      {children}
+    </PromptStateContext.Provider>
+  );
+}
+
 export function usePromptState() {
+  const promptState = useContext(PromptStateContext);
+  if (!promptState) {
+    throw new Error(`usePromptState must be used within a PromptStateProvider`);
+  }
   return promptState;
 }
 
@@ -67,7 +82,7 @@ export function updateRawPrompt(promptState: PromptState, raw: string) {
 
 const colors = ["blue", "yellow", "teal", "grape", "lime", "orange", "cyan"];
 
-export function getColorForInput(inputName: string) {
+export function getColorForInput(promptState: PromptState, inputName: string) {
   const index = promptState.inputs.findIndex(
     (input) => input.name === inputName
   );
