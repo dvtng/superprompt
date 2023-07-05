@@ -34,7 +34,7 @@ const dotStyles = css`
 // Component that renders a label and an input for a placeholder node
 export function PromptInputView({ input }: { input: PromptInput }) {
   const promptState = usePromptState();
-  const _promptState = useSnapshot(promptState);
+  const _promptState = useSnapshot(promptState, { sync: true });
   const inputState = _promptState.inputStates[input.name];
   const dataType = input.dataTypes[0];
   const theme = useMantineTheme();
