@@ -1,41 +1,55 @@
 @preprocessor typescript
 @builtin "whitespace.ne" # `_` means arbitrary amount of whitespace
 
-placeholder -> ident {%
+placeholder -> _ ident _ {%
   d => ({
     type: 'placeholder',
-    name: d[0],
-    functionCall: { type: 'functionCall', name: '_', args: [] }
+    identifier: d[1],
+    functionCall: {
+      type: 'functionCall',
+      identifier: {
+        type: 'identifier',
+        name: '_',
+        offset: -1,
+      },
+      args: []
+    },
   })
 %}
 
-placeholder -> ident ":" function_call {%
+placeholder -> _ ident _ ":" function_call {%
   d => ({
     type: 'placeholder',
-    name: d[0],
-    functionCall: d[2]
+    identifier: d[1],
+    functionCall: d[4],
   })
 %}
 
-function_call -> ident {%
+function_call -> _ ident _ {%
   d => ({
     type: 'functionCall',
-    name: d[0],
-    args: []
+    identifier: d[1],
+    args: [],
   })
 %}
 
-function_call -> ident "(" _ expression_list _ ")" {%
+function_call -> _ ident _ "(" _ expression_list _ ")" {%
   d => ({
     type: 'functionCall',
-    name: d[0],
-    args: d[3]
+    identifier: d[1],
+    args: d[5],
   })
 %}
 
 expression_list -> expression
-  | expression _ "," _ expression_list {% d => [d[0]].concat(d[4]) %}
+  | expression "," expression_list {% d => [d[0]].concat(d[2]) %}
 
 expression -> placeholder {% id %}
 
-ident -> _ [a-zA-Z_] [a-zA-Z0-9_]:* _ {% d => d[1] + d[2].join("").trim() %}
+ident -> [a-zA-Z_] [a-zA-Z0-9_]:* {%
+  (d, offset) => ({
+    type: 'identifier',
+    name: d[0] + d[1].join(""),
+    offset,
+  })
+%}

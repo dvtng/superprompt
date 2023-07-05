@@ -1,6 +1,7 @@
 import { proxy } from "valtio";
 import { parsePrompt } from "./prompt-parser";
 import { ParseNode } from "./ast";
+import { PromptInput, getInputs } from "./input";
 
 const examplePrompt = `
 Consider the following excerpts:
@@ -16,7 +17,8 @@ Let's start.
 
 export type PromptState = {
   raw: string;
-  inputs: Record<string, InputState>;
+  inputs: PromptInput[];
+  inputStates: Record<string, InputState>;
   parsed: ParseNode[];
   parseError?: string;
   filledPrompt?: string;
@@ -35,11 +37,14 @@ export type InputState =
     };
 
 const promptState = proxy<PromptState>({
-  raw: examplePrompt,
-  inputs: {},
-  parsed: parsePrompt(examplePrompt),
+  raw: "",
+  inputs: [],
+  inputStates: {},
+  parsed: [],
   isRunning: false,
 });
+
+updateRawPrompt(promptState, examplePrompt);
 
 // TODO Convert to context-based state
 export function usePromptState() {
@@ -52,9 +57,22 @@ export function updateRawPrompt(promptState: PromptState, raw: string) {
 
   try {
     promptState.parsed = parsePrompt(raw);
+    promptState.inputs = getInputs(promptState.parsed);
   } catch (e) {
     if (e instanceof Error) {
       promptState.parseError = e.message;
     }
   }
+}
+
+const colors = ["blue", "yellow", "teal", "grape", "lime", "orange", "cyan"];
+
+export function getColorForInput(inputName: string) {
+  const index = promptState.inputs.findIndex(
+    (input) => input.name === inputName
+  );
+  if (index === -1) {
+    return "gray";
+  }
+  return colors[index % colors.length];
 }

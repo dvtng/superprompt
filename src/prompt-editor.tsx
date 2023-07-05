@@ -1,5 +1,9 @@
 import { useSnapshot } from "valtio";
-import { updateRawPrompt, usePromptState } from "./prompt-state";
+import {
+  getColorForInput,
+  updateRawPrompt,
+  usePromptState,
+} from "./prompt-state";
 import { CSSProperties, useState } from "react";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import {
@@ -15,6 +19,13 @@ import { css } from "@emotion/css";
 import { withHistory } from "slate-history";
 import { parsePrompt } from "./prompt-parser";
 import { useMantineTheme } from "@mantine/core";
+import {
+  FunctionCallNode,
+  IdentifierNode,
+  PlaceholderNode,
+  visit,
+} from "./ast";
+import { isPlainObject } from "lodash";
 
 type Paragraph = {
   type: "paragraph";
@@ -30,6 +41,10 @@ type CustomRange = BaseRange & ExtraLeafProps;
 type ExtraLeafProps = {
   isPlaceholder?: boolean;
   isInvalid?: boolean;
+  identifier?: {
+    name: string;
+    for: "placeholder" | "functionCall";
+  };
 };
 
 declare module "slate" {
@@ -92,7 +107,15 @@ export function PromptEditor() {
             style.fontWeight = "bold";
           }
           if (leaf.isInvalid) {
-            style.color = theme.colors.red[8];
+            style.color = theme.colors.red[5];
+          }
+          if (leaf.identifier) {
+            if (leaf.identifier.for === "placeholder") {
+              style.color =
+                theme.colors[getColorForInput(leaf.identifier.name)][4];
+            } else {
+              style.fontStyle = "italic";
+            }
           }
 
           return (
@@ -108,7 +131,8 @@ export function PromptEditor() {
         decorate={([node, path]) => {
           const ranges: Range[] = [];
           if (Text.isText(node)) {
-            parsePrompt(node.text).forEach((parseNode) => {
+            const parsed = parsePrompt(node.text);
+            parsed.forEach((parseNode) => {
               if (
                 parseNode.type === "placeholder" ||
                 parseNode.type === "invalid-placeholder"
@@ -118,6 +142,26 @@ export function PromptEditor() {
                   focus: { path, offset: parseNode.offset + parseNode.length },
                   isPlaceholder: true,
                   isInvalid: parseNode.type === "invalid-placeholder",
+                });
+              }
+              if (parseNode.type === "placeholder") {
+                visit(parseNode, (node, parent) => {
+                  if (node.type === "identifier" && isPlainObject(parent)) {
+                    const _node = node as IdentifierNode;
+                    if (_node.offset < 0) {
+                      return;
+                    }
+                    const start = parseNode.offset + 1 + _node.offset;
+                    ranges.push({
+                      anchor: { path, offset: start },
+                      focus: { path, offset: start + _node.name.length },
+                      identifier: {
+                        name: _node.name,
+                        for: (parent as PlaceholderNode | FunctionCallNode)
+                          .type,
+                      },
+                    });
+                  }
                 });
               }
             });

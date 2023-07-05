@@ -16,14 +16,20 @@ export type InvalidPlaceholderNode = {
 
 export type PlaceholderNode = {
   type: "placeholder";
-  name: string;
+  identifier: IdentifierNode;
   functionCall: FunctionCallNode;
 };
 
 export type FunctionCallNode = {
   type: "functionCall";
-  name: string;
+  identifier: IdentifierNode;
   args: ExpressionNode[];
+};
+
+export type IdentifierNode = {
+  type: "identifier";
+  name: string;
+  offset: number;
 };
 
 export type ExpressionNode = PlaceholderNode;
@@ -33,27 +39,32 @@ export function filterInAST<T extends Record<string, unknown>>(
   predicate: (value: Record<string, unknown>) => value is T
 ): T[] {
   const results: T[] = [];
+  visit(ast, (value) => {
+    if (predicate(value)) {
+      results.push(value);
+    }
+  });
+  return results;
+}
 
-  const traverse = (value: unknown) => {
-    if (typeof value === "object" && value !== null) {
-      if (Array.isArray(value)) {
-        for (const item of value) {
-          traverse(item);
-        }
-      } else {
-        const _value = value as Record<string, unknown>;
-        if (predicate(_value)) {
-          results.push(_value);
-        }
+// Visits each object recusively
+export function visit(
+  value: unknown,
+  visitor: (value: Record<string, unknown>, parent: unknown) => void,
+  parent: unknown = null
+): void {
+  if (typeof value === "object" && value !== null) {
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        visit(item, visitor, value);
+      }
+    } else {
+      const _value = value as Record<string, unknown>;
+      visitor(_value, parent);
 
-        for (const key of Object.keys(_value)) {
-          traverse(_value[key]);
-        }
+      for (const key of Object.keys(_value)) {
+        visit(_value[key], visitor, _value);
       }
     }
-  };
-
-  traverse(ast);
-
-  return results;
+  }
 }

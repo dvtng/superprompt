@@ -1,8 +1,6 @@
 import { useSnapshot } from "valtio";
 import { usePromptState } from "./prompt-state";
 import { PromptInputView } from "./prompt-input-view";
-import { useMemo } from "react";
-import { getInputs } from "./input";
 import { css } from "@emotion/css";
 import { Button } from "@mantine/core";
 import { runPrompt } from "./run-prompt";
@@ -19,13 +17,10 @@ const styles = css`
 export function PromptInputForm() {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
-  const inputs = useMemo(() => {
-    return getInputs(_promptState.parsed);
-  }, [_promptState.parsed]);
 
   return (
     <div className={styles}>
-      {inputs.map((input) => (
+      {_promptState.inputs.map((input) => (
         <PromptInputView key={input.name} input={input} />
       ))}
     </div>

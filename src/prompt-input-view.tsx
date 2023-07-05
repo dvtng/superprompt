@@ -1,5 +1,5 @@
 import { ref, useSnapshot } from "valtio";
-import { usePromptState } from "./prompt-state";
+import { getColorForInput, usePromptState } from "./prompt-state";
 import { PromptInput } from "./input";
 import { css } from "@emotion/css";
 import { FileInput, Input, useMantineTheme } from "@mantine/core";
@@ -12,10 +12,11 @@ const styles = css`
   width: 100%;
 
   > label {
+    align-items: center;
     display: flex;
     font-size: 0.9em;
-    justify-content: space-between;
-    width: 40%;
+    gap: 0.5rem;
+    width: 50%;
   }
 
   > label + * {
@@ -23,17 +24,28 @@ const styles = css`
   }
 `;
 
+const dotStyles = css`
+  border-radius: 50%;
+  display: block;
+  height: 0.5rem;
+  width: 0.5rem;
+`;
+
 // Component that renders a label and an input for a placeholder node
 export function PromptInputView({ input }: { input: PromptInput }) {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
-  const inputState = _promptState.inputs[input.name];
+  const inputState = _promptState.inputStates[input.name];
   const dataType = input.dataTypes[0];
   const theme = useMantineTheme();
 
   return (
     <div className={styles}>
       <label style={{ fontFamily: theme.fontFamilyMonospace }}>
+        <span
+          className={dotStyles}
+          style={{ background: theme.colors[getColorForInput(input.name)][4] }}
+        />{" "}
         {input.name}
       </label>
       {dataType === "file" ? (
@@ -47,7 +59,7 @@ export function PromptInputView({ input }: { input: PromptInput }) {
           }
           onChange={(file) => {
             if (file) {
-              promptState.inputs[input.name] = {
+              promptState.inputStates[input.name] = {
                 dataType: "file",
                 value: ref(file),
               };
@@ -63,7 +75,7 @@ export function PromptInputView({ input }: { input: PromptInput }) {
               : ""
           }
           onChange={(e) => {
-            promptState.inputs[input.name] = {
+            promptState.inputStates[input.name] = {
               dataType: "string",
               value: e.currentTarget.value,
             };

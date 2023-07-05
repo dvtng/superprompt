@@ -39,13 +39,15 @@ async function evalPlaceholder(
   prompt: PromptState,
   placeholder: PlaceholderNode
 ): Promise<string> {
-  const functionSpec = FUNCTIONS[placeholder.functionCall.name];
+  const functionSpec = FUNCTIONS[placeholder.functionCall.identifier.name];
   if (!functionSpec) {
-    throw new Error(`Function "${placeholder.functionCall.name}" not found`);
+    throw new Error(
+      `Function "${placeholder.functionCall.identifier.name}" not found`
+    );
   }
-  const input = prompt.inputs[placeholder.name];
+  const input = prompt.inputStates[placeholder.identifier.name];
   if (input === undefined) {
-    throw new Error(`Input for "${placeholder.name}" not found`);
+    throw new Error(`Input for "${placeholder.identifier.name}" not found`);
   }
 
   const args = await Promise.all(

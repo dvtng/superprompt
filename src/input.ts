@@ -14,7 +14,7 @@ export function getInputs(ast: AST): PromptInput[] {
   });
 
   const uniquePlaceholderNames = uniq(
-    placeholderNodes.map((node) => node.name)
+    placeholderNodes.map((node) => node.identifier.name)
   );
 
   const dataTypesByInputName = Object.fromEntries(
@@ -22,14 +22,15 @@ export function getInputs(ast: AST): PromptInput[] {
   );
 
   for (const placeholderNode of placeholderNodes) {
-    const functionSpec = FUNCTIONS[placeholderNode.functionCall.name];
+    const functionSpec =
+      FUNCTIONS[placeholderNode.functionCall.identifier.name];
     if (!functionSpec) {
       continue;
     }
     // Intersect input dataTypes with function dataTypes
-    dataTypesByInputName[placeholderNode.name] = new Set(
-      [...dataTypesByInputName[placeholderNode.name]].filter((dataType) =>
-        functionSpec.dataTypes.includes(dataType)
+    dataTypesByInputName[placeholderNode.identifier.name] = new Set(
+      [...dataTypesByInputName[placeholderNode.identifier.name]].filter(
+        (dataType) => functionSpec.dataTypes.includes(dataType)
       )
     );
   }
