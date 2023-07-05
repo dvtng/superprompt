@@ -24,6 +24,12 @@ const styles = css`
   width: 100%;
 `;
 
+const outputStyles = css`
+  font-family: inherit;
+  margin: 0;
+  text-wrap: wrap;
+`;
+
 export function PromptView() {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState, { sync: true });
@@ -57,7 +63,9 @@ export function PromptView() {
         {_promptState.isRunning ? (
           <PromptProgress />
         ) : _promptState.output ? (
-          <div>{_promptState.output}</div>
+          <div>
+            <pre className={outputStyles}>{_promptState.output}</pre>
+          </div>
         ) : null}
       </div>
     </div>
