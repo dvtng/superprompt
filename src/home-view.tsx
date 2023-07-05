@@ -15,11 +15,13 @@ const styles = css`
 
 export function HomeView() {
   return (
-    <Grid className={styles} gutter="2rem">
+    <Grid className={styles} gutter="3rem">
       <Grid.Col span={6}>
         <h2>Top prompts</h2>
         <Divider h />
-        <TopPromptView />
+        <div style={{ padding: "1.5rem 0" }}>
+          <TopPromptView />
+        </div>
       </Grid.Col>
       <Grid.Col span={6}>
         <h2>Your prompts</h2>
