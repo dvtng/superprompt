@@ -112,7 +112,9 @@ export function PromptEditor() {
           if (leaf.identifier) {
             if (leaf.identifier.for === "placeholder") {
               style.color =
-                theme.colors[getColorForInput(leaf.identifier.name)][4];
+                theme.colors[getColorForInput(leaf.identifier.name)][
+                  theme.colorScheme === "dark" ? 4 : 6
+                ];
             } else {
               style.fontStyle = "italic";
             }
