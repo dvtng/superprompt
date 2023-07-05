@@ -13,6 +13,8 @@
   "dependencies": {
     "@emotion/css": "^11.11.2",
     "@mantine/core": "^6.0.15",
+    "@mantine/form": "^6.0.16",
+    "@mantine/hooks": "^6.0.15",
     "@tabler/icons-react": "^2.23.0",
     "langchain": "^0.0.102",
     "lodash": "^4.17.21",

@@ -2,7 +2,7 @@ import { OpenAI } from "langchain/llms/openai";
 import { PlaceholderNode } from "./ast";
 import { FUNCTIONS } from "./function";
 import { PromptState } from "./prompt-state";
-import { getOpenAiKey } from "./api-key";
+import { getOpenAIKey } from "./app-state";
 
 export async function runPrompt(promptState: PromptState) {
   try {
@@ -10,7 +10,7 @@ export async function runPrompt(promptState: PromptState) {
     const filledPrompt = await getFilledPrompt(promptState);
     promptState.filledPrompt = filledPrompt;
     const model = new OpenAI({
-      openAIApiKey: getOpenAiKey(),
+      openAIApiKey: getOpenAIKey(),
       modelName: "gpt-3.5-turbo",
       temperature: 0,
     });

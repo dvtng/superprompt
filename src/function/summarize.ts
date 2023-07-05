@@ -1,14 +1,14 @@
 import { loadSummarizationChain } from "langchain/chains";
 import { OpenAI } from "langchain/llms/openai";
-import { getOpenAiKey } from "../api-key";
 import { TextLoader } from "langchain/document_loaders/fs/text";
+import { getOpenAIKey } from "../app-state";
 
 export default {
   name: "summarize",
   dataTypes: ["file"],
   fn: async (file: File) => {
     const model = new OpenAI({
-      openAIApiKey: getOpenAiKey(),
+      openAIApiKey: getOpenAIKey(),
       modelName: "gpt-3.5-turbo",
       temperature: 0,
     });
