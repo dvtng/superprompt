@@ -14,7 +14,7 @@ Let's start.
 {question}
 `.trim();
 
-export type BasePromptState = {
+export type PromptState = {
   raw: string;
   inputs: Record<string, InputState>;
   parsed: ParseNode[];
@@ -34,14 +34,12 @@ export type InputState =
       value: File;
     };
 
-const promptState = proxy<BasePromptState>({
+const promptState = proxy<PromptState>({
   raw: examplePrompt,
   inputs: {},
   parsed: parsePrompt(examplePrompt),
   isRunning: false,
 });
-
-export type PromptState = typeof promptState;
 
 // TODO Convert to context-based state
 export function usePromptState() {

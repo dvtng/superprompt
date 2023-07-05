@@ -1,11 +1,16 @@
 export type AST = ParseNode[];
 
-export type ParseNode = TextNode | PlaceholderNode;
+export type ParseNode = TextNode | InvalidPlaceholderNode | PlaceholderNode;
 
 export type NodeType = ParseNode["type"];
 
 export type TextNode = {
   type: "text";
+  value: string;
+};
+
+export type InvalidPlaceholderNode = {
+  type: "invalid-placeholder";
   value: string;
 };
 

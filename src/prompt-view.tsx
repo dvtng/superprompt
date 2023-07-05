@@ -1,11 +1,12 @@
 import { useSnapshot } from "valtio";
 import { css, cx } from "@emotion/css";
 import { PromptInputForm, RunPromptButton } from "./prompt-input-form";
-import { updateRawPrompt, usePromptState } from "./prompt-state";
+import { usePromptState } from "./prompt-state";
 import { shadow } from "./common-style";
 import { Divider } from "./divider";
 import { PromptProgress } from "./prompt-progress";
 import { useMantineTheme } from "@mantine/core";
+import { PromptEditor } from "./prompt-editor";
 
 const styles = css`
   background: var(--bg-1);
@@ -16,20 +17,6 @@ const styles = css`
   margin: 2rem auto;
   max-width: 1100px;
   width: calc(100% - 4rem);
-`;
-
-const textareaStyles = css`
-  background: none;
-  border: none;
-  display: block;
-  font-family: inherit;
-  font-size: inherit;
-  height: 100%;
-  line-height: 1.7;
-  outline: none;
-  padding: 2rem;
-  resize: none;
-  width: 100%;
 `;
 
 export function PromptView() {
@@ -43,14 +30,9 @@ export function PromptView() {
 
   return (
     <div className={cx(styles, shadow)} style={{ background: bgColor }}>
-      <textarea
-        className={textareaStyles}
-        value={_promptState.raw}
-        onChange={(e) => {
-          updateRawPrompt(promptState, e.currentTarget.value);
-        }}
-        style={{ color }}
-      />
+      <div style={{ color }}>
+        <PromptEditor />
+      </div>
       <Divider />
       <div
         style={{

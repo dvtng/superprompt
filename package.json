@@ -20,6 +20,9 @@
     "openai": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "slate": "^0.94.1",
+    "slate-history": "^0.93.0",
+    "slate-react": "^0.97.1",
     "valtio": "^1.10.6"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import { ref, useSnapshot } from "valtio";
 import { usePromptState } from "./prompt-state";
 import { PromptInput } from "./input";
 import { css } from "@emotion/css";
-import { FileInput, Input } from "@mantine/core";
+import { FileInput, Input, useMantineTheme } from "@mantine/core";
 
 const styles = css`
   align-items: center;
@@ -13,6 +13,7 @@ const styles = css`
 
   > label {
     display: flex;
+    font-size: 0.9em;
     justify-content: space-between;
     width: 40%;
   }
@@ -28,11 +29,12 @@ export function PromptInputView({ input }: { input: PromptInput }) {
   const _promptState = useSnapshot(promptState);
   const inputState = _promptState.inputs[input.name];
   const dataType = input.dataTypes[0];
+  const theme = useMantineTheme();
 
   return (
     <div className={styles}>
-      <label>
-        <strong>{input.name}</strong>
+      <label style={{ fontFamily: theme.fontFamilyMonospace }}>
+        {input.name}
       </label>
       {dataType === "file" ? (
         <FileInput

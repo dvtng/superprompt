@@ -1,10 +1,21 @@
 import { Grammar, Parser } from "nearley";
 import grammar from "./grammar";
-import { ParseNode, NodeType, PlaceholderNode } from "./ast";
+import {
+  ParseNode,
+  NodeType,
+  PlaceholderNode,
+  InvalidPlaceholderNode,
+} from "./ast";
 
-export function parsePrompt(prompt: string): ParseNode[] {
-  const nodes: ParseNode[] = [];
+export type ParseNodeWithLocation = ParseNode & {
+  offset: number;
+  length: number;
+};
+
+export function parsePrompt(prompt: string): ParseNodeWithLocation[] {
+  const nodes: ParseNodeWithLocation[] = [];
   let nodeType: NodeType = "text";
+  let offset = 0;
   let currentSubstring = "";
   let escaped = false;
 
@@ -15,12 +26,15 @@ export function parsePrompt(prompt: string): ParseNode[] {
       nodes.push({
         type: nodeType,
         value: currentSubstring,
+        offset,
+        length: currentSubstring.length,
       });
     } else if (nodeType === "placeholder") {
-      nodes.push(parsePlaceholder(currentSubstring));
-    } else {
-      const _never: never = nodeType;
-      return _never;
+      nodes.push({
+        ...parsePlaceholder(currentSubstring),
+        offset,
+        length: currentSubstring.length + 2,
+      });
     }
 
     currentSubstring = "";
@@ -36,10 +50,12 @@ export function parsePrompt(prompt: string): ParseNode[] {
 
     if (char === "{" && !escaped) {
       pushCurrentSubstring();
+      offset = i;
       nodeType = "placeholder";
       currentSubstring = "";
     } else if (char === "}" && !escaped && nodeType === "placeholder") {
       pushCurrentSubstring();
+      offset = i + 1;
       nodeType = "text";
       currentSubstring = "";
     } else {
@@ -55,9 +71,18 @@ export function parsePrompt(prompt: string): ParseNode[] {
 }
 
 // Parse placeholder using nearley grammar
-function parsePlaceholder(placeholder: string): PlaceholderNode {
-  const result = new Parser(Grammar.fromCompiled(grammar))
-    .feed(placeholder)
-    .finish()[0] as PlaceholderNode;
-  return result;
+function parsePlaceholder(
+  placeholder: string
+): InvalidPlaceholderNode | PlaceholderNode {
+  try {
+    const result = new Parser(Grammar.fromCompiled(grammar))
+      .feed(placeholder)
+      .finish()[0] as PlaceholderNode;
+    return result;
+  } catch (e) {
+    return {
+      type: "invalid-placeholder",
+      value: placeholder,
+    };
+  }
 }
