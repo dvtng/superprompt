@@ -77,8 +77,14 @@ function parsePlaceholder(
   try {
     const result = new Parser(Grammar.fromCompiled(grammar))
       .feed(placeholder)
-      .finish()[0] as PlaceholderNode;
-    return result;
+      .finish();
+    if (result.length === 0) {
+      throw new Error("No parse results");
+    }
+    if (result.length > 1) {
+      console.warn(`Ambiguous parse result for: ${placeholder}`);
+    }
+    return result[0] as PlaceholderNode;
   } catch (e) {
     return {
       type: "invalid-placeholder",
