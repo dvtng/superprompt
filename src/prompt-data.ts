@@ -14,8 +14,17 @@ export const PROMPTS: Record<string, PromptDoc> = keyBy(
       title: "Grade an exam question",
       content: EXAMPLE_PROMPTS.grade,
     },
+    {
+      id: "experts",
+      title: "Experts answering a question",
+      content: EXAMPLE_PROMPTS.experts,
+    },
   ],
   "id"
 );
 
-export const TOP_PROMPTS: PromptDoc[] = [PROMPTS.character, PROMPTS.grade];
+export const TOP_PROMPTS: PromptDoc[] = [
+  PROMPTS.character,
+  PROMPTS.grade,
+  PROMPTS.experts,
+];
