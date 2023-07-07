@@ -2,7 +2,7 @@ import { ref, useSnapshot } from "valtio";
 import { getColorForInput, usePromptState } from "./prompt-state";
 import { PromptInput } from "./input";
 import { css } from "@emotion/css";
-import { FileInput, Input, Textarea, useMantineTheme } from "@mantine/core";
+import { FileInput, Textarea, useMantineTheme } from "@mantine/core";
 
 const styles = css`
   align-items: center;
