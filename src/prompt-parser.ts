@@ -1,11 +1,6 @@
 import { Grammar, Parser } from "nearley";
 import grammar from "./grammar";
-import {
-  ParseNode,
-  NodeType,
-  PlaceholderNode,
-  InvalidPlaceholderNode,
-} from "./ast";
+import { ParseNode, InvalidNode, PlaceholderNode } from "./ast";
 
 export type ParseNodeWithLocation = ParseNode & {
   offset: number;
@@ -14,7 +9,7 @@ export type ParseNodeWithLocation = ParseNode & {
 
 export function parsePrompt(prompt: string): ParseNodeWithLocation[] {
   const nodes: ParseNodeWithLocation[] = [];
-  let nodeType: NodeType = "text";
+  let isPlaceholder = false;
   let offset = 0;
   let currentSubstring = "";
   let escaped = false;
@@ -22,18 +17,18 @@ export function parsePrompt(prompt: string): ParseNodeWithLocation[] {
   function pushCurrentSubstring() {
     if (!currentSubstring) return;
 
-    if (nodeType === "text") {
-      nodes.push({
-        type: nodeType,
-        value: currentSubstring,
-        offset,
-        length: currentSubstring.length,
-      });
-    } else if (nodeType === "placeholder") {
+    if (isPlaceholder) {
       nodes.push({
         ...parsePlaceholder(currentSubstring),
         offset,
         length: currentSubstring.length + 2,
+      });
+    } else {
+      nodes.push({
+        type: "text",
+        value: currentSubstring,
+        offset,
+        length: currentSubstring.length,
       });
     }
 
@@ -51,12 +46,12 @@ export function parsePrompt(prompt: string): ParseNodeWithLocation[] {
     if (char === "{" && !escaped) {
       pushCurrentSubstring();
       offset = i;
-      nodeType = "placeholder";
+      isPlaceholder = true;
       currentSubstring = "";
-    } else if (char === "}" && !escaped && nodeType === "placeholder") {
+    } else if (char === "}" && !escaped && isPlaceholder) {
       pushCurrentSubstring();
       offset = i + 1;
-      nodeType = "text";
+      isPlaceholder = false;
       currentSubstring = "";
     } else {
       currentSubstring += char;
@@ -71,9 +66,7 @@ export function parsePrompt(prompt: string): ParseNodeWithLocation[] {
 }
 
 // Parse placeholder using nearley grammar
-function parsePlaceholder(
-  placeholder: string
-): InvalidPlaceholderNode | PlaceholderNode {
+function parsePlaceholder(placeholder: string): InvalidNode | PlaceholderNode {
   try {
     const result = new Parser(Grammar.fromCompiled(grammar))
       .feed(placeholder)
@@ -87,7 +80,7 @@ function parsePlaceholder(
     return result[0] as PlaceholderNode;
   } catch (e) {
     return {
-      type: "invalid-placeholder",
+      type: "invalid",
       value: placeholder,
     };
   }

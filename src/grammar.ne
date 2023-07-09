@@ -1,9 +1,18 @@
 @preprocessor typescript
 @builtin "whitespace.ne" # `_` means arbitrary amount of whitespace
 
-placeholder -> _ ident _ {%
+placeholder -> variable {% id %}
+  | generator {% id %}
+
+generator -> _ "*" _ {%
   d => ({
-    type: 'placeholder',
+    type: 'generator',
+  })
+%}
+
+variable -> _ ident _ {%
+  d => ({
+    type: 'variable',
     identifier: d[1],
     functionCall: {
       type: 'functionCall',
@@ -17,9 +26,9 @@ placeholder -> _ ident _ {%
   })
 %}
 
-placeholder -> _ ident _ ":" function_call {%
+variable -> _ ident _ ":" function_call {%
   d => ({
-    type: 'placeholder',
+    type: 'variable',
     identifier: d[1],
     functionCall: d[4],
   })
@@ -44,7 +53,7 @@ function_call -> _ ident _ "(" _ expression_list _ ")" {%
 expression_list -> expression
   | expression "," expression_list {% d => [d[0]].concat(d[2]) %}
 
-expression -> placeholder {% id %}
+expression -> variable {% id %}
 
 ident -> [a-zA-Z_] [a-zA-Z0-9_]:* {%
   (d, offset) => ({

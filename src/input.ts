@@ -1,5 +1,5 @@
 import { uniq } from "lodash";
-import { AST, PlaceholderNode, filterInAST } from "./ast";
+import { AST, VariableNode, filterInAST } from "./ast";
 import { FUNCTIONS } from "./function";
 import { DATA_TYPES, DataType } from "./function-spec";
 
@@ -9,27 +9,26 @@ export type PromptInput = {
 };
 
 export function getInputs(ast: AST): PromptInput[] {
-  const placeholderNodes = filterInAST(ast, (node): node is PlaceholderNode => {
-    return node.type === "placeholder";
+  const variableNodes = filterInAST(ast, (node): node is VariableNode => {
+    return node.type === "variable";
   });
 
-  const uniquePlaceholderNames = uniq(
-    placeholderNodes.map((node) => node.identifier.name)
+  const uniqueVariableNames = uniq(
+    variableNodes.map((node) => node.identifier.name)
   );
 
   const dataTypesByInputName = Object.fromEntries(
-    uniquePlaceholderNames.map((name) => [name, new Set(DATA_TYPES)])
+    uniqueVariableNames.map((name) => [name, new Set(DATA_TYPES)])
   );
 
-  for (const placeholderNode of placeholderNodes) {
-    const functionSpec =
-      FUNCTIONS[placeholderNode.functionCall.identifier.name];
+  for (const variableNode of variableNodes) {
+    const functionSpec = FUNCTIONS[variableNode.functionCall.identifier.name];
     if (!functionSpec) {
       continue;
     }
     // Intersect input dataTypes with function dataTypes
-    dataTypesByInputName[placeholderNode.identifier.name] = new Set(
-      [...dataTypesByInputName[placeholderNode.identifier.name]].filter(
+    dataTypesByInputName[variableNode.identifier.name] = new Set(
+      [...dataTypesByInputName[variableNode.identifier.name]].filter(
         (dataType) => functionSpec.dataTypes.includes(dataType)
       )
     );

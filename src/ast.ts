@@ -1,6 +1,8 @@
 export type AST = ParseNode[];
 
-export type ParseNode = TextNode | InvalidPlaceholderNode | PlaceholderNode;
+export type ParseNode = TextNode | InvalidNode | PlaceholderNode;
+
+export type PlaceholderNode = GeneratorNode | VariableNode;
 
 export type NodeType = ParseNode["type"];
 
@@ -9,13 +11,17 @@ export type TextNode = {
   value: string;
 };
 
-export type InvalidPlaceholderNode = {
-  type: "invalid-placeholder";
+export type InvalidNode = {
+  type: "invalid";
   value: string;
 };
 
-export type PlaceholderNode = {
-  type: "placeholder";
+export type GeneratorNode = {
+  type: "generator";
+};
+
+export type VariableNode = {
+  type: "variable";
   identifier: IdentifierNode;
   functionCall: FunctionCallNode;
 };
@@ -32,7 +38,7 @@ export type IdentifierNode = {
   offset: number;
 };
 
-export type ExpressionNode = PlaceholderNode;
+export type ExpressionNode = VariableNode;
 
 export function filterInAST<T extends Record<string, unknown>>(
   ast: AST,

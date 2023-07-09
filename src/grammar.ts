@@ -41,9 +41,16 @@ const grammar: Grammar = {
     {"name": "__$ebnf$1", "symbols": ["__$ebnf$1", "wschar"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "__", "symbols": ["__$ebnf$1"], "postprocess": function(d) {return null;}},
     {"name": "wschar", "symbols": [/[ \t\n\v\f]/], "postprocess": id},
-    {"name": "placeholder", "symbols": ["_", "ident", "_"], "postprocess": 
+    {"name": "placeholder", "symbols": ["variable"], "postprocess": id},
+    {"name": "placeholder", "symbols": ["generator"], "postprocess": id},
+    {"name": "generator", "symbols": ["_", {"literal":"*"}, "_"], "postprocess": 
         d => ({
-          type: 'placeholder',
+          type: 'generator',
+        })
+        },
+    {"name": "variable", "symbols": ["_", "ident", "_"], "postprocess": 
+        d => ({
+          type: 'variable',
           identifier: d[1],
           functionCall: {
             type: 'functionCall',
@@ -56,9 +63,9 @@ const grammar: Grammar = {
           },
         })
         },
-    {"name": "placeholder", "symbols": ["_", "ident", "_", {"literal":":"}, "function_call"], "postprocess": 
+    {"name": "variable", "symbols": ["_", "ident", "_", {"literal":":"}, "function_call"], "postprocess": 
         d => ({
-          type: 'placeholder',
+          type: 'variable',
           identifier: d[1],
           functionCall: d[4],
         })
@@ -79,7 +86,7 @@ const grammar: Grammar = {
         },
     {"name": "expression_list", "symbols": ["expression"]},
     {"name": "expression_list", "symbols": ["expression", {"literal":","}, "expression_list"], "postprocess": d => [d[0]].concat(d[2])},
-    {"name": "expression", "symbols": ["placeholder"], "postprocess": id},
+    {"name": "expression", "symbols": ["variable"], "postprocess": id},
     {"name": "ident$ebnf$1", "symbols": []},
     {"name": "ident$ebnf$1", "symbols": ["ident$ebnf$1", /[a-zA-Z0-9_]/], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "ident", "symbols": [/[a-zA-Z_]/, "ident$ebnf$1"], "postprocess": 

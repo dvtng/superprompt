@@ -19,12 +19,7 @@ import { css } from "@emotion/css";
 import { withHistory } from "slate-history";
 import { parsePrompt } from "./prompt-parser";
 import { useMantineTheme } from "@mantine/core";
-import {
-  FunctionCallNode,
-  IdentifierNode,
-  PlaceholderNode,
-  visit,
-} from "./ast";
+import { FunctionCallNode, IdentifierNode, VariableNode, visit } from "./ast";
 import { isPlainObject } from "lodash";
 
 type Paragraph = {
@@ -43,7 +38,7 @@ type ExtraLeafProps = {
   isInvalid?: boolean;
   identifier?: {
     name: string;
-    for: "placeholder" | "functionCall";
+    for: "variable" | "functionCall";
   };
 };
 
@@ -117,7 +112,7 @@ export function PromptEditor() {
             style.color = theme.colors.red[5];
           }
           if (leaf.identifier) {
-            if (leaf.identifier.for === "placeholder") {
+            if (leaf.identifier.for === "variable") {
               style.color =
                 theme.colors[
                   getColorForInput(_promptState, leaf.identifier.name)
@@ -142,18 +137,15 @@ export function PromptEditor() {
           if (Text.isText(node)) {
             const parsed = parsePrompt(node.text);
             parsed.forEach((parseNode) => {
-              if (
-                parseNode.type === "placeholder" ||
-                parseNode.type === "invalid-placeholder"
-              ) {
+              if (parseNode.type !== "text") {
                 ranges.push({
                   anchor: { path, offset: parseNode.offset },
                   focus: { path, offset: parseNode.offset + parseNode.length },
                   isPlaceholder: true,
-                  isInvalid: parseNode.type === "invalid-placeholder",
+                  isInvalid: parseNode.type === "invalid",
                 });
               }
-              if (parseNode.type === "placeholder") {
+              if (parseNode.type === "variable") {
                 visit(parseNode, (node, parent) => {
                   if (node.type === "identifier" && isPlainObject(parent)) {
                     const _node = node as IdentifierNode;
@@ -166,8 +158,7 @@ export function PromptEditor() {
                       focus: { path, offset: start + _node.name.length },
                       identifier: {
                         name: _node.name,
-                        for: (parent as PlaceholderNode | FunctionCallNode)
-                          .type,
+                        for: (parent as VariableNode | FunctionCallNode).type,
                       },
                     });
                   }
