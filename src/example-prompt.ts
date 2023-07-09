@@ -26,6 +26,6 @@ Name 3 experts who would be great at answering the following question. Choose pe
 {*}
 Now answer the question as each of the above experts.
 {*}
-Give a summary of the arguments made in bullet point format.
-  `.trim(),
+Each expert now has a chance to respond to each other.
+`.trim(),
 };
