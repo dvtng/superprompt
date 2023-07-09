@@ -1,7 +1,7 @@
 import { loadSummarizationChain } from "langchain/chains";
 import { OpenAI } from "langchain/llms/openai";
 import { TextLoader } from "langchain/document_loaders/fs/text";
-import { getOpenAIKey } from "../app-state";
+import { getOpenAIKey } from "../../app-state";
 
 export default {
   name: "summarize",

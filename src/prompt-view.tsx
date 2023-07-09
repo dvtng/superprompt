@@ -1,11 +1,7 @@
-import { useSnapshot } from "valtio";
+import { proxy, useSnapshot } from "valtio";
 import { css, cx } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
-import {
-  PromptStateProvider,
-  createPromptState,
-  usePromptState,
-} from "./prompt-state";
+import { createPromptState } from "./core/prompt-state";
 import { shadow } from "./common-style";
 import { Divider } from "./divider";
 import { PromptProgress } from "./prompt-progress";
@@ -13,6 +9,7 @@ import { useMantineTheme } from "@mantine/core";
 import { PromptEditor } from "./prompt-editor";
 import { useState } from "react";
 import { PROMPTS } from "./prompt-data";
+import { PromptStateProvider, usePromptState } from "./prompt-state-context";
 
 const styles = css`
   background: var(--bg-1);
@@ -70,7 +67,7 @@ export function PromptView() {
 }
 
 export function NewPromptView() {
-  const [promptState] = useState(() => createPromptState(""));
+  const [promptState] = useState(() => proxy(createPromptState("")));
 
   return (
     <PromptStateProvider value={promptState}>
@@ -81,7 +78,9 @@ export function NewPromptView() {
 
 export function ExistingPromptView({ id }: { id: string }) {
   const promptDoc = PROMPTS[id];
-  const [promptState] = useState(() => createPromptState(promptDoc.content));
+  const [promptState] = useState(() =>
+    proxy(createPromptState(promptDoc.content))
+  );
 
   return (
     <PromptStateProvider value={promptState}>

@@ -1,12 +1,12 @@
 import { useSnapshot } from "valtio";
-import { usePromptState } from "./prompt-state";
 import { PromptInputView } from "./prompt-input-view";
 import { css } from "@emotion/css";
 import { Button, Stack } from "@mantine/core";
-import { runPrompt } from "./run-prompt";
+import { runPrompt } from "./core/run";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useRequestRequiredApiKeysModal } from "./api-key-modal";
 import { FormEvent } from "react";
+import { usePromptState } from "./prompt-state-context";
 
 const styles = css`
   align-items: start;

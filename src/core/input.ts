@@ -1,5 +1,5 @@
 import { uniq } from "lodash";
-import { AST, VariableNode, filterNodes } from "./core/ast";
+import { AST, VariableNode, filterNodes } from "./ast";
 import { FUNCTIONS } from "./function";
 import { DATA_TYPES, DataType } from "./function-spec";
 

@@ -1,7 +1,7 @@
-import { VariableNode } from "./core/ast";
+import { VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
 import { PromptState } from "./prompt-state";
-import { getModel } from "./get-model";
+import { getModel } from "../get-model";
 
 export async function runPrompt(promptState: PromptState) {
   try {

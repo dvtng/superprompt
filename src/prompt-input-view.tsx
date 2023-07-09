@@ -1,8 +1,9 @@
 import { ref, useSnapshot } from "valtio";
-import { getColorForInput, usePromptState } from "./prompt-state";
-import { PromptInput } from "./input";
+import { getColorForInput } from "./core/prompt-state";
+import { PromptInput } from "./core/input";
 import { css } from "@emotion/css";
 import { FileInput, Textarea, useMantineTheme } from "@mantine/core";
+import { usePromptState } from "./prompt-state-context";
 
 const styles = css`
   align-items: center;

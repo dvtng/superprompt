@@ -1,9 +1,6 @@
-/* eslint-disable react-refresh/only-export-components */
-import { proxy } from "valtio";
-import { parsePrompt } from "./prompt-parser";
-import { AST } from "./core/ast";
+import { parse } from "./parse";
+import { AST } from "./ast";
 import { PromptInput, getInputs } from "./input";
-import { ReactNode, createContext, useContext } from "react";
 
 export type PromptState = {
   raw: string;
@@ -27,13 +24,13 @@ export type InputState =
     };
 
 export function createPromptState(raw: string) {
-  const promptState = proxy<PromptState>({
+  const promptState: PromptState = {
     raw: "",
     inputs: [],
     inputStates: {},
     parsed: [],
     isRunning: false,
-  });
+  };
 
   if (raw) {
     updateRawPrompt(promptState, raw);
@@ -42,36 +39,12 @@ export function createPromptState(raw: string) {
   return promptState;
 }
 
-const PromptStateContext = createContext<PromptState | null>(null);
-
-export function PromptStateProvider({
-  value,
-  children,
-}: {
-  value: PromptState;
-  children: ReactNode;
-}) {
-  return (
-    <PromptStateContext.Provider value={value}>
-      {children}
-    </PromptStateContext.Provider>
-  );
-}
-
-export function usePromptState() {
-  const promptState = useContext(PromptStateContext);
-  if (!promptState) {
-    throw new Error(`usePromptState must be used within a PromptStateProvider`);
-  }
-  return promptState;
-}
-
 export function updateRawPrompt(promptState: PromptState, raw: string) {
   promptState.raw = raw;
   delete promptState.parseError;
 
   try {
-    promptState.parsed = parsePrompt(raw);
+    promptState.parsed = parse(raw);
     promptState.inputs = getInputs(promptState.parsed);
   } catch (e) {
     if (e instanceof Error) {

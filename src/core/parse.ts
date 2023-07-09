@@ -1,8 +1,8 @@
 import { Grammar, Parser } from "nearley";
 import grammar from "./grammar";
-import { InvalidNode, PlaceholderNode, ASTWithLocation } from "./core/ast";
+import { InvalidNode, PlaceholderNode, ASTWithLocation } from "./ast";
 
-export function parsePrompt(prompt: string): ASTWithLocation {
+export function parse(prompt: string): ASTWithLocation {
   const nodes: ASTWithLocation = [];
   let isPlaceholder = false;
   let column = 0;

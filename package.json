@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "compile-grammar": "nearleyc ./src/grammar.ne -o ./src/grammar.ts"
+    "compile-grammar": "nearleyc ./src/core/grammar.ne -o ./src/core/grammar.ts"
   },
   "dependencies": {
     "@emotion/css": "^11.11.2",

@@ -1,5 +1,5 @@
 import { useSnapshot } from "valtio";
-import { usePromptState } from "./prompt-state";
+import { usePromptState } from "./prompt-state-context";
 
 export function PromptProgress() {
   const promptState = usePromptState();

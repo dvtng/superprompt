@@ -1,9 +1,5 @@
 import { useSnapshot } from "valtio";
-import {
-  getColorForInput,
-  updateRawPrompt,
-  usePromptState,
-} from "./prompt-state";
+import { getColorForInput, updateRawPrompt } from "./core/prompt-state";
 import { CSSProperties, useEffect, useState } from "react";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import {
@@ -17,9 +13,10 @@ import {
 } from "slate";
 import { css } from "@emotion/css";
 import { withHistory } from "slate-history";
-import { parsePrompt } from "./prompt-parser";
+import { parse } from "./core/parse";
 import { useMantineTheme } from "@mantine/core";
 import { NodeType, visitNodes } from "./core/ast";
+import { usePromptState } from "./prompt-state-context";
 
 type Paragraph = {
   type: "paragraph";
@@ -134,7 +131,7 @@ export function PromptEditor() {
         decorate={([node, path]) => {
           const ranges: Range[] = [];
           if (Text.isText(node)) {
-            const parsed = parsePrompt(node.text);
+            const parsed = parse(node.text);
             parsed.forEach((rootNode) => {
               if (rootNode.type !== "text") {
                 ranges.push({

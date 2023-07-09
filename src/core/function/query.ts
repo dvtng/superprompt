@@ -1,7 +1,7 @@
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { getOpenAIKey } from "../app-state";
+import { getOpenAIKey } from "../../app-state";
 
 export default {
   name: "query",
