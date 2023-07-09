@@ -1,7 +1,38 @@
 import { Button, Checkbox, Modal, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
-import { setAPIKey } from "./app-state";
+import { useRef, useState } from "react";
+import { appState, getMissingAPIKeys, setAPIKey } from "./app-state";
+import { useSnapshot } from "valtio";
+import { useDisclosure } from "@mantine/hooks";
+
+export function useRequestRequiredApiKeysModal(requiredApiKeys: string[]) {
+  const _appState = useSnapshot(appState);
+  const [opened, { open, close }] = useDisclosure(false);
+  const missingAPIKeys = getMissingAPIKeys(_appState, requiredApiKeys);
+  const promiseResolveRef = useRef<((value: boolean) => void) | null>(null);
+  const modal = (
+    <ApiKeyModal
+      names={missingAPIKeys}
+      opened={opened}
+      onClose={() => {
+        close();
+        promiseResolveRef.current?.(
+          getMissingAPIKeys(appState, requiredApiKeys).length === 0
+        );
+      }}
+    />
+  );
+  const request = () => {
+    if (getMissingAPIKeys(appState, requiredApiKeys).length === 0) {
+      return Promise.resolve(true);
+    }
+    return new Promise<boolean>((resolve) => {
+      promiseResolveRef.current = resolve;
+      open();
+    });
+  };
+  return [modal, request] as const;
+}
 
 export function ApiKeyModal({
   names,

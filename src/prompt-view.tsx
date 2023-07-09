@@ -1,6 +1,6 @@
 import { useSnapshot } from "valtio";
 import { css, cx } from "@emotion/css";
-import { PromptInputForm, RunPromptButton } from "./prompt-input-form";
+import { PromptInputForm } from "./prompt-input-form";
 import {
   PromptStateProvider,
   createPromptState,
@@ -55,10 +55,7 @@ export function PromptView() {
           padding: "2rem",
         }}
       >
-        {_promptState.inputs.length ? <PromptInputForm /> : null}
-        <div>
-          <RunPromptButton />
-        </div>
+        <PromptInputForm />
         <Divider h />
         {_promptState.isRunning ? (
           <PromptProgress />

@@ -2,12 +2,11 @@ import { useSnapshot } from "valtio";
 import { usePromptState } from "./prompt-state";
 import { PromptInputView } from "./prompt-input-view";
 import { css } from "@emotion/css";
-import { Button } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { runPrompt } from "./run-prompt";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
-import { ApiKeyModal } from "./api-key-modal";
-import { appState, getMissingAPIKeys } from "./app-state";
+import { useRequestRequiredApiKeysModal } from "./api-key-modal";
+import { FormEvent } from "react";
 
 const styles = css`
   align-items: start;
@@ -16,51 +15,49 @@ const styles = css`
   gap: 0.5rem;
 `;
 
+const requiredApiKeys = ["OPENAI"];
+
 export function PromptInputForm() {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
-
-  return (
-    <div className={styles}>
-      {_promptState.inputs.map((input) => (
-        <PromptInputView key={input.name} input={input} />
-      ))}
-    </div>
-  );
-}
-
-const requiredApiKeys = ["OPENAI"];
-
-export function RunPromptButton() {
-  const promptState = usePromptState();
-  const _promptState = useSnapshot(promptState);
-  const _appState = useSnapshot(appState);
-  const [opened, { open, close }] = useDisclosure(false, {
-    onClose: () => {
-      if (getMissingAPIKeys(appState, requiredApiKeys).length === 0) {
+  const [apiKeysModal, requestRequiredApiKeys] =
+    useRequestRequiredApiKeysModal(requiredApiKeys);
+  const onSubmit = (e: FormEvent | KeyboardEvent) => {
+    e.preventDefault();
+    requestRequiredApiKeys().then((hasRequiredApiKeys) => {
+      if (hasRequiredApiKeys) {
         runPrompt(promptState);
       }
-    },
-  });
-  const missingAPIKeys = getMissingAPIKeys(_appState, requiredApiKeys);
+    });
+  };
 
   return (
-    <>
-      <ApiKeyModal names={missingAPIKeys} opened={opened} onClose={close} />
-      <Button
-        onClick={() => {
-          if (missingAPIKeys.length > 0) {
-            open();
-            return;
-          }
-          runPrompt(promptState);
-        }}
-        loading={_promptState.isRunning}
-        leftIcon={<IconPlayerPlayFilled size="1rem" />}
-        loaderProps={{ size: "1rem" }}
-      >
-        Run
-      </Button>
-    </>
+    <form
+      onSubmit={onSubmit}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+          onSubmit(e);
+        }
+      }}
+    >
+      {apiKeysModal}
+      <Stack spacing="2rem">
+        <div className={styles}>
+          {_promptState.inputs.map((input) => (
+            <PromptInputView key={input.name} input={input} />
+          ))}
+        </div>
+        <div>
+          <Button
+            type="submit"
+            loading={_promptState.isRunning}
+            leftIcon={<IconPlayerPlayFilled size="1rem" />}
+            loaderProps={{ size: "1rem" }}
+          >
+            Run
+          </Button>
+        </div>
+      </Stack>
+    </form>
   );
 }
