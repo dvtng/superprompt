@@ -19,8 +19,7 @@ import { css } from "@emotion/css";
 import { withHistory } from "slate-history";
 import { parsePrompt } from "./prompt-parser";
 import { useMantineTheme } from "@mantine/core";
-import { FunctionCallNode, IdentifierNode, VariableNode, visit } from "./ast";
-import { isPlainObject } from "lodash";
+import { NodeType, visitNodes } from "./core/ast";
 
 type Paragraph = {
   type: "paragraph";
@@ -38,7 +37,7 @@ type ExtraLeafProps = {
   isInvalid?: boolean;
   identifier?: {
     name: string;
-    for: "variable" | "functionCall";
+    for: NodeType;
   };
 };
 
@@ -136,34 +135,29 @@ export function PromptEditor() {
           const ranges: Range[] = [];
           if (Text.isText(node)) {
             const parsed = parsePrompt(node.text);
-            parsed.forEach((parseNode) => {
-              if (parseNode.type !== "text") {
+            parsed.forEach((rootNode) => {
+              if (rootNode.type !== "text") {
                 ranges.push({
-                  anchor: { path, offset: parseNode.offset },
-                  focus: { path, offset: parseNode.offset + parseNode.length },
+                  anchor: { path, offset: rootNode.column },
+                  focus: { path, offset: rootNode.column + rootNode.length },
                   isPlaceholder: true,
-                  isInvalid: parseNode.type === "invalid",
+                  isInvalid: rootNode.type === "invalid",
                 });
               }
-              if (parseNode.type === "variable") {
-                visit(parseNode, (node, parent) => {
-                  if (node.type === "identifier" && isPlainObject(parent)) {
-                    const _node = node as IdentifierNode;
-                    if (_node.offset < 0) {
-                      return;
-                    }
-                    const start = parseNode.offset + 1 + _node.offset;
-                    ranges.push({
-                      anchor: { path, offset: start },
-                      focus: { path, offset: start + _node.name.length },
-                      identifier: {
-                        name: _node.name,
-                        for: (parent as VariableNode | FunctionCallNode).type,
-                      },
-                    });
+
+              visitNodes(rootNode, (node, parent) => {
+                if (node.type === "identifier" && parent !== null) {
+                  if (node.offset < 0) {
+                    return;
                   }
-                });
-              }
+                  const start = rootNode.column + 1 + node.offset;
+                  ranges.push({
+                    anchor: { path, offset: start },
+                    focus: { path, offset: start + node.name.length },
+                    identifier: { name: node.name, for: parent.type },
+                  });
+                }
+              });
             });
           }
           return ranges;

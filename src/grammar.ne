@@ -1,8 +1,15 @@
 @preprocessor typescript
 @builtin "whitespace.ne" # `_` means arbitrary amount of whitespace
 
-placeholder -> variable {% id %}
-  | generator {% id %}
+placeholder -> variable {% d => ({
+  type: 'placeholder',
+  value: d[0],
+}) %}
+
+placeholder -> generator {% d => ({
+  type: 'placeholder',
+  value: d[0],
+}) %}
 
 generator -> _ "*" _ {%
   d => ({

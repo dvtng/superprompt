@@ -1,4 +1,4 @@
-import { VariableNode } from "./ast";
+import { VariableNode } from "./core/ast";
 import { FUNCTIONS } from "./function";
 import { PromptState } from "./prompt-state";
 import { getModel } from "./get-model";
@@ -21,10 +21,12 @@ export async function getFilledPrompt(prompt: PromptState) {
   for (const node of prompt.parsed) {
     if (node.type === "text") {
       filledPrompt += node.value;
-    } else if (node.type === "variable") {
-      filledPrompt += await evalVariable(prompt, node);
-    } else if (node.type === "generator") {
-      filledPrompt += await getModel().predict(filledPrompt);
+    } else if (node.type === "placeholder") {
+      if (node.value.type === "variable") {
+        filledPrompt += await evalVariable(prompt, node.value);
+      } else {
+        filledPrompt += await getModel().predict(filledPrompt);
+      }
     }
   }
   console.log(filledPrompt);

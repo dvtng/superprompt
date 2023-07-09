@@ -1,16 +1,11 @@
 import { Grammar, Parser } from "nearley";
 import grammar from "./grammar";
-import { ParseNode, InvalidNode, PlaceholderNode } from "./ast";
+import { InvalidNode, PlaceholderNode, ASTWithLocation } from "./core/ast";
 
-export type ParseNodeWithLocation = ParseNode & {
-  offset: number;
-  length: number;
-};
-
-export function parsePrompt(prompt: string): ParseNodeWithLocation[] {
-  const nodes: ParseNodeWithLocation[] = [];
+export function parsePrompt(prompt: string): ASTWithLocation {
+  const nodes: ASTWithLocation = [];
   let isPlaceholder = false;
-  let offset = 0;
+  let column = 0;
   let currentSubstring = "";
   let escaped = false;
 
@@ -20,14 +15,14 @@ export function parsePrompt(prompt: string): ParseNodeWithLocation[] {
     if (isPlaceholder) {
       nodes.push({
         ...parsePlaceholder(currentSubstring),
-        offset,
+        column,
         length: currentSubstring.length + 2,
       });
     } else {
       nodes.push({
         type: "text",
         value: currentSubstring,
-        offset,
+        column,
         length: currentSubstring.length,
       });
     }
@@ -45,12 +40,12 @@ export function parsePrompt(prompt: string): ParseNodeWithLocation[] {
 
     if (char === "{" && !escaped) {
       pushCurrentSubstring();
-      offset = i;
+      column = i;
       isPlaceholder = true;
       currentSubstring = "";
     } else if (char === "}" && !escaped && isPlaceholder) {
       pushCurrentSubstring();
-      offset = i + 1;
+      column = i + 1;
       isPlaceholder = false;
       currentSubstring = "";
     } else {

@@ -1,5 +1,5 @@
 import { uniq } from "lodash";
-import { AST, VariableNode, filterInAST } from "./ast";
+import { AST, VariableNode, filterNodes } from "./core/ast";
 import { FUNCTIONS } from "./function";
 import { DATA_TYPES, DataType } from "./function-spec";
 
@@ -9,7 +9,7 @@ export type PromptInput = {
 };
 
 export function getInputs(ast: AST): PromptInput[] {
-  const variableNodes = filterInAST(ast, (node): node is VariableNode => {
+  const variableNodes = filterNodes(ast, (node): node is VariableNode => {
     return node.type === "variable";
   });
 

@@ -41,8 +41,14 @@ const grammar: Grammar = {
     {"name": "__$ebnf$1", "symbols": ["__$ebnf$1", "wschar"], "postprocess": (d) => d[0].concat([d[1]])},
     {"name": "__", "symbols": ["__$ebnf$1"], "postprocess": function(d) {return null;}},
     {"name": "wschar", "symbols": [/[ \t\n\v\f]/], "postprocess": id},
-    {"name": "placeholder", "symbols": ["variable"], "postprocess": id},
-    {"name": "placeholder", "symbols": ["generator"], "postprocess": id},
+    {"name": "placeholder", "symbols": ["variable"], "postprocess":  d => ({
+          type: 'placeholder',
+          value: d[0],
+        }) },
+    {"name": "placeholder", "symbols": ["generator"], "postprocess":  d => ({
+          type: 'placeholder',
+          value: d[0],
+        }) },
     {"name": "generator", "symbols": ["_", {"literal":"*"}, "_"], "postprocess": 
         d => ({
           type: 'generator',

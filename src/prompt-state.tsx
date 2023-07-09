@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { proxy } from "valtio";
 import { parsePrompt } from "./prompt-parser";
-import { ParseNode } from "./ast";
+import { AST } from "./core/ast";
 import { PromptInput, getInputs } from "./input";
 import { ReactNode, createContext, useContext } from "react";
 
@@ -9,7 +9,7 @@ export type PromptState = {
   raw: string;
   inputs: PromptInput[];
   inputStates: Record<string, InputState>;
-  parsed: ParseNode[];
+  parsed: AST;
   parseError?: string;
   filledPrompt?: string;
   isRunning: boolean;
