@@ -10,5 +10,9 @@ export function Divider({ h = false }: { h?: boolean }) {
     ? { width: "100%", height: 1 }
     : { height: "100%", width: 1 };
 
-  return <div style={{ background: color, ...orientationStyles }} />;
+  return (
+    <div style={{ background: color, fontSize: 1, ...orientationStyles }}>
+      &nbsp;
+    </div>
+  );
 }
