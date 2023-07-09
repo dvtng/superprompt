@@ -1,5 +1,5 @@
 import { OpenAI } from "langchain/llms/openai";
-import { getOpenAIKey } from "./app-state";
+import { getOpenAIKey } from "./core/api-key-state";
 
 export function getModel() {
   return new OpenAI({

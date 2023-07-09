@@ -16,7 +16,7 @@ import { withHistory } from "slate-history";
 import { parse } from "./core/parse";
 import { useMantineTheme } from "@mantine/core";
 import { NodeType, visitNodes } from "./core/ast";
-import { usePromptState } from "./prompt-state-context";
+import { usePromptState } from "./context";
 
 type Paragraph = {
   type: "paragraph";

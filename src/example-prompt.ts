@@ -20,12 +20,12 @@ Please format it as follows:
 Grade: [1-5]
 Explanation: [your explanation]
 `.trim(),
-  experts: `
-Imagine three different experts are answering this question.
-All experts will write down 1 step of their thinking, then share it with the group.
-Then all experts will go on to the next step, etc.
-If any expert realizes they're wrong they admit their mistake.
-Give a final answer that the 3 experts agree upon.
-The question is... {question}
+  expertPanel: `
+Name 3 experts who would be great at answering the following question. Choose people who might have conflicting views with each other.
+{question}
+{*}
+Now answer the question as each of the above experts.
+{*}
+Give a summary of the arguments made in bullet point format.
   `.trim(),
 };

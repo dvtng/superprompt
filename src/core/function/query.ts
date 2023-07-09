@@ -1,15 +1,16 @@
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { getOpenAIKey } from "../../app-state";
+import { FunctionContext } from "../function-spec";
 
 export default {
   name: "query",
   dataTypes: ["file"],
-  fn: async (file: File, question: string) => {
+  fn: async (context: FunctionContext, file: File, question: string) => {
     // Create the models
-    const openAIApiKey = getOpenAIKey();
-    const embeddings = new OpenAIEmbeddings({ openAIApiKey });
+    const embeddings = new OpenAIEmbeddings({
+      openAIApiKey: context.apiKeyState.OPENAI,
+    });
 
     // Load the documents and create the vector store
     const loader = new TextLoader(file);

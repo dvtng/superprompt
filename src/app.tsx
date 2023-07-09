@@ -6,6 +6,9 @@ import {
 import { useState } from "react";
 import { router } from "./router";
 import { RouterProvider } from "react-router-dom";
+import { proxy } from "valtio";
+import { loadApiKeyState } from "./core/api-key-state";
+import { ApiKeyStateProvider } from "./context";
 
 export function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(() => {
@@ -14,6 +17,7 @@ export function App() {
   });
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+  const [apiKeyState] = useState(() => proxy(loadApiKeyState()));
 
   return (
     <ColorSchemeProvider
@@ -25,7 +29,9 @@ export function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <RouterProvider router={router} />
+        <ApiKeyStateProvider value={apiKeyState}>
+          <RouterProvider router={router} />
+        </ApiKeyStateProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

@@ -3,7 +3,7 @@ import { getColorForInput } from "./core/prompt-state";
 import { PromptInput } from "./core/input";
 import { css } from "@emotion/css";
 import { FileInput, Textarea, useMantineTheme } from "@mantine/core";
-import { usePromptState } from "./prompt-state-context";
+import { usePromptState } from "./context";
 
 const styles = css`
   align-items: center;

@@ -19,6 +19,9 @@ export function AppShell() {
     <MantineAppShell
       styles={{
         root: positioningStyles,
+        main: {
+          height: "100vh",
+        },
       }}
       header={
         <Header

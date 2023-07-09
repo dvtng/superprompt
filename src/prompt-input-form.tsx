@@ -6,7 +6,7 @@ import { runPrompt } from "./core/run";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useRequestRequiredApiKeysModal } from "./api-key-modal";
 import { FormEvent } from "react";
-import { usePromptState } from "./prompt-state-context";
+import { useApiKeyState, usePromptState } from "./context";
 
 const styles = css`
   align-items: start;
@@ -18,6 +18,7 @@ const styles = css`
 const requiredApiKeys = ["OPENAI"];
 
 export function PromptInputForm() {
+  const apiKeyState = useApiKeyState();
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
   const [apiKeysModal, requestRequiredApiKeys] =
@@ -26,7 +27,7 @@ export function PromptInputForm() {
     e.preventDefault();
     requestRequiredApiKeys().then((hasRequiredApiKeys) => {
       if (hasRequiredApiKeys) {
-        runPrompt(promptState);
+        runPrompt(promptState, apiKeyState);
       }
     });
   };
@@ -42,11 +43,13 @@ export function PromptInputForm() {
     >
       {apiKeysModal}
       <Stack spacing="2rem">
-        <div className={styles}>
-          {_promptState.inputs.map((input) => (
-            <PromptInputView key={input.name} input={input} />
-          ))}
-        </div>
+        {_promptState.inputs.length ? (
+          <div className={styles}>
+            {_promptState.inputs.map((input) => (
+              <PromptInputView key={input.name} input={input} />
+            ))}
+          </div>
+        ) : null}
         <div>
           <Button
             type="submit"

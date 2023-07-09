@@ -1,15 +1,15 @@
-import { proxy, useSnapshot } from "valtio";
+import { proxy } from "valtio";
 import { css, cx } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
 import { createPromptState } from "./core/prompt-state";
 import { shadow } from "./common-style";
 import { Divider } from "./divider";
-import { PromptProgress } from "./prompt-progress";
 import { useMantineTheme } from "@mantine/core";
 import { PromptEditor } from "./prompt-editor";
 import { useState } from "react";
 import { PROMPTS } from "./prompt-data";
-import { PromptStateProvider, usePromptState } from "./prompt-state-context";
+import { PromptStateProvider } from "./context";
+import { Messages } from "./messages";
 
 const styles = css`
   background: var(--bg-1);
@@ -18,18 +18,11 @@ const styles = css`
   grid-template-columns: 1fr auto 1fr;
   height: calc(100% - 4rem);
   margin: 2rem auto;
+  overflow: hidden;
   width: 100%;
 `;
 
-const outputStyles = css`
-  font-family: inherit;
-  margin: 0;
-  text-wrap: wrap;
-`;
-
 export function PromptView() {
-  const promptState = usePromptState();
-  const _promptState = useSnapshot(promptState, { sync: true });
   const theme = useMantineTheme();
   const bgColor =
     theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.white;
@@ -49,18 +42,13 @@ export function PromptView() {
           display: "flex",
           flexDirection: "column",
           gap: "2rem",
+          overflow: "auto",
           padding: "2rem",
         }}
       >
         <PromptInputForm />
         <Divider h />
-        {_promptState.isRunning ? (
-          <PromptProgress />
-        ) : _promptState.output ? (
-          <div>
-            <pre className={outputStyles}>{_promptState.output}</pre>
-          </div>
-        ) : null}
+        <Messages />
       </div>
     </div>
   );

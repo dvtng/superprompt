@@ -8,9 +8,13 @@ export type PromptState = {
   inputStates: Record<string, InputState>;
   parsed: AST;
   parseError?: string;
-  filledPrompt?: string;
   isRunning: boolean;
-  output?: string;
+  messages: Message[];
+};
+
+export type Message = {
+  role: "system" | "user" | "assistant";
+  content: string;
 };
 
 export type InputState =
@@ -30,6 +34,7 @@ export function createPromptState(raw: string) {
     inputStates: {},
     parsed: [],
     isRunning: false,
+    messages: [],
   };
 
   if (raw) {
