@@ -8,8 +8,8 @@ import { usePromptState } from "./context";
 const styles = css`
   align-items: center;
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
   width: 100%;
 
   > label {
@@ -17,7 +17,8 @@ const styles = css`
     display: flex;
     font-size: 0.9em;
     gap: 0.5rem;
-    width: 50%;
+    justify-content: flex-start;
+    width: 100%;
   }
 
   > label + * {
@@ -56,6 +57,7 @@ export function PromptInputView({ input }: { input: PromptInput }) {
         <FileInput
           placeholder="Choose a file"
           accept="text/plain"
+          size="md"
           value={
             inputState && inputState.dataType === "file"
               ? inputState.value
@@ -84,7 +86,7 @@ export function PromptInputView({ input }: { input: PromptInput }) {
               value: e.currentTarget.value,
             };
           }}
-          size="sm"
+          size="md"
           autosize
         />
       )}

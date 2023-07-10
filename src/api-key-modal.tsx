@@ -78,6 +78,7 @@ export function ApiKeyModal({
                 key={name}
                 label={name}
                 withAsterisk
+                size="md"
                 {...form.getInputProps(name)}
               />
             ))}
