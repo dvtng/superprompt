@@ -15,11 +15,27 @@ const styles = css`
   background: var(--bg-1);
   border-radius: 4px;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  height: calc(100% - 4rem);
-  margin: 2rem auto;
+  grid-template-columns: 1fr 1fr;
+  height: calc(100% - 2rem);
+  margin: 0 auto 2rem auto;
   overflow: hidden;
   width: 100%;
+
+  @media (max-width: 800px) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+  }
+`;
+
+const convoStyles = css`
+  height: 100%;
+  overflow: auto;
+
+  @media (max-width: 800px) {
+    overflow: visible;
+  }
 `;
 
 export function PromptView() {
@@ -34,21 +50,25 @@ export function PromptView() {
       <div style={{ color }}>
         <PromptEditor />
       </div>
-      <Divider />
       <div
+        className={convoStyles}
         style={{
           background:
             theme.colorScheme === "dark" ? theme.colors.dark[6] : "#fafafa",
-          display: "flex",
-          flexDirection: "column",
-          gap: "2rem",
-          overflow: "auto",
-          padding: "2rem",
         }}
       >
-        <PromptInputForm />
-        <Divider h />
-        <Messages />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "2rem",
+            padding: "2rem",
+          }}
+        >
+          <PromptInputForm />
+          <Divider h />
+          <Messages />
+        </div>
       </div>
     </div>
   );

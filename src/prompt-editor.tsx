@@ -53,12 +53,13 @@ const styles = css`
   display: block;
   font-family: inherit;
   font-size: inherit;
-  height: 100%;
-  outline: none;
   margin-top: -0.4em;
   padding: 2rem;
-  resize: none;
   width: 100%;
+
+  > * {
+    outline: none;
+  }
 
   p {
     margin-block-start: 0.75em;
@@ -92,74 +93,76 @@ export function PromptEditor() {
         }
       }}
     >
-      <Editable
-        className={styles}
-        renderElement={({ attributes, children }) => {
-          return <p {...attributes}>{children}</p>;
-        }}
-        renderLeaf={({ attributes, children, leaf }) => {
-          const style: CSSProperties = {};
+      <div className={styles}>
+        <Editable
+          placeholder="Enter a prompt..."
+          renderElement={({ attributes, children }) => {
+            return <p {...attributes}>{children}</p>;
+          }}
+          renderLeaf={({ attributes, children, leaf }) => {
+            const style: CSSProperties = {};
 
-          if (leaf.isPlaceholder) {
-            style.fontFamily = theme.fontFamilyMonospace;
-            style.fontWeight = "bold";
-          }
-          if (leaf.isInvalid) {
-            style.color = theme.colors.red[5];
-          }
-          if (leaf.identifier) {
-            if (leaf.identifier.for === "variable") {
-              style.color =
-                theme.colors[
-                  getColorForInput(_promptState, leaf.identifier.name)
-                ][theme.colorScheme === "dark" ? 4 : 6];
-            } else {
-              style.fontStyle = "italic";
+            if (leaf.isPlaceholder) {
+              style.fontFamily = theme.fontFamilyMonospace;
+              style.fontWeight = "bold";
             }
-          }
-
-          return (
-            <span
-              {...attributes}
-              style={style}
-              spellCheck={!leaf.isPlaceholder}
-            >
-              {children}
-            </span>
-          );
-        }}
-        decorate={([node, path]) => {
-          const ranges: Range[] = [];
-          if (Text.isText(node)) {
-            const parsed = parse(node.text);
-            parsed.forEach((rootNode) => {
-              if (rootNode.type !== "text") {
-                ranges.push({
-                  anchor: { path, offset: rootNode.column },
-                  focus: { path, offset: rootNode.column + rootNode.length },
-                  isPlaceholder: true,
-                  isInvalid: rootNode.type === "invalid",
-                });
+            if (leaf.isInvalid) {
+              style.color = theme.colors.red[5];
+            }
+            if (leaf.identifier) {
+              if (leaf.identifier.for === "variable") {
+                style.color =
+                  theme.colors[
+                    getColorForInput(_promptState, leaf.identifier.name)
+                  ][theme.colorScheme === "dark" ? 4 : 6];
+              } else {
+                style.fontStyle = "italic";
               }
+            }
 
-              visitNodes(rootNode, (node, parent) => {
-                if (node.type === "identifier" && parent !== null) {
-                  if (node.offset < 0) {
-                    return;
-                  }
-                  const start = rootNode.column + 1 + node.offset;
+            return (
+              <span
+                {...attributes}
+                style={style}
+                spellCheck={!leaf.isPlaceholder}
+              >
+                {children}
+              </span>
+            );
+          }}
+          decorate={([node, path]) => {
+            const ranges: Range[] = [];
+            if (Text.isText(node)) {
+              const parsed = parse(node.text);
+              parsed.forEach((rootNode) => {
+                if (rootNode.type !== "text") {
                   ranges.push({
-                    anchor: { path, offset: start },
-                    focus: { path, offset: start + node.name.length },
-                    identifier: { name: node.name, for: parent.type },
+                    anchor: { path, offset: rootNode.column },
+                    focus: { path, offset: rootNode.column + rootNode.length },
+                    isPlaceholder: true,
+                    isInvalid: rootNode.type === "invalid",
                   });
                 }
+
+                visitNodes(rootNode, (node, parent) => {
+                  if (node.type === "identifier" && parent !== null) {
+                    if (node.offset < 0) {
+                      return;
+                    }
+                    const start = rootNode.column + 1 + node.offset;
+                    ranges.push({
+                      anchor: { path, offset: start },
+                      focus: { path, offset: start + node.name.length },
+                      identifier: { name: node.name, for: parent.type },
+                    });
+                  }
+                });
               });
-            });
-          }
-          return ranges;
-        }}
-      />
+            }
+            return ranges;
+          }}
+        />
+      </div>
     </Slate>
   );
 }
