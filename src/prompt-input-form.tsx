@@ -1,12 +1,13 @@
 import { useSnapshot } from "valtio";
 import { PromptInputView } from "./prompt-input-view";
 import { css } from "@emotion/css";
-import { Button, Stack } from "@mantine/core";
+import { Button, Flex, Stack } from "@mantine/core";
 import { runPrompt } from "./core/run";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useRequestRequiredApiKeysModal } from "./api-key-modal";
 import { FormEvent } from "react";
 import { useApiKeyState, usePromptState } from "./context";
+import { OpenPromptAdvancedOptionsModalButton } from "./prompt-advanced-options";
 
 const styles = css`
   align-items: start;
@@ -50,7 +51,7 @@ export function PromptInputForm() {
             ))}
           </div>
         ) : null}
-        <div>
+        <Flex gap="md">
           <Button
             type="submit"
             loading={_promptState.isRunning}
@@ -59,7 +60,8 @@ export function PromptInputForm() {
           >
             Run
           </Button>
-        </div>
+          <OpenPromptAdvancedOptionsModalButton />
+        </Flex>
       </Stack>
     </form>
   );

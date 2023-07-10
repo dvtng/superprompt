@@ -10,6 +10,7 @@ export type PromptState = {
   parseError?: string;
   isRunning: boolean;
   messages: Message[];
+  options: Options;
 };
 
 export type Message = {
@@ -27,6 +28,13 @@ export type InputState =
       value: File;
     };
 
+export type Options = {
+  temperature?: number;
+  maxTokens?: number | "inf";
+  presencePenalty?: number;
+  frequencyPenalty?: number;
+};
+
 export function createPromptState(raw: string) {
   const promptState: PromptState = {
     raw: "",
@@ -35,6 +43,7 @@ export function createPromptState(raw: string) {
     parsed: [],
     isRunning: false,
     messages: [],
+    options: {},
   };
 
   if (raw) {
@@ -68,4 +77,20 @@ export function getColorForInput(promptState: PromptState, inputName: string) {
     return "gray";
   }
   return colors[index % colors.length];
+}
+
+export const defaultOptions: Required<Options> = {
+  temperature: 1,
+  maxTokens: "inf",
+  presencePenalty: 0,
+  frequencyPenalty: 0,
+};
+
+export function getOptionsWithDefaults(
+  promptState: PromptState
+): Required<Options> {
+  return {
+    ...defaultOptions,
+    ...promptState.options,
+  };
 }

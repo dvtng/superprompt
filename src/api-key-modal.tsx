@@ -1,4 +1,4 @@
-import { Button, Checkbox, Modal, Stack, TextInput } from "@mantine/core";
+import { Button, Checkbox, Modal, Stack, TextInput, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useRef, useState } from "react";
 import { getMissingApiKeys, setApiKey } from "./core/api-key-state";
@@ -58,7 +58,7 @@ export function ApiKeyModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title="Please provide the following API keys"
+      title={<Text size="lg">Please provide the following API keys</Text>}
     >
       <form
         onSubmit={form.onSubmit((values) => {

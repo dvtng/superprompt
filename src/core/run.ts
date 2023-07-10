@@ -1,6 +1,6 @@
 import { VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
-import { Message, PromptState } from "./prompt-state";
+import { Message, PromptState, getOptionsWithDefaults } from "./prompt-state";
 import { ApiKeyState } from "./api-key-state";
 import { FunctionContext } from "./function-spec";
 import OpenAI from "openai";
@@ -10,6 +10,7 @@ export async function runPrompt(
   apiKeyState: ApiKeyState
 ) {
   const openai = new OpenAI({ apiKey: apiKeyState.OPENAI });
+  const options = getOptionsWithDefaults(promptState);
 
   let prompt = "";
   async function generate() {
@@ -23,6 +24,10 @@ export async function runPrompt(
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: promptState.messages,
+      temperature: options.temperature,
+      max_tokens: options.maxTokens === "inf" ? undefined : options.maxTokens,
+      presence_penalty: options.presencePenalty,
+      frequency_penalty: options.frequencyPenalty,
     });
     if (chatCompletion.choices[0].message) {
       promptState.messages.push(chatCompletion.choices[0].message as Message);
