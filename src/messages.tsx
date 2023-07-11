@@ -21,8 +21,12 @@ export function Messages() {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
 
+  if (!_promptState.messages.length) {
+    return null;
+  }
+
   return (
-    <Stack>
+    <Stack p="2rem">
       {_promptState.messages.map((message, i) => (
         <div key={i} className={messageStyles}>
           <Stack spacing="0.2rem">

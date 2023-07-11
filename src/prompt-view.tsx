@@ -3,7 +3,6 @@ import { css, cx } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
 import { createPromptState } from "./core/prompt-state";
 import { shadow } from "./common-style";
-import { Divider } from "./divider";
 import { useMantineTheme } from "@mantine/core";
 import { PromptEditor } from "./prompt-editor";
 import { useState } from "react";
@@ -30,10 +29,13 @@ const styles = css`
 `;
 
 const convoStyles = css`
+  display: flex;
+  flex-direction: column;
   height: 100%;
   overflow: auto;
 
   @media (max-width: 800px) {
+    height: auto;
     overflow: visible;
   }
 `;
@@ -44,31 +46,17 @@ export function PromptView() {
     theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.white;
   const color =
     theme.colorScheme === "dark" ? theme.white : theme.colors.dark[8];
+  const convoPaneColor =
+    theme.colorScheme === "dark" ? theme.colors.dark[6] : "#fafafa";
 
   return (
     <div className={cx(styles, shadow)} style={{ background: bgColor }}>
       <div style={{ color }}>
         <PromptEditor />
       </div>
-      <div
-        className={convoStyles}
-        style={{
-          background:
-            theme.colorScheme === "dark" ? theme.colors.dark[6] : "#fafafa",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "2rem",
-            padding: "2rem",
-          }}
-        >
-          <PromptInputForm />
-          <Divider h />
-          <Messages />
-        </div>
+      <div className={convoStyles} style={{ background: convoPaneColor }}>
+        <PromptInputForm bgColor={convoPaneColor} />
+        <Messages />
       </div>
     </div>
   );

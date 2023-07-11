@@ -88,6 +88,7 @@ export function PromptInputView({ input }: { input: PromptInput }) {
           }}
           size="md"
           autosize
+          maxRows={10}
         />
       )}
     </div>

@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
 import { PromptInputView } from "./prompt-input-view";
 import { css } from "@emotion/css";
-import { Button, Flex, Stack } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import { runPrompt } from "./core/run";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useRequestRequiredApiKeysModal } from "./api-key-modal";
@@ -18,7 +18,7 @@ const styles = css`
 
 const requiredApiKeys = ["OPENAI"];
 
-export function PromptInputForm() {
+export function PromptInputForm({ bgColor }: { bgColor: string }) {
   const apiKeyState = useApiKeyState();
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
@@ -37,16 +37,19 @@ export function PromptInputForm() {
   );
 
   return (
-    <form
-      onSubmit={onSubmit}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-          onSubmit(e);
-        }
-      }}
-    >
+    <>
       {apiKeysModal}
-      <Stack spacing="2rem">
+      <form
+        style={{
+          padding: "2rem",
+        }}
+        onSubmit={onSubmit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+            onSubmit(e);
+          }
+        }}
+      >
         {manualInputs.length ? (
           <div className={styles}>
             {manualInputs.map((input) => (
@@ -54,18 +57,29 @@ export function PromptInputForm() {
             ))}
           </div>
         ) : null}
-        <Flex gap="md">
-          <Button
-            type="submit"
-            loading={_promptState.isRunning}
-            leftIcon={<IconPlayerPlayFilled size="1rem" />}
-            loaderProps={{ size: "1rem" }}
-          >
-            Run
-          </Button>
-          <OpenPromptAdvancedOptionsModalButton />
-        </Flex>
-      </Stack>
-    </form>
+      </form>
+      <Flex
+        gap="md"
+        style={{
+          background: bgColor,
+          bottom: 0,
+          margin: "-2rem 0",
+          padding: "2rem",
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+        }}
+      >
+        <Button
+          loading={_promptState.isRunning}
+          leftIcon={<IconPlayerPlayFilled size="1rem" />}
+          loaderProps={{ size: "1rem" }}
+          onClick={onSubmit}
+        >
+          Run
+        </Button>
+        <OpenPromptAdvancedOptionsModalButton />
+      </Flex>
+    </>
   );
 }
