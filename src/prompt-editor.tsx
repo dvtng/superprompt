@@ -110,7 +110,10 @@ export function PromptEditor() {
               style.color = theme.colors.red[5];
             }
             if (leaf.identifier) {
-              if (leaf.identifier.for === "variable") {
+              if (
+                leaf.identifier.for === "variable" ||
+                leaf.identifier.for === "generator"
+              ) {
                 style.color =
                   theme.colors[
                     getColorForInput(_promptState, leaf.identifier.name)

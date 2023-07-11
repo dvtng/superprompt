@@ -54,6 +54,12 @@ const grammar: Grammar = {
           type: 'generator',
         })
         },
+    {"name": "generator", "symbols": ["_", {"literal":"*"}, "ident", "_"], "postprocess": 
+        d => ({
+          type: 'generator',
+          identifier: d[2],
+        })
+        },
     {"name": "variable", "symbols": ["_", "ident", "_"], "postprocess": 
         d => ({
           type: 'variable',

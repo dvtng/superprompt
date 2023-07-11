@@ -30,6 +30,7 @@ export type PlaceholderNode = {
 
 export type GeneratorNode = {
   type: "generator";
+  identifier?: IdentifierNode;
 };
 
 export type VariableNode = {

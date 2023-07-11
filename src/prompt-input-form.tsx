@@ -32,6 +32,9 @@ export function PromptInputForm() {
       }
     });
   };
+  const manualInputs = _promptState.inputs.filter(
+    (input) => !input.isGenerated
+  );
 
   return (
     <form
@@ -44,9 +47,9 @@ export function PromptInputForm() {
     >
       {apiKeysModal}
       <Stack spacing="2rem">
-        {_promptState.inputs.length ? (
+        {manualInputs.length ? (
           <div className={styles}>
-            {_promptState.inputs.map((input) => (
+            {manualInputs.map((input) => (
               <PromptInputView key={input.name} input={input} />
             ))}
           </div>

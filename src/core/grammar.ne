@@ -17,6 +17,13 @@ generator -> _ "*" _ {%
   })
 %}
 
+generator -> _ "*" ident _ {%
+  d => ({
+    type: 'generator',
+    identifier: d[2],
+  })
+%}
+
 variable -> _ ident _ {%
   d => ({
     type: 'variable',

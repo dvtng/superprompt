@@ -1,11 +1,12 @@
 import { uniq } from "lodash";
-import { AST, VariableNode, filterNodes } from "./ast";
+import { AST, VariableNode, filterNodes, visitNodes } from "./ast";
 import { FUNCTIONS } from "./function";
 import { DATA_TYPES, DataType } from "./function-spec";
 
 export type PromptInput = {
   name: string;
   dataTypes: DataType[];
+  isGenerated: boolean;
 };
 
 export function getInputs(ast: AST): PromptInput[] {
@@ -34,8 +35,16 @@ export function getInputs(ast: AST): PromptInput[] {
     );
   }
 
+  const generatedVariableNames = new Set<string>();
+  visitNodes(ast, (node) => {
+    if (node.type === "generator" && node.identifier) {
+      generatedVariableNames.add(node.identifier.name);
+    }
+  });
+
   return Object.entries(dataTypesByInputName).map(([name, dataTypes]) => ({
     name,
     dataTypes: Array.from(dataTypes),
+    isGenerated: generatedVariableNames.has(name),
   }));
 }

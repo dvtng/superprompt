@@ -13,7 +13,7 @@ export async function runPrompt(
   const options = getOptionsWithDefaults(promptState);
 
   let prompt = "";
-  async function generate() {
+  async function generate(generatedInputName?: string) {
     if (prompt.trim()) {
       promptState.messages.push({
         role: "user",
@@ -29,8 +29,15 @@ export async function runPrompt(
       presence_penalty: options.presencePenalty,
       frequency_penalty: options.frequencyPenalty,
     });
-    if (chatCompletion.choices[0].message) {
-      promptState.messages.push(chatCompletion.choices[0].message as Message);
+    const message = chatCompletion.choices[0].message as Message | undefined;
+    if (message) {
+      promptState.messages.push(message);
+      if (generatedInputName) {
+        promptState.inputStates[generatedInputName] = {
+          dataType: "string",
+          value: message.content,
+        };
+      }
     }
   }
 
@@ -46,7 +53,7 @@ export async function runPrompt(
         if (placeholderType === "variable") {
           prompt += await evalVariable(promptState, apiKeyState, node.value);
         } else if (placeholderType === "generator") {
-          await generate();
+          await generate(node.value.identifier?.name);
         } else {
           const _never: never = placeholderType;
           return _never;
@@ -54,10 +61,10 @@ export async function runPrompt(
       }
     }
     if (prompt.trim()) {
-      generate();
+      await generate();
     }
   } catch (e) {
-    // TODO
+    console.error(e);
   } finally {
     promptState.isRunning = false;
   }
