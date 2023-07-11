@@ -39,25 +39,25 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
   return (
     <>
       {apiKeysModal}
-      <form
-        style={{
-          padding: "2rem",
-        }}
-        onSubmit={onSubmit}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-            onSubmit(e);
-          }
-        }}
-      >
-        {manualInputs.length ? (
+      {manualInputs.length ? (
+        <form
+          style={{
+            padding: "2rem",
+          }}
+          onSubmit={onSubmit}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+              onSubmit(e);
+            }
+          }}
+        >
           <div className={styles}>
             {manualInputs.map((input) => (
               <PromptInputView key={input.name} input={input} />
             ))}
           </div>
-        ) : null}
-      </form>
+        </form>
+      ) : null}
       <Flex
         gap="md"
         style={{
