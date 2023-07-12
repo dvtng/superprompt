@@ -28,4 +28,11 @@ Now answer the question as each of the above experts.
 {*}
 Each expert now has a chance to respond to each other.
 `.trim(),
+  assimilateTone: `
+Describe the tone of the following text in one word. Choose between professional and casual:
+{them}
+{*tone}
+Rewrite the following text in a {tone} tone:
+{you}
+`.trim(),
 };

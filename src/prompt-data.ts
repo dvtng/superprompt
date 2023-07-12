@@ -5,19 +5,24 @@ import { PromptDoc } from "./prompt-doc";
 export const PROMPTS: Record<string, PromptDoc> = keyBy(
   [
     {
-      id: "character",
-      title: "Book character",
-      content: EXAMPLE_PROMPTS.character,
+      id: "grade",
+      title: "Grade exam question",
+      content: EXAMPLE_PROMPTS.grade,
     },
     {
-      id: "grade",
-      title: "Grade an exam question",
-      content: EXAMPLE_PROMPTS.grade,
+      id: "assimilate-tone",
+      title: "Assimilate tone",
+      content: EXAMPLE_PROMPTS.assimilateTone,
     },
     {
       id: "expert-panel",
       title: "Expert panel",
       content: EXAMPLE_PROMPTS.expertPanel,
+    },
+    {
+      id: "character",
+      title: "Character chat",
+      content: EXAMPLE_PROMPTS.character,
     },
   ],
   "id"
