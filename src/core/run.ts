@@ -1,6 +1,11 @@
 import { VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
-import { Message, PromptState, getOptionsWithDefaults } from "./prompt-state";
+import {
+  Message,
+  PromptState,
+  addError,
+  getOptionsWithDefaults,
+} from "./prompt-state";
 import { ApiKeyState } from "./api-key-state";
 import { FunctionContext } from "./function-spec";
 import OpenAI from "openai";
@@ -43,6 +48,7 @@ export async function runPrompt(
 
   try {
     promptState.messages = [];
+    promptState.errors = [];
     promptState.isRunning = true;
 
     for (const node of promptState.parsed) {
@@ -64,7 +70,7 @@ export async function runPrompt(
       await generate();
     }
   } catch (e) {
-    console.error(e);
+    addError(promptState, e);
   } finally {
     promptState.isRunning = false;
   }
@@ -78,12 +84,12 @@ async function evalVariable(
   const functionSpec = FUNCTIONS[placeholder.functionCall.identifier.name];
   if (!functionSpec) {
     throw new Error(
-      `Function "${placeholder.functionCall.identifier.name}" not found`
+      `Function "${placeholder.functionCall.identifier.name}" doesn't exist`
     );
   }
   const input = promptState.inputStates[placeholder.identifier.name];
   if (input === undefined) {
-    throw new Error(`Input for "${placeholder.identifier.name}" not found`);
+    throw new Error(`Missing input for "${placeholder.identifier.name}"`);
   }
 
   const args = await Promise.all(

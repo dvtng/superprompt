@@ -11,6 +11,7 @@ export type PromptState = {
   isRunning: boolean;
   messages: Message[];
   options: Options;
+  errors: string[];
 };
 
 export type Message = {
@@ -44,6 +45,7 @@ export function createPromptState(raw: string) {
     isRunning: false,
     messages: [],
     options: {},
+    errors: [],
   };
 
   if (raw) {
@@ -93,4 +95,12 @@ export function getOptionsWithDefaults(
     ...defaultOptions,
     ...promptState.options,
   };
+}
+
+export function addError(promptState: PromptState, error: unknown) {
+  if (error instanceof Error) {
+    promptState.errors.push(error.message || error.name);
+  } else {
+    promptState.errors.push(String(error));
+  }
 }

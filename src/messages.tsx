@@ -1,7 +1,8 @@
-import { Stack } from "@mantine/core";
+import { Stack, Alert } from "@mantine/core";
 import { usePromptState } from "./context";
 import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
+import { IconX } from "@tabler/icons-react";
 
 const messageStyles = css`
   pre {
@@ -21,7 +22,7 @@ export function Messages() {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
 
-  if (!_promptState.messages.length) {
+  if (_promptState.messages.length + _promptState.errors.length === 0) {
     return null;
   }
 
@@ -40,6 +41,16 @@ export function Messages() {
             <pre>{message.content}</pre>
           </Stack>
         </div>
+      ))}
+      {_promptState.errors.map((errorMessage, i) => (
+        <Alert
+          key={i}
+          icon={<IconX size="1.1rem" />}
+          color="red"
+          variant="outline"
+        >
+          {errorMessage}
+        </Alert>
       ))}
     </Stack>
   );
