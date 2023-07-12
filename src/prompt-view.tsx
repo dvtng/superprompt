@@ -1,14 +1,18 @@
-import { proxy } from "valtio";
+import { useSnapshot } from "valtio";
 import { css, cx } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
-import { createPromptState } from "./core/prompt-state";
 import { shadow } from "./common-style";
 import { useMantineTheme } from "@mantine/core";
 import { PromptEditor } from "./prompt-editor";
-import { useState } from "react";
+import { useEffect } from "react";
 import { PROMPTS } from "./prompt-data";
-import { PromptStateProvider } from "./context";
+import { PromptStateProvider, usePromptState } from "./context";
 import { Messages } from "./messages";
+import { useNavigate, useParams } from "react-router-dom";
+import { saveDoc } from "./db";
+import { nanoid } from "nanoid";
+import { useDerivedState } from "./use-derived-state";
+import { preparePromptState, promptStates } from "./prompt-states";
 
 const styles = css`
   background: var(--bg-1);
@@ -62,25 +66,51 @@ export function PromptView() {
   );
 }
 
-export function NewPromptView() {
-  const [promptState] = useState(() => proxy(createPromptState("")));
+export function PromptViewContainer() {
+  const params = useParams<"id">();
+  const idFromUrl = params.id ?? "blank";
+  const isExamplePrompt = idFromUrl in PROMPTS;
+  const [id] = useDerivedState(
+    () => (isExamplePrompt ? nanoid() : idFromUrl),
+    [idFromUrl]
+  );
+  preparePromptState(id, PROMPTS[idFromUrl]);
+  const promptState = useSnapshot(promptStates)[id];
+
+  if (!promptState) {
+    return null;
+  }
 
   return (
-    <PromptStateProvider value={promptState}>
+    <PromptStateProvider value={promptStates[id]}>
+      <PromptDocSaver idFromUrl={idFromUrl} />
       <PromptView />
     </PromptStateProvider>
   );
 }
 
-export function ExistingPromptView({ id }: { id: string }) {
-  const promptDoc = PROMPTS[id];
-  const [promptState] = useState(() =>
-    proxy(createPromptState(promptDoc.content))
-  );
+function PromptDocSaver({ idFromUrl }: { idFromUrl: string }) {
+  const promptState = usePromptState();
+  const _promptState = useSnapshot(promptState);
+  const navigate = useNavigate();
 
-  return (
-    <PromptStateProvider value={promptState}>
-      <PromptView />
-    </PromptStateProvider>
-  );
+  useEffect(() => {
+    if (!_promptState.isDirty) {
+      return;
+    }
+
+    saveDoc({
+      id: _promptState.id,
+      content: _promptState.content,
+      title: _promptState.title,
+    });
+
+    if (idFromUrl !== _promptState.id) {
+      navigate(`/prompt/${_promptState.id}`, { replace: true });
+    }
+
+    promptState.isDirty = false;
+  }, [navigate, _promptState, promptState, idFromUrl]);
+
+  return null;
 }

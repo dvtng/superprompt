@@ -1,9 +1,12 @@
 import { parse } from "./parse";
 import { AST } from "./ast";
 import { PromptInput, getInputs } from "./input";
+import { PromptDoc } from "../prompt-doc";
 
 export type PromptState = {
-  raw: string;
+  id: string;
+  title?: string;
+  content: string;
   inputs: PromptInput[];
   inputStates: Record<string, InputState>;
   parsed: AST;
@@ -12,6 +15,7 @@ export type PromptState = {
   messages: Message[];
   options: Options;
   errors: string[];
+  isDirty: boolean;
 };
 
 export type Message = {
@@ -36,9 +40,11 @@ export type Options = {
   frequencyPenalty?: number;
 };
 
-export function createPromptState(raw: string) {
+export function createPromptState(doc: PromptDoc) {
   const promptState: PromptState = {
-    raw: "",
+    id: doc.id,
+    title: doc.title,
+    content: doc.content,
     inputs: [],
     inputStates: {},
     parsed: [],
@@ -46,21 +52,32 @@ export function createPromptState(raw: string) {
     messages: [],
     options: {},
     errors: [],
+    isDirty: false,
   };
 
-  if (raw) {
-    updateRawPrompt(promptState, raw);
+  if (promptState.content) {
+    parseContent(promptState);
   }
 
   return promptState;
 }
 
-export function updateRawPrompt(promptState: PromptState, raw: string) {
-  promptState.raw = raw;
+export function updatePromptContent(promptState: PromptState, content: string) {
+  if (promptState.content === content) {
+    return;
+  }
+
+  promptState.isDirty = true;
+  promptState.content = content;
+
+  parseContent(promptState);
+}
+
+function parseContent(promptState: PromptState) {
   delete promptState.parseError;
 
   try {
-    promptState.parsed = parse(raw);
+    promptState.parsed = parse(promptState.content);
     promptState.inputs = getInputs(promptState.parsed);
   } catch (e) {
     if (e instanceof Error) {

@@ -1,5 +1,5 @@
 import { useSnapshot } from "valtio";
-import { getColorForInput, updateRawPrompt } from "./core/prompt-state";
+import { getColorForInput, updatePromptContent } from "./core/prompt-state";
 import { CSSProperties, useEffect, useState } from "react";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import {
@@ -83,13 +83,13 @@ export function PromptEditor() {
   return (
     <Slate
       editor={editor}
-      initialValue={deserialize(_promptState.raw)}
+      initialValue={deserialize(_promptState.content)}
       onChange={(value) => {
         const isAstChange = editor.operations.some(
           (op) => "set_selection" !== op.type
         );
         if (isAstChange) {
-          updateRawPrompt(promptState, serialize(value));
+          updatePromptContent(promptState, serialize(value));
         }
       }}
     >

@@ -5,6 +5,10 @@ import { PromptDoc } from "./prompt-doc";
 export const PROMPTS: Record<string, PromptDoc> = keyBy(
   [
     {
+      id: "blank",
+      content: "",
+    },
+    {
       id: "grade",
       title: "Grade exam question",
       content: EXAMPLE_PROMPTS.grade,
@@ -28,4 +32,6 @@ export const PROMPTS: Record<string, PromptDoc> = keyBy(
   "id"
 );
 
-export const TOP_PROMPTS: PromptDoc[] = Object.values(PROMPTS);
+export const TOP_PROMPTS: PromptDoc[] = Object.values(PROMPTS).filter(
+  (prompt) => prompt.id !== "blank"
+);

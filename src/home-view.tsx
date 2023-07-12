@@ -1,8 +1,8 @@
-import { Anchor, Grid, Text } from "@mantine/core";
+import { Grid } from "@mantine/core";
 import { Divider } from "./divider";
 import { css } from "@emotion/css";
 import { TopPromptView } from "./top-prompt-view";
-import { Link } from "react-router-dom";
+import { MyDocList } from "./my-doc-list";
 
 const styles = css`
   h2 {
@@ -26,13 +26,9 @@ export function HomeView() {
       <Grid.Col span={6}>
         <h2>Your prompts</h2>
         <Divider h />
-        <Text c="dimmed" style={{ padding: "1.5rem 0" }}>
-          Start by editing someone else's prompt, or{" "}
-          <Anchor component={Link} to="new">
-            create a new one
-          </Anchor>{" "}
-          from scratch.
-        </Text>
+        <div style={{ padding: "1.5rem 0" }}>
+          <MyDocList />
+        </div>
       </Grid.Col>
     </Grid>
   );
