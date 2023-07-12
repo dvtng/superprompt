@@ -10,14 +10,14 @@ export const PROMPTS: Record<string, PromptDoc> = keyBy(
       content: EXAMPLE_PROMPTS.grade,
     },
     {
+      id: "experts",
+      title: "Ask the experts",
+      content: EXAMPLE_PROMPTS.expertPanel,
+    },
+    {
       id: "assimilate-tone",
       title: "Assimilate tone",
       content: EXAMPLE_PROMPTS.assimilateTone,
-    },
-    {
-      id: "expert-panel",
-      title: "Expert panel",
-      content: EXAMPLE_PROMPTS.expertPanel,
     },
     {
       id: "character",

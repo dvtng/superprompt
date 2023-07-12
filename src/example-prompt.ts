@@ -26,7 +26,7 @@ Name 3 experts who would be great at answering the following question. Choose pe
 {*}
 Now answer the question as each of the above experts.
 {*}
-Each expert now has a chance to respond to each other.
+You are an intelligent observer who has carefully considered the expert responses. Give a concise and definitive answer to the question. Don't repeat what the experts said, but instead give your own opinion. You prefer to give decisive and single-sentence answers, even if it could be wrong.
 `.trim(),
   assimilateTone: `
 Describe the tone of the following text in one word. Choose between professional and casual:
