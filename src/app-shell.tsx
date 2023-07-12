@@ -36,15 +36,20 @@ export function AppShell() {
           }}
         >
           <Flex align="center" justify="space-between">
+            <Anchor component={Link} to="/" style={{ color: "inherit" }}>
+              <strong style={{ letterSpacing: 1 }}>{"{superprompt}"}</strong>
+            </Anchor>
             <Flex gap="xl" align="center">
-              <Anchor component={Link} to="/" style={{ color: "inherit" }}>
-                <strong style={{ letterSpacing: 1 }}>{"{superprompt}"}</strong>
-              </Anchor>
-              <Button component={Link} to="/new" leftIcon={<IconPlus />}>
+              <Button
+                component={Link}
+                to="/new"
+                leftIcon={<IconPlus />}
+                variant="default"
+              >
                 New
               </Button>
+              <ColorSchemeToggle />
             </Flex>
-            <ColorSchemeToggle />
           </Flex>
         </Header>
       }
