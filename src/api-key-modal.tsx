@@ -58,7 +58,7 @@ export function ApiKeyModal({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Text size="lg">Please provide the following API keys</Text>}
+      title={<Text size="lg">Enter your OpenAI API key</Text>}
     >
       <form
         onSubmit={form.onSubmit((values) => {
@@ -73,11 +73,18 @@ export function ApiKeyModal({
       >
         <Stack spacing="xl">
           <Stack>
+            <Text>
+              You can get your API key{" "}
+              <a href="https://platform.openai.com/account/api-keys">here</a>.
+            </Text>
+            <Text>
+              Your key will only be used directly in your browser to communicate
+              with OpenAI. It is never sent to us, or any other website.
+            </Text>
             {names.map((name) => (
               <TextInput
                 key={name}
-                label={name}
-                withAsterisk
+                placeholder={`${name} API key`}
                 size="md"
                 {...form.getInputProps(name)}
               />
