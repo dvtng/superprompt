@@ -7,9 +7,13 @@ export function AppHomeLink() {
       component={Link}
       to="/"
       sx={(theme) => ({
-        color: theme.colors.gray[5],
+        color:
+          theme.colorScheme === "dark"
+            ? theme.colors.gray[5]
+            : theme.colors.gray[7],
+        fontWeight: 500,
         ":hover": {
-          color: theme.colors.gray[0],
+          color: theme.colorScheme === "dark" ? theme.colors.gray[0] : "#000",
           textDecoration: "none",
         },
       })}
