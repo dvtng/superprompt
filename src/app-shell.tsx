@@ -4,6 +4,7 @@ import {
   Flex,
   Header,
   AppShell as MantineAppShell,
+  useMantineTheme,
 } from "@mantine/core";
 import { Link, Outlet } from "react-router-dom";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
@@ -15,11 +16,13 @@ const positioningStyles = {
 };
 
 export function AppShell() {
+  const theme = useMantineTheme();
+
   return (
     <MantineAppShell
       styles={{
-        root: positioningStyles,
         main: {
+          ...positioningStyles,
           height: "100vh",
         },
       }}
@@ -28,18 +31,20 @@ export function AppShell() {
           height={60}
           p="md"
           withBorder={false}
-          style={positioningStyles}
-          styles={{
-            root: {
-              backgroundColor: "transparent",
-            },
+          style={{
+            ...positioningStyles,
+            background: theme.colors.background[0],
           }}
         >
-          <Flex align="center" justify="space-between">
+          <Flex
+            align="center"
+            justify="space-between"
+            style={{ height: "100%" }}
+          >
             <Anchor component={Link} to="/" style={{ color: "inherit" }}>
               <strong style={{ letterSpacing: 1 }}>{"{superprompt}"}</strong>
             </Anchor>
-            <Flex gap="xl" align="center">
+            <Flex gap="md" align="center">
               <Button
                 component={Link}
                 to="/new"

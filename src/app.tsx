@@ -3,7 +3,7 @@ import {
   ColorSchemeProvider,
   MantineProvider,
 } from "@mantine/core";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { router } from "./router";
 import { RouterProvider } from "react-router-dom";
 import { proxy } from "valtio";
@@ -19,6 +19,11 @@ export function App() {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
   const [apiKeyState] = useState(() => proxy(loadApiKeyState()));
 
+  const background = colorScheme === "dark" ? "#1A1A1E" : "#ebebea";
+  useLayoutEffect(() => {
+    document.body.style.background = background;
+  });
+
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}
@@ -27,6 +32,7 @@ export function App() {
       <MantineProvider
         theme={{
           colorScheme,
+          colors: { background: [background] },
           primaryColor: "violet",
           headings: {
             fontFamily: "'Nunito', serif;",

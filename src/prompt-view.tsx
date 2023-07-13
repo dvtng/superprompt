@@ -1,7 +1,6 @@
 import { useSnapshot } from "valtio";
-import { css, cx } from "@emotion/css";
+import { css } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
-import { shadow } from "./common-style";
 import { useMantineTheme } from "@mantine/core";
 import { PromptEditor } from "./prompt-editor";
 import { useEffect } from "react";
@@ -20,15 +19,15 @@ const styles = css`
   border-radius: 4px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: calc(100% - 2rem);
-  margin: 0 auto 2rem auto;
+  height: 100%;
+  margin: -1rem auto 0 auto;
   overflow: hidden;
   width: 100%;
 
   @media (max-width: 800px) {
     display: flex;
+    height: calc(100% + 1rem);
     flex-direction: column;
-    height: 100%;
     overflow: auto;
   }
 `;
@@ -55,7 +54,7 @@ export function PromptView() {
     theme.colorScheme === "dark" ? theme.colors.dark[6] : "#f9f9f9";
 
   return (
-    <div className={cx(styles, shadow)} style={{ background: convoPaneColor }}>
+    <div className={styles} style={{ background: convoPaneColor }}>
       <div style={{ color, background: bgColor }}>
         <PromptEditorTitlebar />
         <PromptEditor />
