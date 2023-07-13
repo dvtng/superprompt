@@ -74,7 +74,6 @@ export function updatePromptContent(promptState: PromptState, content: string) {
 }
 
 export function updatePromptTitle(promptState: PromptState, title: string) {
-  title = title.trim();
   if (promptState.title === title) {
     return;
   }

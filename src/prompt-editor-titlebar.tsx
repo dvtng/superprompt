@@ -28,6 +28,9 @@ export function PromptEditorTitlebar() {
           ref={inputRef}
           size="xl"
           styles={(theme) => ({
+            wrapper: {
+              width: "100%",
+            },
             input: {
               background: "none",
               border: "none",
