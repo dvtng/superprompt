@@ -6,8 +6,9 @@ import { MyDocList } from "./my-doc-list";
 
 const styles = css`
   h2 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: normal;
+    margin-bottom: 0.5rem;
     letter-spacing: 1px;
     opacity: 0.5;
   }
@@ -16,18 +17,18 @@ const styles = css`
 export function HomeView() {
   return (
     <Grid className={styles} gutter="3rem">
-      <Grid.Col span={6}>
-        <h2>Top prompts</h2>
-        <Divider h />
-        <div style={{ padding: "1.5rem 0" }}>
-          <TopPromptView />
-        </div>
-      </Grid.Col>
-      <Grid.Col span={6}>
-        <h2>Your prompts</h2>
+      <Grid.Col sm={6}>
+        <h2>My prompts</h2>
         <Divider h />
         <div style={{ padding: "1.5rem 0" }}>
           <MyDocList />
+        </div>
+      </Grid.Col>
+      <Grid.Col sm={6}>
+        <h2>Examples</h2>
+        <Divider h />
+        <div style={{ padding: "1.5rem 0" }}>
+          <TopPromptView />
         </div>
       </Grid.Col>
     </Grid>

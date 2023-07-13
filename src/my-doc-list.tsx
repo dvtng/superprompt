@@ -12,7 +12,7 @@ export function MyDocList() {
   if (!docs.length) {
     return (
       <Text c="dimmed">
-        Start by editing someone else's prompt, or{" "}
+        Start with one of the provided examples, or{" "}
         <Anchor component={Link} to="new">
           create a new one
         </Anchor>{" "}
