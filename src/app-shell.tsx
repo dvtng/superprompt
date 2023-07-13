@@ -1,5 +1,4 @@
 import {
-  Anchor,
   Button,
   Flex,
   Header,
@@ -9,6 +8,7 @@ import {
 import { Link, Outlet } from "react-router-dom";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
 import { IconPlus } from "@tabler/icons-react";
+import { AppHomeLink } from "./app-home-link";
 
 const positioningStyles = {
   maxWidth: 1200,
@@ -41,9 +41,7 @@ export function AppShell() {
             justify="space-between"
             style={{ height: "100%" }}
           >
-            <Anchor component={Link} to="/" style={{ color: "inherit" }}>
-              <strong style={{ letterSpacing: 1 }}>{"{superprompt}"}</strong>
-            </Anchor>
+            <AppHomeLink />
             <Flex gap="md" align="center">
               <Button
                 component={Link}
