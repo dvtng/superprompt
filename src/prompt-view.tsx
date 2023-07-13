@@ -13,6 +13,8 @@ import { saveDoc } from "./db";
 import { nanoid } from "nanoid";
 import { useDerivedState } from "./use-derived-state";
 import { preparePromptState, promptStates } from "./prompt-states";
+import { PromptEditorTitlebar } from "./prompt-editor-titlebar";
+import { Divider } from "./divider";
 
 const styles = css`
   background: var(--bg-1);
@@ -51,11 +53,12 @@ export function PromptView() {
   const color =
     theme.colorScheme === "dark" ? theme.white : theme.colors.dark[8];
   const convoPaneColor =
-    theme.colorScheme === "dark" ? theme.colors.dark[6] : "#fafafa";
+    theme.colorScheme === "dark" ? theme.colors.dark[6] : "#f9f9f9";
 
   return (
-    <div className={cx(styles, shadow)} style={{ background: bgColor }}>
-      <div style={{ color }}>
+    <div className={cx(styles, shadow)} style={{ background: convoPaneColor }}>
+      <div style={{ color, background: bgColor }}>
+        <PromptEditorTitlebar />
         <PromptEditor />
       </div>
       <div className={convoStyles} style={{ background: convoPaneColor }}>

@@ -21,3 +21,7 @@ export function createDoc(doc: PromptDoc) {
 export async function saveDoc(doc: PromptDoc) {
   await db.docs.put(doc);
 }
+
+export async function deleteDoc(id: string) {
+  await db.docs.delete(id);
+}

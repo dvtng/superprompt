@@ -25,7 +25,13 @@ export function App() {
       toggleColorScheme={toggleColorScheme}
     >
       <MantineProvider
-        theme={{ colorScheme, primaryColor: "violet" }}
+        theme={{
+          colorScheme,
+          primaryColor: "violet",
+          headings: {
+            fontFamily: "'Nunito', serif;",
+          },
+        }}
         withGlobalStyles
         withNormalizeCSS
       >

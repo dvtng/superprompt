@@ -53,8 +53,8 @@ const styles = css`
   display: block;
   font-family: inherit;
   font-size: inherit;
-  margin-top: -0.4em;
-  padding: 2rem;
+  margin-top: -1em;
+  padding: 0 2rem 2rem;
   width: 100%;
 
   > * {

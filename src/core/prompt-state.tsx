@@ -73,6 +73,20 @@ export function updatePromptContent(promptState: PromptState, content: string) {
   parseContent(promptState);
 }
 
+export function updatePromptTitle(promptState: PromptState, title: string) {
+  title = title.trim();
+  if (promptState.title === title) {
+    return;
+  }
+
+  promptState.isDirty = true;
+  if (title) {
+    promptState.title = title;
+  } else {
+    delete promptState.title;
+  }
+}
+
 function parseContent(promptState: PromptState) {
   delete promptState.parseError;
 

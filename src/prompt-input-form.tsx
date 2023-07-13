@@ -42,7 +42,7 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
       {manualInputs.length ? (
         <form
           style={{
-            padding: "2rem",
+            padding: "2rem ",
           }}
           onSubmit={onSubmit}
           onKeyDown={(e) => {
@@ -60,15 +60,21 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
       ) : null}
       <Flex
         gap="md"
-        style={{
+        sx={(theme) => ({
           background: bgColor,
           bottom: 0,
-          margin: "-2rem 0",
-          padding: "2rem",
+          padding: "1.5rem 2rem",
           position: "sticky",
           top: 0,
           zIndex: 1,
-        }}
+          ...(manualInputs.length
+            ? {
+                borderTop: `1px solid ${
+                  theme.colorScheme === "dark" ? "#ffffff18" : "#00000018"
+                }`,
+              }
+            : {}),
+        })}
       >
         <Button
           loading={_promptState.isRunning}
