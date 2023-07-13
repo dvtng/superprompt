@@ -14,7 +14,6 @@ import { nanoid } from "nanoid";
 import { useDerivedState } from "./use-derived-state";
 import { preparePromptState, promptStates } from "./prompt-states";
 import { PromptEditorTitlebar } from "./prompt-editor-titlebar";
-import { Divider } from "./divider";
 
 const styles = css`
   background: var(--bg-1);
