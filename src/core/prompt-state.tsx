@@ -16,6 +16,7 @@ export type PromptState = {
   options: Options;
   errors: string[];
   isDirty: boolean;
+  isSaved: boolean;
 };
 
 export type Message = {
@@ -40,7 +41,7 @@ export type Options = {
   frequencyPenalty?: number;
 };
 
-export function createPromptState(doc: PromptDoc) {
+export function createPromptState(doc: PromptDoc, isSaved: boolean) {
   const promptState: PromptState = {
     id: doc.id,
     title: doc.title,
@@ -53,6 +54,7 @@ export function createPromptState(doc: PromptDoc) {
     options: {},
     errors: [],
     isDirty: false,
+    isSaved,
   };
 
   if (promptState.content) {

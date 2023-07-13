@@ -14,8 +14,10 @@ export async function preparePromptState(
 ) {
   if (!promptStates[id] && !isLoadingDict[id]) {
     isLoadingDict[id] = true;
+    const docFromDb = await db.docs.get(id);
     promptStates[id] = createPromptState(
-      (await db.docs.get(id)) ?? { ...defaultDoc, id }
+      docFromDb ?? { ...defaultDoc, id },
+      Boolean(docFromDb)
     );
     delete isLoadingDict[id];
   }

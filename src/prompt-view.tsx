@@ -121,6 +121,7 @@ function PromptDocSaver({ idFromUrl }: { idFromUrl: string }) {
     }
 
     promptState.isDirty = false;
+    promptState.isSaved = true;
   }, [navigate, _promptState, promptState, idFromUrl]);
 
   return null;
