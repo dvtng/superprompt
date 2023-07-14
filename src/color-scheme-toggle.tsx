@@ -6,9 +6,9 @@ export function ColorSchemeToggle() {
   return (
     <ActionIcon onClick={() => toggleColorScheme()}>
       {colorScheme === "dark" ? (
-        <IconSun size="1.3rem" />
+        <IconSun size="1.4rem" />
       ) : (
-        <IconMoon size="1.3rem" />
+        <IconMoon size="1.2rem" />
       )}
     </ActionIcon>
   );

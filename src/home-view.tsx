@@ -26,21 +26,23 @@ const styles = css`
 
 export function HomeView() {
   return (
-    <Flex className={styles} gap="3rem">
-      <div>
-        <h2>My prompts</h2>
-        <Divider h />
-        <div style={{ padding: "1.5rem 0" }}>
-          <MyDocList />
+    <>
+      <Flex className={styles} gap="3rem">
+        <div>
+          <h2>My prompts</h2>
+          <Divider h />
+          <div style={{ padding: "1.5rem 0" }}>
+            <MyDocList />
+          </div>
         </div>
-      </div>
-      <div>
-        <h2>Examples</h2>
-        <Divider h />
-        <div style={{ padding: "1.5rem 0" }}>
-          <TopPromptView />
+        <div>
+          <h2>Examples</h2>
+          <Divider h />
+          <div style={{ padding: "1.5rem 0" }}>
+            <TopPromptView />
+          </div>
         </div>
-      </div>
-    </Flex>
+      </Flex>
+    </>
   );
 }

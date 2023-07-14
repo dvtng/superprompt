@@ -10,6 +10,7 @@ import { ColorSchemeToggle } from "./color-scheme-toggle";
 import { IconPlus } from "@tabler/icons-react";
 import { AppHomeLink } from "./app-home-link";
 import { HideOnMobile } from "./hide-on-mobile";
+import { OpenHelpModalButton } from "./help-modal";
 
 const positioningStyles = {
   maxWidth: 1200,
@@ -54,9 +55,12 @@ export function AppShell() {
               >
                 New
               </Button>
-              <HideOnMobile>
-                <ColorSchemeToggle />
-              </HideOnMobile>
+              <Flex gap="xs" align="center">
+                <OpenHelpModalButton />
+                <HideOnMobile>
+                  <ColorSchemeToggle />
+                </HideOnMobile>
+              </Flex>
             </Flex>
           </Flex>
         </Header>
