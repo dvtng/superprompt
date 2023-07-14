@@ -5,7 +5,10 @@ import { Link } from "react-router-dom";
 import { PromptDocPreview } from "./prompt-doc-preview";
 
 export function MyDocList() {
-  const docs = useLiveQuery(() => db.docs.toArray(), []);
+  const docs = useLiveQuery(
+    () => db.docs.orderBy("updatedAt").reverse().toArray(),
+    []
+  );
   if (!docs) {
     return null;
   }

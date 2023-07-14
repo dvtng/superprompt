@@ -7,7 +7,7 @@ export class Db extends Dexie {
   constructor() {
     super("superprompt");
     this.version(1).stores({
-      docs: "++id", // Primary key and indexed props
+      docs: "++id, updatedAt", // Primary key and indexed props
     });
   }
 }
@@ -19,7 +19,13 @@ export function createDoc(doc: PromptDoc) {
 }
 
 export async function saveDoc(doc: PromptDoc) {
-  await db.docs.put(doc);
+  const _doc = { ...doc };
+  const now = new Date().toISOString();
+  if (!_doc.createdAt) {
+    _doc.createdAt = now;
+  }
+  _doc.updatedAt = now;
+  await db.docs.put(_doc);
 }
 
 export async function deleteDoc(id: string) {
