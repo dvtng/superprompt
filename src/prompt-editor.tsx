@@ -53,6 +53,7 @@ const styles = css`
   display: block;
   font-family: inherit;
   font-size: inherit;
+  height: 100%;
   margin-top: -1em;
   padding: 0 2rem 2rem;
   width: 100%;
