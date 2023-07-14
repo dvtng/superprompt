@@ -16,6 +16,7 @@
     "@mantine/form": "^6.0.16",
     "@mantine/hooks": "^6.0.15",
     "@tabler/icons-react": "^2.23.0",
+    "date-fns": "^2.30.0",
     "dexie": "^3.2.4",
     "dexie-react-hooks": "^1.1.6",
     "langchain": "^0.0.102",

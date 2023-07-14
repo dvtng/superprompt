@@ -25,7 +25,7 @@ export type InvalidNode = {
 
 export type PlaceholderNode = {
   type: "placeholder";
-  value: VariableNode | GeneratorNode;
+  value: VariableNode | FunctionCallNode | GeneratorNode;
 };
 
 export type GeneratorNode = {
@@ -51,7 +51,23 @@ export type IdentifierNode = {
   offset: number;
 };
 
-export type ExpressionNode = VariableNode;
+export type StringLiteralNode = {
+  type: "stringLiteral";
+  value: string;
+  offset: number;
+};
+
+export type NumberLiteralNode = {
+  type: "numberLiteral";
+  value: number;
+  offset: number;
+};
+
+export type ExpressionNode =
+  | VariableNode
+  | FunctionCallNode
+  | StringLiteralNode
+  | NumberLiteralNode;
 
 export function isParseNode(value: unknown): value is ParseNode {
   return (

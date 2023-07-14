@@ -1,4 +1,4 @@
-import { VariableNode } from "./ast";
+import { FunctionCallNode, VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
 import {
   Message,
@@ -56,8 +56,11 @@ export async function runPrompt(
         prompt += node.value;
       } else if (node.type === "placeholder") {
         const placeholderType = node.value.type;
-        if (placeholderType === "variable") {
-          prompt += await evalVariable(promptState, apiKeyState, node.value);
+        if (
+          placeholderType === "variable" ||
+          placeholderType === "functionCall"
+        ) {
+          prompt += await evalPlaceholder(promptState, apiKeyState, node.value);
         } else if (placeholderType === "generator") {
           await generate(node.value.identifier?.name);
         } else {
@@ -76,28 +79,41 @@ export async function runPrompt(
   }
 }
 
-async function evalVariable(
+async function evalPlaceholder(
   promptState: PromptState,
   apiKeyState: ApiKeyState,
-  placeholder: VariableNode
+  placeholder: VariableNode | FunctionCallNode
 ): Promise<string> {
-  const functionSpec = FUNCTIONS[placeholder.functionCall.identifier.name];
-  if (!functionSpec) {
-    throw new Error(
-      `Function "${placeholder.functionCall.identifier.name}" doesn't exist`
-    );
+  let functionCall: FunctionCallNode;
+  let prependArgs: unknown[] = [];
+  if (placeholder.type === "variable") {
+    functionCall = placeholder.functionCall;
+    const input = promptState.inputStates[placeholder.identifier.name];
+    if (input === undefined) {
+      throw new Error(`Missing input for "${placeholder.identifier.name}"`);
+    }
+    prependArgs = [input.value];
+  } else if (placeholder.type === "functionCall") {
+    functionCall = placeholder;
+  } else {
+    const _never: never = placeholder;
+    return _never;
   }
-  const input = promptState.inputStates[placeholder.identifier.name];
-  if (input === undefined) {
-    throw new Error(`Missing input for "${placeholder.identifier.name}"`);
+
+  const functionSpec = FUNCTIONS[functionCall.identifier.name];
+  if (!functionSpec) {
+    throw new Error(`Function "${functionCall.identifier.name}" doesn't exist`);
   }
 
   const args = await Promise.all(
-    placeholder.functionCall.args.map((arg) => {
-      return evalVariable(promptState, apiKeyState, arg);
+    functionCall.args.map((arg) => {
+      if (arg.type === "stringLiteral" || arg.type === "numberLiteral") {
+        return arg.value;
+      }
+      return evalPlaceholder(promptState, apiKeyState, arg);
     })
   );
 
   const context: FunctionContext = { apiKeyState };
-  return await functionSpec.fn(context, input.value, ...args);
+  return await functionSpec.fn(context, ...prependArgs, ...args);
 }
