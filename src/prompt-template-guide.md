@@ -52,14 +52,14 @@ Let's start.
 {question}
 ```
 
-#### summarize
+#### summarize()
 
 Summarizes the contents of a file.
 
 ```
 The following is a book summary:
 ---
-{book:summarize}
+{book:summarize()}
 ---
 Give me 5 adjectives that describe the book.
 ```
