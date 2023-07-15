@@ -152,33 +152,33 @@ const grammar: Grammar = {
             );
         }
         },
-    {"name": "placeholder", "symbols": ["variable"], "postprocess":  d => ({
+    {"name": "placeholder", "symbols": ["_", "variable", "_"], "postprocess":  d => ({
           type: 'placeholder',
-          value: d[0],
+          value: d[1],
         }) },
-    {"name": "placeholder", "symbols": ["generator"], "postprocess":  d => ({
+    {"name": "placeholder", "symbols": ["_", "generator", "_"], "postprocess":  d => ({
           type: 'placeholder',
-          value: d[0],
+          value: d[1],
         }) },
-    {"name": "placeholder", "symbols": ["function_call"], "postprocess":  d => ({
+    {"name": "placeholder", "symbols": ["_", "function_call", "_"], "postprocess":  d => ({
           type: 'placeholder',
-          value: d[0],
+          value: d[1],
         }) },
-    {"name": "generator", "symbols": ["_", {"literal":"*"}, "_"], "postprocess": 
+    {"name": "generator", "symbols": [{"literal":"*"}], "postprocess": 
         d => ({
           type: 'generator',
         })
         },
-    {"name": "generator", "symbols": ["_", {"literal":"*"}, "ident", "_"], "postprocess": 
+    {"name": "generator", "symbols": [{"literal":"*"}, "ident"], "postprocess": 
         d => ({
           type: 'generator',
-          identifier: d[2],
+          identifier: d[1],
         })
         },
-    {"name": "variable", "symbols": ["_", "ident", "_"], "postprocess": 
+    {"name": "variable", "symbols": ["ident"], "postprocess": 
         d => ({
           type: 'variable',
-          identifier: d[1],
+          identifier: d[0],
           functionCall: {
             type: 'functionCall',
             identifier: {
@@ -190,30 +190,31 @@ const grammar: Grammar = {
           },
         })
         },
-    {"name": "variable", "symbols": ["_", "ident", "_", {"literal":":"}, "function_call"], "postprocess": 
+    {"name": "variable", "symbols": ["ident", "_", {"literal":":"}, "_", "function_call"], "postprocess": 
         d => ({
           type: 'variable',
-          identifier: d[1],
+          identifier: d[0],
           functionCall: d[4],
         })
         },
-    {"name": "function_call", "symbols": ["_", "ident", "_", {"literal":"("}, {"literal":")"}], "postprocess": 
+    {"name": "function_call", "symbols": ["ident", "_", {"literal":"("}, {"literal":")"}], "postprocess": 
         d => ({
           type: 'functionCall',
-          identifier: d[1],
+          identifier: d[0],
           args: [],
         })
         },
-    {"name": "function_call", "symbols": ["_", "ident", "_", {"literal":"("}, "_", "expression_list", "_", {"literal":")"}], "postprocess": 
+    {"name": "function_call", "symbols": ["ident", "_", {"literal":"("}, "_", "expression_list", "_", {"literal":")"}], "postprocess": 
         d => ({
           type: 'functionCall',
-          identifier: d[1],
-          args: d[5],
+          identifier: d[0],
+          args: d[4],
         })
         },
     {"name": "expression_list", "symbols": ["expression"]},
-    {"name": "expression_list", "symbols": ["expression", {"literal":","}, "expression_list"], "postprocess": d => [d[0]].concat(d[2])},
+    {"name": "expression_list", "symbols": ["expression", "_", {"literal":","}, "_", "expression_list"], "postprocess": d => [d[0]].concat(d[4])},
     {"name": "expression", "symbols": ["variable"], "postprocess": id},
+    {"name": "expression", "symbols": ["function_call"], "postprocess": id},
     {"name": "expression", "symbols": ["string_literal"], "postprocess": id},
     {"name": "expression", "symbols": ["number_literal"], "postprocess": id},
     {"name": "ident$ebnf$1", "symbols": []},

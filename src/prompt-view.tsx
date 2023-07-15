@@ -59,7 +59,14 @@ export function PromptView() {
 
   return (
     <div className={styles} style={{ background: convoPaneColor }}>
-      <div style={{ color, background: bgColor }}>
+      <div
+        style={{
+          color,
+          background: bgColor,
+          maxHeight: "100%",
+          overflow: "auto",
+        }}
+      >
         <PromptEditorTitlebar />
         <PromptEditor />
       </div>

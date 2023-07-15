@@ -3,38 +3,38 @@
 @builtin "string.ne"
 @builtin "number.ne"
 
-placeholder -> variable {% d => ({
+placeholder -> _ variable _ {% d => ({
   type: 'placeholder',
-  value: d[0],
+  value: d[1],
 }) %}
 
-placeholder -> generator {% d => ({
+placeholder -> _ generator _ {% d => ({
   type: 'placeholder',
-  value: d[0],
+  value: d[1],
 }) %}
 
-placeholder -> function_call {% d => ({
+placeholder -> _ function_call _ {% d => ({
   type: 'placeholder',
-  value: d[0],
+  value: d[1],
 }) %}
 
-generator -> _ "*" _ {%
+generator -> "*" {%
   d => ({
     type: 'generator',
   })
 %}
 
-generator -> _ "*" ident _ {%
+generator -> "*" ident {%
   d => ({
     type: 'generator',
-    identifier: d[2],
+    identifier: d[1],
   })
 %}
 
-variable -> _ ident _ {%
+variable -> ident {%
   d => ({
     type: 'variable',
-    identifier: d[1],
+    identifier: d[0],
     functionCall: {
       type: 'functionCall',
       identifier: {
@@ -47,34 +47,35 @@ variable -> _ ident _ {%
   })
 %}
 
-variable -> _ ident _ ":" function_call {%
+variable -> ident _ ":" _ function_call {%
   d => ({
     type: 'variable',
-    identifier: d[1],
+    identifier: d[0],
     functionCall: d[4],
   })
 %}
 
-function_call -> _ ident _ "(" ")" {%
+function_call -> ident _ "(" ")" {%
   d => ({
     type: 'functionCall',
-    identifier: d[1],
+    identifier: d[0],
     args: [],
   })
 %}
 
-function_call -> _ ident _ "(" _ expression_list _ ")" {%
+function_call -> ident _ "(" _ expression_list _ ")" {%
   d => ({
     type: 'functionCall',
-    identifier: d[1],
-    args: d[5],
+    identifier: d[0],
+    args: d[4],
   })
 %}
 
 expression_list -> expression
-  | expression "," expression_list {% d => [d[0]].concat(d[2]) %}
+  | expression _ "," _ expression_list {% d => [d[0]].concat(d[4]) %}
 
 expression -> variable {% id %}
+  | function_call {% id %}
   | string_literal {% id %}
   | number_literal {% id %}
 

@@ -17,6 +17,7 @@ export function parse(prompt: string): ASTWithLocation {
         ...parsePlaceholder(currentSubstring),
         column,
         length: currentSubstring.length + 2,
+        text: currentSubstring,
       });
     } else {
       nodes.push({
@@ -24,6 +25,7 @@ export function parse(prompt: string): ASTWithLocation {
         value: currentSubstring,
         column,
         length: currentSubstring.length,
+        text: currentSubstring,
       });
     }
 

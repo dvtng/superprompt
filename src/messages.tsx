@@ -3,6 +3,7 @@ import { usePromptState } from "./context";
 import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
 import { IconX } from "@tabler/icons-react";
+import { MessageActions } from "./message-actions";
 
 const messageStyles = css`
   pre {
@@ -39,6 +40,10 @@ export function Messages() {
                 : "SYSTEM"}
             </div>
             <pre>{message.content}</pre>
+            {i === _promptState.messages.length - 1 &&
+            message.role === "assistant" ? (
+              <MessageActions messageContent={message.content} />
+            ) : null}
           </Stack>
         </div>
       ))}

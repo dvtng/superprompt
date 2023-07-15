@@ -1,4 +1,4 @@
-import { FunctionCallNode, VariableNode } from "./ast";
+import { AST, FunctionCallNode, VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
 import {
   Message,
@@ -12,7 +12,8 @@ import OpenAI from "openai";
 
 export async function runPrompt(
   promptState: PromptState,
-  apiKeyState: ApiKeyState
+  apiKeyState: ApiKeyState,
+  append?: AST
 ) {
   const openai = new OpenAI({ apiKey: apiKeyState.OPENAI });
   const options = getOptionsWithDefaults(promptState);
@@ -46,12 +47,8 @@ export async function runPrompt(
     }
   }
 
-  try {
-    promptState.messages = [];
-    promptState.errors = [];
-    promptState.isRunning = true;
-
-    for (const node of promptState.parsed) {
+  async function runAST(ast: AST) {
+    for (const node of ast) {
       if (node.type === "text") {
         prompt += node.value;
       } else if (node.type === "placeholder") {
@@ -71,6 +68,18 @@ export async function runPrompt(
     }
     if (prompt.trim()) {
       await generate();
+    }
+  }
+
+  try {
+    if (append) {
+      promptState.isRunning = true;
+      await runAST(append);
+    } else {
+      promptState.messages = [];
+      promptState.errors = [];
+      promptState.isRunning = true;
+      await runAST(promptState.parsed);
     }
   } catch (e) {
     addError(promptState, e);

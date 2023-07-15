@@ -1,6 +1,10 @@
 export type AST = RootNode[];
 
-export type ASTWithLocation = (RootNode & { column: number; length: number })[];
+export type ASTWithLocation = (RootNode & {
+  column: number;
+  length: number;
+  text: string;
+})[];
 
 export type RootNode = TextNode | InvalidNode | PlaceholderNode;
 
