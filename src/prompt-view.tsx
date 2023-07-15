@@ -2,7 +2,6 @@ import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
 import { useMantineTheme } from "@mantine/core";
-import { PromptEditor } from "./prompt-editor";
 import { useEffect } from "react";
 import { PROMPTS } from "./prompt-data";
 import { PromptStateProvider, usePromptState } from "./context";
@@ -17,6 +16,7 @@ import {
   promptStates,
 } from "./prompt-states";
 import { PromptEditorTitlebar } from "./prompt-editor-titlebar";
+import { PromptEditorContainer } from "./prompt-editor-container";
 
 const styles = css`
   background: var(--bg-1);
@@ -68,7 +68,9 @@ export function PromptView() {
         }}
       >
         <PromptEditorTitlebar />
-        <PromptEditor />
+        <div style={{ padding: "0 2rem 2rem" }}>
+          <PromptEditorContainer />
+        </div>
       </div>
       <div className={convoStyles} style={{ background: convoPaneColor }}>
         <PromptInputForm bgColor={convoPaneColor} />

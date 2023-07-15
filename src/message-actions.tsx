@@ -26,7 +26,6 @@ export function MessageActions({ messageContent }: { messageContent: string }) {
             onClick={() => {
               runPrompt(promptState, apiKeyState, [node]);
             }}
-            sx={i === 0 ? { marginTop: "0.5rem" } : undefined}
           >
             Run <Code sx={{ fontSize: "1em" }}>{node.text}</Code>
           </Button>

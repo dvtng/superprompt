@@ -1,5 +1,3 @@
-import { useSnapshot } from "valtio";
-import { getColorForInput, updatePromptContent } from "./core/prompt-state";
 import { CSSProperties, useEffect, useState } from "react";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import {
@@ -17,6 +15,8 @@ import { parse } from "./core/parse";
 import { useMantineTheme } from "@mantine/core";
 import { NodeType, visitNodes } from "./core/ast";
 import { usePromptState } from "./context";
+import { useSnapshot } from "valtio";
+import { getColorForInput } from "./core/prompt-state";
 
 type Paragraph = {
   type: "paragraph";
@@ -55,7 +55,6 @@ const styles = css`
   font-size: inherit;
   height: 100%;
   margin-top: -1em;
-  padding: 0 2rem 2rem;
   width: 100%;
 
   > * {
@@ -63,39 +62,50 @@ const styles = css`
   }
 
   p {
-    margin-block-start: 0.75em;
-    margin-block-end: 0.75em;
+    margin-block-start: 0.55em;
+    margin-block-end: 0.55em;
   }
 `;
 
-export function PromptEditor() {
+export function PromptEditor({
+  initialValue,
+  onChange,
+  readOnly = false,
+}: {
+  initialValue: string;
+  onChange?: (value: string) => void;
+  readOnly?: boolean;
+}) {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
   const [editor] = useState(() => withReact(withHistory(createEditor())));
   const theme = useMantineTheme();
 
   useEffect(() => {
-    setTimeout(() => {
-      ReactEditor.focus(editor);
-    }, 0);
+    if (!readOnly) {
+      setTimeout(() => {
+        ReactEditor.focus(editor);
+      }, 0);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Slate
       editor={editor}
-      initialValue={deserialize(_promptState.content)}
+      initialValue={deserialize(initialValue)}
       onChange={(value) => {
         const isAstChange = editor.operations.some(
           (op) => "set_selection" !== op.type
         );
         if (isAstChange) {
-          updatePromptContent(promptState, serialize(value));
+          onChange?.(serialize(value));
         }
       }}
     >
       <div className={styles}>
         <Editable
+          readOnly={readOnly}
           placeholder="Enter a prompt..."
           renderElement={({ attributes, children }) => {
             return <p {...attributes}>{children}</p>;

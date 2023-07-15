@@ -4,6 +4,7 @@ import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
 import { IconX } from "@tabler/icons-react";
 import { MessageActions } from "./message-actions";
+import { PromptEditor } from "./prompt-editor";
 
 const messageStyles = css`
   pre {
@@ -31,7 +32,7 @@ export function Messages() {
     <Stack p="2rem">
       {_promptState.messages.map((message, i) => (
         <div key={i} className={messageStyles}>
-          <Stack spacing="0.2rem">
+          <Stack spacing="1rem">
             <div className={labelStyles}>
               {message.role === "user"
                 ? "YOU"
@@ -39,7 +40,7 @@ export function Messages() {
                 ? "AI"
                 : "SYSTEM"}
             </div>
-            <pre>{message.content}</pre>
+            <PromptEditor initialValue={message.content} readOnly />
             {i === _promptState.messages.length - 1 &&
             message.role === "assistant" ? (
               <MessageActions messageContent={message.content} />
