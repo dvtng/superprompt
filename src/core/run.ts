@@ -124,5 +124,9 @@ async function evalPlaceholder(
   );
 
   const context: FunctionContext = { apiKeyState };
-  return await functionSpec.fn(context, ...prependArgs, ...args);
+  const returnValue = await functionSpec.fn(context, ...prependArgs, ...args);
+  if (typeof returnValue !== "string") {
+    return JSON.stringify(returnValue, undefined, 2);
+  }
+  return returnValue;
 }
