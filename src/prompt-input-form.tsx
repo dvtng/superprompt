@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
 import { PromptInputView } from "./prompt-input-view";
 import { css } from "@emotion/css";
-import { Button, Divider, Flex, useMantineTheme } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import { runPrompt } from "./core/run";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useRequestRequiredApiKeysModal } from "./api-key-modal";
@@ -35,7 +35,6 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
   const manualInputs = _promptState.inputs.filter(
     (input) => !input.isGenerated
   );
-  const theme = useMantineTheme();
 
   return (
     <>
