@@ -25,7 +25,7 @@ Install dependencies.
 
 ```sh
 cd superprompt
-npm run install
+npm install
 ```
 
 Start the server.
