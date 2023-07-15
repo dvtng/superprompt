@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
 import { PromptInputView } from "./prompt-input-view";
 import { css } from "@emotion/css";
-import { Button, Flex } from "@mantine/core";
+import { Button, Divider, Flex, useMantineTheme } from "@mantine/core";
 import { runPrompt } from "./core/run";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useRequestRequiredApiKeysModal } from "./api-key-modal";
@@ -35,6 +35,7 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
   const manualInputs = _promptState.inputs.filter(
     (input) => !input.isGenerated
   );
+  const theme = useMantineTheme();
 
   return (
     <>
@@ -42,7 +43,8 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
       {manualInputs.length ? (
         <form
           style={{
-            padding: "2rem ",
+            backgroundColor: bgColor,
+            padding: "2rem 2rem 0",
           }}
           onSubmit={onSubmit}
           onKeyDown={(e) => {
@@ -60,20 +62,13 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
       ) : null}
       <Flex
         gap="md"
-        sx={(theme) => ({
+        sx={() => ({
           background: bgColor,
           bottom: 0,
           padding: "1.5rem 2rem",
           position: "sticky",
           top: 0,
           zIndex: 1,
-          ...(manualInputs.length
-            ? {
-                borderTop: `1px solid ${
-                  theme.colorScheme === "dark" ? "#ffffff18" : "#00000018"
-                }`,
-              }
-            : {}),
         })}
       >
         <Button

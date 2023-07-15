@@ -17,6 +17,7 @@ export type PromptState = {
   errors: string[];
   isDirty: boolean;
   isSaved: boolean;
+  isStuckToBottom: boolean;
 };
 
 export type Message = {
@@ -55,6 +56,7 @@ export function createPromptState(doc: PromptDoc, isSaved: boolean) {
     errors: [],
     isDirty: false,
     isSaved,
+    isStuckToBottom: false,
   };
 
   if (promptState.content) {

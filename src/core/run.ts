@@ -72,13 +72,13 @@ export async function runPrompt(
   }
 
   try {
+    promptState.isRunning = true;
+    promptState.isStuckToBottom = true;
     if (append) {
-      promptState.isRunning = true;
       await runAST(append);
     } else {
       promptState.messages = [];
       promptState.errors = [];
-      promptState.isRunning = true;
       await runAST(promptState.parsed);
     }
   } catch (e) {

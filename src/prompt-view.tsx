@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
-import { useMantineTheme } from "@mantine/core";
+import { Box, useMantineTheme } from "@mantine/core";
 import { useEffect } from "react";
 import { PROMPTS } from "./prompt-data";
 import { PromptStateProvider, usePromptState } from "./context";
@@ -13,6 +13,7 @@ import { useDerivedState } from "./use-derived-state";
 import { preparePromptState, promptStates } from "./prompt-states";
 import { PromptEditorTitlebar } from "./prompt-editor-titlebar";
 import { PromptEditorContainer } from "./prompt-editor-container";
+import { ConvoPane } from "./convo-pane";
 
 const styles = css`
   background: var(--bg-1);
@@ -32,18 +33,6 @@ const styles = css`
   }
 `;
 
-const convoStyles = css`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: auto;
-
-  @media (max-width: 800px) {
-    height: auto;
-    overflow: visible;
-  }
-`;
-
 export function PromptView() {
   const theme = useMantineTheme();
   const bgColor =
@@ -55,23 +44,27 @@ export function PromptView() {
 
   return (
     <div className={styles} style={{ background: convoPaneColor }}>
-      <div
-        style={{
+      <Box
+        sx={{
           color,
           background: bgColor,
           maxHeight: "100%",
           overflow: "auto",
+          "@media(max-width: 800px)": {
+            maxHeight: "none",
+            overflow: "visible",
+          },
         }}
       >
         <PromptEditorTitlebar />
         <div style={{ padding: "0 2rem 2rem" }}>
           <PromptEditorContainer />
         </div>
-      </div>
-      <div className={convoStyles} style={{ background: convoPaneColor }}>
+      </Box>
+      <ConvoPane>
         <PromptInputForm bgColor={convoPaneColor} />
         <Messages />
-      </div>
+      </ConvoPane>
     </div>
   );
 }

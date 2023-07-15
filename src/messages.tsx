@@ -1,4 +1,4 @@
-import { Stack, Alert } from "@mantine/core";
+import { Stack, Alert, Divider } from "@mantine/core";
 import { usePromptState } from "./context";
 import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
@@ -29,35 +29,38 @@ export function Messages() {
   }
 
   return (
-    <Stack p="2rem">
-      {_promptState.messages.map((message, i) => (
-        <div key={i} className={messageStyles}>
-          <Stack spacing="1rem">
-            <div className={labelStyles}>
-              {message.role === "user"
-                ? "YOU"
-                : message.role === "assistant"
-                ? "AI"
-                : "SYSTEM"}
-            </div>
-            <PromptEditor initialValue={message.content} readOnly />
-            {i === _promptState.messages.length - 1 &&
-            message.role === "assistant" ? (
-              <MessageActions messageContent={message.content} />
-            ) : null}
-          </Stack>
-        </div>
-      ))}
-      {_promptState.errors.map((errorMessage, i) => (
-        <Alert
-          key={i}
-          icon={<IconX size="1.1rem" />}
-          color="red"
-          variant="outline"
-        >
-          {errorMessage}
-        </Alert>
-      ))}
-    </Stack>
+    <>
+      <Divider variant="dashed" />
+      <Stack p="2rem">
+        {_promptState.messages.map((message, i) => (
+          <div key={i} className={messageStyles}>
+            <Stack spacing="1rem">
+              <div className={labelStyles}>
+                {message.role === "user"
+                  ? "YOU"
+                  : message.role === "assistant"
+                  ? "AI"
+                  : "SYSTEM"}
+              </div>
+              <PromptEditor initialValue={message.content} readOnly />
+              {i === _promptState.messages.length - 1 &&
+              message.role === "assistant" ? (
+                <MessageActions messageContent={message.content} />
+              ) : null}
+            </Stack>
+          </div>
+        ))}
+        {_promptState.errors.map((errorMessage, i) => (
+          <Alert
+            key={i}
+            icon={<IconX size="1.1rem" />}
+            color="red"
+            variant="outline"
+          >
+            {errorMessage}
+          </Alert>
+        ))}
+      </Stack>
+    </>
   );
 }
