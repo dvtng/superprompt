@@ -1,4 +1,4 @@
-import { AST, FunctionCallNode, VariableNode } from "./ast";
+import { ASTWithLocation, FunctionCallNode, VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
 import {
   Message,
@@ -9,16 +9,18 @@ import {
 import { ApiKeyState } from "./api-key-state";
 import { FunctionContext } from "./function-spec";
 import OpenAI from "openai";
+import { never } from "./never";
 
 export async function runPrompt(
   promptState: PromptState,
   apiKeyState: ApiKeyState,
-  append?: AST
+  append?: ASTWithLocation
 ) {
   const openai = new OpenAI({ apiKey: apiKeyState.OPENAI });
   const options = getOptionsWithDefaults(promptState);
 
   let prompt = "";
+
   async function generate(generatedInputName?: string) {
     if (prompt.trim()) {
       promptState.messages.push({
@@ -47,9 +49,12 @@ export async function runPrompt(
     }
   }
 
-  async function runAST(ast: AST) {
+  async function runAST(ast: ASTWithLocation) {
     for (const node of ast) {
       if (node.type === "text") {
+        if (node.column === 0) {
+          prompt += "\n";
+        }
         prompt += node.value;
       } else if (node.type === "placeholder") {
         const placeholderType = node.value.type;
@@ -57,13 +62,26 @@ export async function runPrompt(
           placeholderType === "variable" ||
           placeholderType === "functionCall"
         ) {
+          if (node.column === 0) {
+            prompt += "\n";
+          }
           prompt += await evalPlaceholder(promptState, apiKeyState, node.value);
         } else if (placeholderType === "generator") {
           await generate(node.value.identifier?.name);
         } else {
-          const _never: never = placeholderType;
-          return _never;
+          never(placeholderType);
         }
+      } else if (node.type === "directive") {
+        if (node.name in options) {
+          const num = Number(node.value);
+          if (!isNaN(num)) {
+            options[node.name as keyof typeof options] = num;
+          }
+        }
+      } else if (node.type === "invalid") {
+        // Ignore
+      } else {
+        never(node);
       }
     }
     if (prompt.trim()) {
@@ -105,8 +123,7 @@ async function evalPlaceholder(
   } else if (placeholder.type === "functionCall") {
     functionCall = placeholder;
   } else {
-    const _never: never = placeholder;
-    return _never;
+    never(placeholder);
   }
 
   const functionSpec = FUNCTIONS[functionCall.identifier.name];

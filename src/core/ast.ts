@@ -6,7 +6,7 @@ export type ASTWithLocation = (RootNode & {
   text: string;
 })[];
 
-export type RootNode = TextNode | InvalidNode | PlaceholderNode;
+export type RootNode = DirectiveNode | TextNode | InvalidNode | PlaceholderNode;
 
 export type ParseNode =
   | RootNode
@@ -16,6 +16,12 @@ export type ParseNode =
   | IdentifierNode;
 
 export type NodeType = ParseNode["type"];
+
+export type DirectiveNode = {
+  type: "directive";
+  name: string;
+  value: string;
+};
 
 export type TextNode = {
   type: "text";

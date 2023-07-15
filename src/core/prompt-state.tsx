@@ -1,5 +1,5 @@
 import { parse } from "./parse";
-import { AST } from "./ast";
+import { ASTWithLocation } from "./ast";
 import { PromptInput, getInputs } from "./input";
 import { PromptDoc } from "../prompt-doc";
 
@@ -9,7 +9,7 @@ export type PromptState = {
   content: string;
   inputs: PromptInput[];
   inputStates: Record<string, InputState>;
-  parsed: AST;
+  parsed: ASTWithLocation;
   parseError?: string;
   isRunning: boolean;
   messages: Message[];

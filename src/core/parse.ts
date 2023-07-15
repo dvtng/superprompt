@@ -1,10 +1,17 @@
 import { Grammar, Parser } from "nearley";
 import grammar from "./grammar";
 import { InvalidNode, PlaceholderNode, ASTWithLocation } from "./ast";
+import { never } from "./never";
 
 export function parse(prompt: string): ASTWithLocation {
+  return prompt.split("\n").reduce((acc, line) => {
+    return acc.concat(parseLine(line));
+  }, [] as ASTWithLocation);
+}
+
+export function parseLine(prompt: string): ASTWithLocation {
   const nodes: ASTWithLocation = [];
-  let isPlaceholder = false;
+  let nodeType: "directive" | "text" | "placeholder" = "text";
   let column = 0;
   let currentSubstring = "";
   let escaped = false;
@@ -12,14 +19,34 @@ export function parse(prompt: string): ASTWithLocation {
   function pushCurrentSubstring() {
     if (!currentSubstring) return;
 
-    if (isPlaceholder) {
+    if (nodeType === "placeholder") {
       nodes.push({
         ...parsePlaceholder(currentSubstring),
         column,
         length: currentSubstring.length + 2,
         text: currentSubstring,
       });
-    } else {
+    } else if (nodeType === "directive") {
+      const [name, value] = currentSubstring.slice(1).split(/\s+/);
+      if (name && value) {
+        nodes.push({
+          type: "directive",
+          name,
+          value,
+          column,
+          length: currentSubstring.length,
+          text: currentSubstring,
+        });
+      } else {
+        nodes.push({
+          type: "invalid",
+          value: currentSubstring,
+          column,
+          length: currentSubstring.length,
+          text: currentSubstring,
+        });
+      }
+    } else if (nodeType === "text") {
       nodes.push({
         type: "text",
         value: currentSubstring,
@@ -27,6 +54,8 @@ export function parse(prompt: string): ASTWithLocation {
         length: currentSubstring.length,
         text: currentSubstring,
       });
+    } else {
+      never(nodeType);
     }
 
     currentSubstring = "";
@@ -40,16 +69,19 @@ export function parse(prompt: string): ASTWithLocation {
       continue;
     }
 
-    if (char === "{" && !escaped) {
+    if (char === "{" && !escaped && nodeType === "text") {
       pushCurrentSubstring();
       column = i;
-      isPlaceholder = true;
+      nodeType = "placeholder";
       currentSubstring = "";
-    } else if (char === "}" && !escaped && isPlaceholder) {
+    } else if (char === "}" && !escaped && nodeType === "placeholder") {
       pushCurrentSubstring();
       column = i + 1;
-      isPlaceholder = false;
+      nodeType = "text";
       currentSubstring = "";
+    } else if (char === "@" && i === 0) {
+      nodeType = "directive";
+      currentSubstring += char;
     } else {
       currentSubstring += char;
     }
