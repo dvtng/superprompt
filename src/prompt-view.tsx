@@ -10,11 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { saveDoc } from "./db";
 import { nanoid } from "nanoid";
 import { useDerivedState } from "./use-derived-state";
-import {
-  deletePromptState,
-  preparePromptState,
-  promptStates,
-} from "./prompt-states";
+import { preparePromptState, promptStates } from "./prompt-states";
 import { PromptEditorTitlebar } from "./prompt-editor-titlebar";
 import { PromptEditorContainer } from "./prompt-editor-container";
 
@@ -90,12 +86,6 @@ export function PromptViewContainer() {
   );
   preparePromptState(id, PROMPTS[idFromUrl]);
   const promptState = useSnapshot(promptStates)[id];
-
-  useEffect(() => {
-    return () => {
-      deletePromptState(id);
-    };
-  }, [id]);
 
   if (!promptState) {
     return null;
