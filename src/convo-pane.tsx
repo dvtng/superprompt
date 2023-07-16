@@ -28,7 +28,7 @@ export function ConvoPane({ children }: { children: ReactNode }) {
   const onScroll = useCallback(() => {
     if (scrollableRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = scrollableRef.current;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight;
+      const isAtBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
       // If we scroll to the bottom, then stick to the bottom
       promptState.isStuckToBottom = isAtBottom;
     }
