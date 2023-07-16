@@ -28,6 +28,11 @@ export const PROMPTS: Record<string, PromptDoc> = keyBy(
       title: "Character chat",
       content: EXAMPLE_PROMPTS.character,
     },
+    {
+      id: "agent",
+      title: "Agent",
+      content: EXAMPLE_PROMPTS.agent,
+    },
   ],
   "id"
 );
