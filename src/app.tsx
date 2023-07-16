@@ -8,7 +8,7 @@ import { router } from "./router";
 import { RouterProvider } from "react-router-dom";
 import { proxy } from "valtio";
 import { loadApiKeyState } from "./core/api-key-state";
-import { ApiKeyStateProvider } from "./context";
+import { ApiKeyStateProvider, DocListProvider } from "./context";
 
 export function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(() => {
@@ -41,9 +41,11 @@ export function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <ApiKeyStateProvider value={apiKeyState}>
-          <RouterProvider router={router} />
-        </ApiKeyStateProvider>
+        <DocListProvider>
+          <ApiKeyStateProvider value={apiKeyState}>
+            <RouterProvider router={router} />
+          </ApiKeyStateProvider>
+        </DocListProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

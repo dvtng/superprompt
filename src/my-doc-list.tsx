@@ -1,14 +1,10 @@
-import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "./db";
 import { Text, Anchor, Box } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { PromptDocPreview } from "./prompt-doc-preview";
+import { useDocList } from "./context";
 
 export function MyDocList() {
-  const docs = useLiveQuery(
-    () => db.docs.orderBy("updatedAt").reverse().toArray(),
-    []
-  );
+  const docs = useDocList();
   if (!docs) {
     return null;
   }
