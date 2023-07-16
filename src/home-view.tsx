@@ -1,7 +1,7 @@
 import { Flex } from "@mantine/core";
 import { Divider } from "./divider";
 import { css } from "@emotion/css";
-import { TopPromptView } from "./top-prompt-view";
+import { ExampleDocList } from "./example-doc-list";
 import { MyDocList } from "./my-doc-list";
 
 const styles = css`
@@ -39,7 +39,7 @@ export function HomeView() {
           <h2>Examples</h2>
           <Divider h />
           <div style={{ padding: "1.5rem 0" }}>
-            <TopPromptView />
+            <ExampleDocList />
           </div>
         </div>
       </Flex>

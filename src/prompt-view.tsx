@@ -3,7 +3,6 @@ import { css } from "@emotion/css";
 import { PromptInputForm } from "./prompt-input-form";
 import { Box, useMantineTheme } from "@mantine/core";
 import { useEffect } from "react";
-import { PROMPTS } from "./prompt-data";
 import { PromptStateProvider, usePromptState } from "./context";
 import { Messages } from "./messages";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,6 +13,7 @@ import { preparePromptState, promptStates } from "./prompt-states";
 import { PromptEditorTitlebar } from "./prompt-editor-titlebar";
 import { PromptEditorContainer } from "./prompt-editor-container";
 import { ConvoPane } from "./convo-pane";
+import { EXAMPLES } from "./example";
 
 const styles = css`
   background: var(--bg-1);
@@ -72,12 +72,12 @@ export function PromptView() {
 export function PromptViewContainer() {
   const params = useParams<"id">();
   const idFromUrl = params.id ?? "blank";
-  const isExamplePrompt = idFromUrl in PROMPTS;
+  const isExamplePrompt = idFromUrl in EXAMPLES;
   const [id] = useDerivedState(
     () => (isExamplePrompt ? nanoid() : idFromUrl),
     [idFromUrl]
   );
-  preparePromptState(id, PROMPTS[idFromUrl]);
+  preparePromptState(id, EXAMPLES[idFromUrl]);
   const promptState = useSnapshot(promptStates)[id];
 
   if (!promptState) {

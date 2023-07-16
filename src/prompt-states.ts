@@ -2,7 +2,7 @@ import { proxy } from "valtio";
 import { PromptState, createPromptState } from "./core/prompt-state";
 import { db } from "./db";
 import { PromptDoc } from "./prompt-doc";
-import { PROMPTS } from "./prompt-data";
+import BLANK_DOC from "./example/lib/blank.ts";
 
 export const promptStates = proxy<Record<string, PromptState>>({});
 
@@ -10,7 +10,7 @@ const isLoadingDict: Record<string, boolean> = {};
 
 export async function preparePromptState(
   id: string,
-  defaultDoc: PromptDoc = PROMPTS.blank
+  defaultDoc: PromptDoc = BLANK_DOC
 ) {
   if (!promptStates[id] && !isLoadingDict[id]) {
     isLoadingDict[id] = true;
