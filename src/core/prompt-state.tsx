@@ -130,11 +130,3 @@ export function getOptionsWithDefaults(
     ...promptState.options,
   };
 }
-
-export function addError(promptState: PromptState, error: unknown) {
-  if (error instanceof Error) {
-    promptState.errors.push(error.message || error.name);
-  } else {
-    promptState.errors.push(String(error));
-  }
-}

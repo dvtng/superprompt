@@ -1,15 +1,12 @@
 import { ASTWithLocation, FunctionCallNode, VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
-import {
-  Message,
-  PromptState,
-  addError,
-  getOptionsWithDefaults,
-} from "./prompt-state";
+import { Message, PromptState, getOptionsWithDefaults } from "./prompt-state";
 import { ApiKeyState } from "./api-key-state";
 import { FunctionContext } from "./function-spec";
 import OpenAI from "openai";
 import { never } from "./never";
+import { getErrorMessage } from "./get-error-message";
+import { parse } from "./parse";
 
 export async function runPrompt(
   promptState: PromptState,
@@ -100,7 +97,20 @@ export async function runPrompt(
       await runAST(promptState.parsed);
     }
   } catch (e) {
-    addError(promptState, e);
+    if (append) {
+      const errorMessage = getErrorMessage(e);
+      runPrompt(promptState, apiKeyState, [
+        {
+          type: "text",
+          value: errorMessage,
+          column: 0,
+          length: errorMessage.length,
+          text: errorMessage,
+        },
+      ]);
+    } else {
+      promptState.errors.push(getErrorMessage(e));
+    }
   } finally {
     promptState.isRunning = false;
   }
