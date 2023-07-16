@@ -32,11 +32,30 @@ In this example, the generated `{*tone}` value is stored and reused as `{tone}` 
 
 ### Functions (experimental)
 
-Superprompt provides two built-in functions: `query` and `summarize`, for working with text files.
+Superprompt provides some built-in functions that can be called from templates
+by placing them in a placeholder, e.g. `{now()}`.
 
 Please note that these are currently experimental and may change in the future.
 
-#### query(question)
+#### now()
+
+Returns the current date as a string.
+
+#### location()
+
+Returns the user's current location as a JSON object. Uses the browser's
+geolocation API and requires the user to grant permission.
+
+#### math(expression)
+
+Evaluates a mathematical expression.
+
+#### weather(latitude, longitude)
+
+Retrieves the current weather at the given latitude and longitude as a JSON
+object.
+
+#### file:query(question)
 
 Searches a file for excerpts that are related to the question and outputs them.
 
@@ -52,7 +71,7 @@ Let's start.
 {question}
 ```
 
-#### summarize()
+#### file:summarize()
 
 Summarizes the contents of a file.
 
