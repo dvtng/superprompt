@@ -6,7 +6,6 @@ import { FunctionContext } from "./function-spec";
 import OpenAI from "openai";
 import { never } from "./never";
 import { getErrorMessage } from "./get-error-message";
-import { parse } from "./parse";
 
 export async function runPrompt(
   promptState: PromptState,
