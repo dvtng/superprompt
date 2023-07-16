@@ -1,13 +1,13 @@
-import { FunctionContext } from "../function-spec";
+import { defineFunction } from "../function-spec";
 
-export default {
+export default defineFunction({
   name: "now",
   dataTypes: [],
-  fn: async (_context: FunctionContext, format?: string) => {
+  fn: async (context, format?: string) => {
     if (!format) {
       return new Date().toString();
     }
     const { default: formatFn } = await import("date-fns/format");
     return formatFn(new Date(), format);
   },
-};
+});

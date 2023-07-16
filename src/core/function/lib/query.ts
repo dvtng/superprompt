@@ -1,9 +1,9 @@
-import { FunctionContext } from "../function-spec";
+import { defineFunction } from "../function-spec";
 
-export default {
+export default defineFunction({
   name: "query",
   dataTypes: ["file"],
-  fn: async (context: FunctionContext, file: File, question: string) => {
+  fn: async (context, file: File, question: string) => {
     const [{ OpenAIEmbeddings }, { TextLoader }, { MemoryVectorStore }] =
       await Promise.all([
         import("langchain/embeddings/openai"),
@@ -30,4 +30,4 @@ export default {
 
     return text;
   },
-};
+});

@@ -2,7 +2,7 @@ import { ASTWithLocation, FunctionCallNode, VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
 import { Message, PromptState, getOptionsWithDefaults } from "./prompt-state";
 import { ApiKeyState } from "./api-key-state";
-import { FunctionContext } from "./function-spec";
+import { FunctionContext } from "./function/function-spec";
 import OpenAI from "openai";
 import { never } from "./never";
 import { getErrorMessage } from "./get-error-message";

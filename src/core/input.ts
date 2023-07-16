@@ -1,7 +1,7 @@
 import { uniq } from "lodash";
 import { AST, VariableNode, filterNodes, visitNodes } from "./ast";
 import { FUNCTIONS } from "./function";
-import { DATA_TYPES, DataType } from "./function-spec";
+import { DATA_TYPES, DataType } from "./function/function-spec";
 
 export type PromptInput = {
   name: string;

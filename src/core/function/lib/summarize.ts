@@ -1,9 +1,9 @@
-import { FunctionContext } from "../function-spec";
+import { defineFunction } from "../function-spec";
 
-export default {
+export default defineFunction({
   name: "summarize",
   dataTypes: ["file"],
-  fn: async (context: FunctionContext, file: File) => {
+  fn: async (context, file: File) => {
     const [{ loadSummarizationChain }, { OpenAI }, { TextLoader }] =
       await Promise.all([
         import("langchain/chains"),
@@ -25,4 +25,4 @@ export default {
     });
     return res.text;
   },
-};
+});

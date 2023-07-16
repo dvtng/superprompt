@@ -1,4 +1,6 @@
-export default {
+import { defineFunction } from "../function-spec";
+
+export default defineFunction({
   name: "location",
   dataTypes: [],
   fn: async () => {
@@ -17,4 +19,4 @@ export default {
       }, reject);
     });
   },
-};
+});
