@@ -117,9 +117,6 @@ export function PromptEditor({
               style.fontFamily = theme.fontFamilyMonospace;
               style.fontWeight = "bold";
             }
-            if (leaf.isInvalid) {
-              style.color = theme.colors.red[5];
-            }
             if (leaf.identifier) {
               if (
                 leaf.identifier.for === "variable" ||

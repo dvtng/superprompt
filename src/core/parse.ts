@@ -17,7 +17,7 @@ export function parseLine(prompt: string): ASTWithLocation {
   let escaped = false;
 
   function pushCurrentSubstring() {
-    if (!currentSubstring) return;
+    if (nodeType === "text" && !currentSubstring) return;
 
     if (nodeType === "placeholder") {
       nodes.push({
