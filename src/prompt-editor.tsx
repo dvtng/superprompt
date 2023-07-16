@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect } from "react";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import {
   BaseEditor,
@@ -12,11 +12,12 @@ import {
 import { css } from "@emotion/css";
 import { withHistory } from "slate-history";
 import { parse } from "./core/parse";
-import { useMantineTheme } from "@mantine/core";
+import { Box, useMantineTheme } from "@mantine/core";
 import { NodeType, visitNodes } from "./core/ast";
 import { usePromptState } from "./context";
 import { useSnapshot } from "valtio";
 import { getColorForInput } from "./core/prompt-state";
+import { useDerivedState } from "./use-derived-state";
 
 type Paragraph = {
   type: "paragraph";
@@ -55,6 +56,7 @@ const styles = css`
   font-size: inherit;
   height: 100%;
   margin-top: -1em;
+  position: relative;
   width: 100%;
 
   > * {
@@ -68,17 +70,22 @@ const styles = css`
 `;
 
 export function PromptEditor({
+  id,
   initialValue,
   onChange,
   readOnly = false,
 }: {
+  id: string;
   initialValue: string;
   onChange?: (value: string) => void;
   readOnly?: boolean;
 }) {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
-  const [editor] = useState(() => withReact(withHistory(createEditor())));
+  const [editor] = useDerivedState(
+    () => withReact(withHistory(createEditor())),
+    [id]
+  );
   const theme = useMantineTheme();
 
   useEffect(() => {
@@ -104,9 +111,18 @@ export function PromptEditor({
       }}
     >
       <div className={styles}>
+        {_promptState.content === "" ? (
+          <Box
+            sx={{
+              opacity: 0.3,
+              position: "absolute",
+            }}
+          >
+            Start typing...
+          </Box>
+        ) : null}
         <Editable
           readOnly={readOnly}
-          placeholder="Enter a prompt..."
           renderElement={({ attributes, children }) => {
             return <p {...attributes}>{children}</p>;
           }}

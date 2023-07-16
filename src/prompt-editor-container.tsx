@@ -9,6 +9,7 @@ export function PromptEditorContainer() {
 
   return (
     <PromptEditor
+      id={promptState.id}
       initialValue={_promptState.content}
       onChange={(value) => {
         updatePromptContent(promptState, value);

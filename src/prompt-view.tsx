@@ -14,6 +14,7 @@ import { PromptEditorTitlebar } from "./prompt-editor-titlebar";
 import { PromptEditorContainer } from "./prompt-editor-container";
 import { ConvoPane } from "./convo-pane";
 import { EXAMPLES } from "./example";
+import { PromptEditorStarters } from "./prompt-editor-starters";
 
 const styles = css`
   background: var(--bg-1);
@@ -41,6 +42,8 @@ export function PromptView() {
     theme.colorScheme === "dark" ? theme.white : theme.colors.dark[8];
   const convoPaneColor =
     theme.colorScheme === "dark" ? theme.colors.dark[6] : "#f9f9f9";
+  const promptState = usePromptState();
+  const _promptState = useSnapshot(promptState);
 
   return (
     <div className={styles} style={{ background: convoPaneColor }}>
@@ -61,10 +64,14 @@ export function PromptView() {
           <PromptEditorContainer />
         </div>
       </Box>
-      <ConvoPane>
-        <PromptInputForm bgColor={convoPaneColor} />
-        <Messages />
-      </ConvoPane>
+      {_promptState.content.length === 0 ? (
+        <PromptEditorStarters />
+      ) : (
+        <ConvoPane>
+          <PromptInputForm bgColor={convoPaneColor} />
+          <Messages />
+        </ConvoPane>
+      )}
     </div>
   );
 }

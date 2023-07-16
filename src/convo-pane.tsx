@@ -19,6 +19,9 @@ const convoStyles = css`
   }
 `;
 
+/**
+ * Generic scrollable area that can autoscroll to the bottom
+ */
 export function ConvoPane({ children }: { children: ReactNode }) {
   const { scrollIntoView, targetRef, scrollableRef } =
     useScrollIntoView<HTMLDivElement>({ duration: 350 });

@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "./db";
-import { Text, Anchor, Stack } from "@mantine/core";
+import { Text, Anchor, Box } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { PromptDocPreview } from "./prompt-doc-preview";
 
@@ -25,10 +25,10 @@ export function MyDocList() {
   }
 
   return (
-    <Stack>
+    <Box>
       {docs.map((doc) => (
         <PromptDocPreview key={doc.id} promptDoc={doc} />
       ))}
-    </Stack>
+    </Box>
   );
 }

@@ -42,7 +42,11 @@ export function Messages() {
                   ? "AI"
                   : "SYSTEM"}
               </div>
-              <PromptEditor initialValue={message.content} readOnly />
+              <PromptEditor
+                id={_promptState.id + "/" + i}
+                initialValue={message.content}
+                readOnly
+              />
               {i === _promptState.messages.length - 1 &&
               message.role === "assistant" ? (
                 <MessageActions messageContent={message.content} />
