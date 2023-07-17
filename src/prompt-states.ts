@@ -8,7 +8,10 @@ export const promptStates = proxy<Record<string, PromptState>>({});
 
 const isLoadingDict: Record<string, boolean> = {};
 
-export async function preparePromptState(
+/**
+ * Loads doc from DB and initializes its state, if not already present.
+ */
+export async function loadPromptState(
   id: string,
   defaultDoc: PromptDoc = BLANK_DOC
 ) {

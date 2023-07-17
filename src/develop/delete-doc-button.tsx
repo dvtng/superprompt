@@ -1,8 +1,8 @@
 import { ActionIcon, Button, Flex, Modal, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
-import { usePromptState } from "./context";
-import { deleteDoc } from "./db";
+import { usePromptState } from "../context";
+import { deleteDoc } from "../db";
 import { useNavigate } from "react-router-dom";
 import { useSnapshot } from "valtio";
 

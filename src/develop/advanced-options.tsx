@@ -1,12 +1,12 @@
 import { Button, Flex, Modal, Slider, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { usePromptState } from "./context";
+import { usePromptState } from "../context";
 import { useSnapshot } from "valtio";
-import { defaultOptions } from "./core/prompt-state";
+import { defaultOptions } from "../core/prompt-state";
 
-export function OpenPromptAdvancedOptionsModalButton() {
+export function OpenAdvancedOptionsModalButton() {
   const [opened, { open, close }] = useDisclosure();
-  const modal = <PromptAdvancedOptionsModal opened={opened} onClose={close} />;
+  const modal = <AdvancedOptionsModal opened={opened} onClose={close} />;
 
   return (
     <>
@@ -23,7 +23,7 @@ export function OpenPromptAdvancedOptionsModalButton() {
   );
 }
 
-function PromptAdvancedOptionsModal({
+function AdvancedOptionsModal({
   opened,
   onClose,
 }: {

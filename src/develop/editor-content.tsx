@@ -11,13 +11,14 @@ import {
 } from "slate";
 import { css } from "@emotion/css";
 import { withHistory } from "slate-history";
-import { parse } from "./core/parse";
-import { Box, useMantineTheme } from "@mantine/core";
-import { NodeType, visitNodes } from "./core/ast";
-import { usePromptState } from "./context";
+import { parse } from "../core/parse";
+import { useMantineTheme } from "@mantine/core";
+import { NodeType, visitNodes } from "../core/ast";
+import { usePromptState } from "../context";
 import { useSnapshot } from "valtio";
-import { getColorForInput } from "./core/prompt-state";
-import { useDerivedState } from "./use-derived-state";
+import { getColorForInput } from "../core/prompt-state";
+import { useDerivedState } from "../use-derived-state";
+import { EditorPlaceholder } from "./editor-placeholder";
 
 type Paragraph = {
   type: "paragraph";
@@ -69,7 +70,7 @@ const styles = css`
   }
 `;
 
-export function PromptEditor({
+export function EditorContent({
   id,
   initialValue,
   onChange,
@@ -99,6 +100,7 @@ export function PromptEditor({
 
   return (
     <Slate
+      key={id}
       editor={editor}
       initialValue={deserialize(initialValue)}
       onChange={(value) => {
@@ -111,16 +113,7 @@ export function PromptEditor({
       }}
     >
       <div className={styles}>
-        {_promptState.content === "" ? (
-          <Box
-            sx={{
-              opacity: 0.3,
-              position: "absolute",
-            }}
-          >
-            Start typing...
-          </Box>
-        ) : null}
+        {_promptState.content === "" ? <EditorPlaceholder /> : null}
         <Editable
           readOnly={readOnly}
           renderElement={({ attributes, children }) => {

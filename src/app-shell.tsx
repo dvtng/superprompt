@@ -1,32 +1,24 @@
 import {
-  Button,
   Flex,
   Header,
   AppShell as MantineAppShell,
   useMantineTheme,
 } from "@mantine/core";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { ColorSchemeToggle } from "./color-scheme-toggle";
-import { IconPlus } from "@tabler/icons-react";
 import { AppHomeLink } from "./app-home-link";
 import { HideOnMobile } from "./hide-on-mobile";
 import { OpenHelpModalButton } from "./help-modal";
 
-const positioningStyles = {
-  maxWidth: 1200,
-  margin: "auto",
-};
-
 export function AppShell() {
   const theme = useMantineTheme();
+  const location = useLocation();
+  const maxWidth = location.pathname === "/" ? 1000 : "100%";
 
   return (
     <MantineAppShell
       styles={{
-        main: {
-          ...positioningStyles,
-          height: "100vh",
-        },
+        main: { height: "100vh", margin: "auto", maxWidth },
       }}
       header={
         <Header
@@ -34,8 +26,10 @@ export function AppShell() {
           p="md"
           withBorder={false}
           style={{
-            ...positioningStyles,
             background: theme.colors.background[0],
+            margin: "auto",
+            maxWidth,
+            transition: "0.3s max-width ease-in-out",
           }}
         >
           <Flex
@@ -47,14 +41,6 @@ export function AppShell() {
               <AppHomeLink />
             </Flex>
             <Flex gap="md" align="center">
-              <Button
-                component={Link}
-                to="/new"
-                leftIcon={<IconPlus size="1.1rem" />}
-                variant="outline"
-              >
-                New
-              </Button>
               <Flex gap="xs" align="center">
                 <OpenHelpModalButton />
                 <HideOnMobile>

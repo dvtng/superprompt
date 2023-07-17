@@ -1,10 +1,10 @@
 import { Stack, Alert, Divider } from "@mantine/core";
-import { usePromptState } from "./context";
+import { usePromptState } from "../context";
 import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
 import { IconX } from "@tabler/icons-react";
 import { MessageActions } from "./message-actions";
-import { PromptEditor } from "./prompt-editor";
+import { EditorContent } from "./editor-content";
 
 const messageStyles = css`
   pre {
@@ -42,7 +42,7 @@ export function Messages() {
                   ? "AI"
                   : "SYSTEM"}
               </div>
-              <PromptEditor
+              <EditorContent
                 id={_promptState.id + "/" + i}
                 initialValue={message.content}
                 readOnly

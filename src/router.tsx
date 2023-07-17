@@ -1,8 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-import { PromptViewContainer } from "./prompt-view";
+import { DevelopView } from "./develop/develop-view";
 import { HomeView } from "./home-view";
 import { AppShell } from "./app-shell";
-import { MyDocList } from "./my-doc-list";
 
 export const router = createBrowserRouter([
   {
@@ -14,16 +13,16 @@ export const router = createBrowserRouter([
         element: <HomeView />,
       },
       {
-        path: "/my",
-        element: <MyDocList />,
+        path: "me",
+        element: <DevelopView mode="me" />,
       },
       {
         path: "new",
-        element: <PromptViewContainer />,
+        element: <DevelopView mode="prompt" />,
       },
       {
         path: "prompt/:id",
-        element: <PromptViewContainer />,
+        element: <DevelopView mode="prompt" />,
       },
     ],
   },

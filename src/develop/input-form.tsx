@@ -1,13 +1,14 @@
 import { useSnapshot } from "valtio";
-import { PromptInputView } from "./prompt-input-view";
+import { InputView } from "./input-view";
 import { css } from "@emotion/css";
-import { Button, Flex } from "@mantine/core";
-import { runPrompt } from "./core/run";
+import { Box, Button, Flex } from "@mantine/core";
+import { runPrompt } from "../core/run";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
-import { useRequestRequiredApiKeysModal } from "./api-key-modal";
+import { useRequestRequiredApiKeysModal } from "../api-key-modal";
 import { FormEvent } from "react";
-import { useApiKeyState, usePromptState } from "./context";
-import { OpenPromptAdvancedOptionsModalButton } from "./prompt-advanced-options";
+import { useApiKeyState, usePromptState } from "../context";
+import { OpenAdvancedOptionsModalButton } from "./advanced-options";
+import { getLayerBgColor } from "../color";
 
 const styles = css`
   align-items: start;
@@ -18,7 +19,7 @@ const styles = css`
 
 const requiredApiKeys = ["OPENAI"];
 
-export function PromptInputForm({ bgColor }: { bgColor: string }) {
+export function InputForm() {
   const apiKeyState = useApiKeyState();
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
@@ -40,11 +41,12 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
     <>
       {apiKeysModal}
       {manualInputs.length ? (
-        <form
-          style={{
-            backgroundColor: bgColor,
+        <Box
+          component="form"
+          sx={(theme) => ({
+            backgroundColor: getLayerBgColor(theme),
             padding: "2rem 2rem 0",
-          }}
+          })}
           onSubmit={onSubmit}
           onKeyDown={(e) => {
             if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
@@ -54,15 +56,15 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
         >
           <div className={styles}>
             {manualInputs.map((input) => (
-              <PromptInputView key={input.name} input={input} />
+              <InputView key={input.name} input={input} />
             ))}
           </div>
-        </form>
+        </Box>
       ) : null}
       <Flex
         gap="md"
-        sx={() => ({
-          background: bgColor,
+        sx={(theme) => ({
+          background: getLayerBgColor(theme),
           bottom: 0,
           padding: "1.5rem 2rem",
           position: "sticky",
@@ -78,7 +80,7 @@ export function PromptInputForm({ bgColor }: { bgColor: string }) {
         >
           Run
         </Button>
-        <OpenPromptAdvancedOptionsModalButton />
+        <OpenAdvancedOptionsModalButton />
       </Flex>
     </>
   );

@@ -10,7 +10,7 @@ export function HomeView() {
     return null;
   }
   if (docs.length) {
-    return <Navigate to="/my" replace={true} />;
+    return <Navigate to="/me" replace={true} />;
   }
 
   return (

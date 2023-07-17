@@ -1,12 +1,12 @@
 import { Button, Flex, Input } from "@mantine/core";
-import { useDerivedState } from "./use-derived-state";
-import { usePromptState } from "./context";
+import { useDerivedState } from "../use-derived-state";
+import { usePromptState } from "../context";
 import { useSnapshot } from "valtio";
 import { useRef } from "react";
-import { updatePromptTitle } from "./core/prompt-state";
+import { updatePromptTitle } from "../core/prompt-state";
 import { DeleteDocButton } from "./delete-doc-button";
 
-export function PromptEditorTitlebar() {
+export function EditorTitlebar() {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
   const inputRef = useRef<HTMLInputElement>(null);
