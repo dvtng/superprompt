@@ -1,4 +1,4 @@
-import { Text, Anchor, Box } from "@mantine/core";
+import { Text, Anchor, Box, Stack, Title, Divider } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { PromptDocPreview } from "./prompt-doc-preview";
 import { useDocList } from "./context";
@@ -21,10 +21,14 @@ export function MyDocList() {
   }
 
   return (
-    <Box>
-      {docs.map((doc) => (
-        <PromptDocPreview key={doc.id} promptDoc={doc} />
-      ))}
-    </Box>
+    <Stack sx={{ paddingBottom: "2rem" }}>
+      <Title order={3}>My prompts</Title>
+      <Divider />
+      <Box>
+        {docs.map((doc) => (
+          <PromptDocPreview key={doc.id} promptDoc={doc} />
+        ))}
+      </Box>
+    </Stack>
   );
 }
