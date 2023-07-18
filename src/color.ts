@@ -1,7 +1,19 @@
-import { MantineTheme } from "@mantine/core";
+import { MantineTheme, useMantineTheme } from "@mantine/core";
+import { useLayoutEffect } from "react";
+
+export function getBodyBgColor(theme: MantineTheme) {
+  return theme.colorScheme === "dark" ? "#1A1A1E" : "#e2e2de";
+}
+
+export function useSetBodyStyles() {
+  const theme = useMantineTheme();
+  useLayoutEffect(() => {
+    document.body.style.background = getBodyBgColor(theme);
+  }, [theme]);
+}
 
 export function getLayerBgColor(theme: MantineTheme) {
-  return theme.colorScheme === "dark" ? theme.colors.dark[6] : "#f9f9f9";
+  return theme.colorScheme === "dark" ? theme.colors.dark[6] : "#f8f8f6";
 }
 
 export function getEditorBgColor(theme: MantineTheme) {
