@@ -1,4 +1,4 @@
-import { keyBy } from "lodash";
+import { keyBy } from "../../utility";
 import { FunctionSpec } from "./function-spec";
 
 const modules: Record<string, { default: FunctionSpec }> = import.meta.glob(

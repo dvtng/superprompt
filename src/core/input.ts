@@ -1,4 +1,4 @@
-import { uniq } from "lodash";
+import { unique } from "../utility";
 import { AST, VariableNode, filterNodes, visitNodes } from "./ast";
 import { FUNCTIONS } from "./function";
 import { DATA_TYPES, DataType } from "./function/function-spec";
@@ -14,7 +14,7 @@ export function getInputs(ast: AST): PromptInput[] {
     return node.type === "variable";
   });
 
-  const uniqueVariableNames = uniq(
+  const uniqueVariableNames = unique(
     variableNodes.map((node) => node.identifier.name)
   );
 

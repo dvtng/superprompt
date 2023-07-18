@@ -1,5 +1,5 @@
-import { keyBy } from "lodash";
 import { PromptDoc } from "../prompt-doc";
+import { keyBy } from "../utility";
 
 const modules: Record<string, { default: PromptDoc }> = import.meta.glob(
   "./lib/*.ts",
