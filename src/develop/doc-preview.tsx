@@ -37,8 +37,8 @@ export function DocPreview({
           {promptDoc.title}
         </Title>
       ) : null}
-      <Text lineClamp={2} sx={{ opacity: 0.8 }}>
-        {promptDoc.content}
+      <Text lineClamp={2} sx={{ opacity: promptDoc.content ? 0.8 : 0.4 }}>
+        {promptDoc.content || "New prompt"}
       </Text>
     </Anchor>
   );
