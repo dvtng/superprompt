@@ -5,14 +5,7 @@ import { css } from "@emotion/css";
 import { IconX } from "@tabler/icons-react";
 import { MessageActions } from "./message-actions";
 import { EditorContent } from "./editor-content";
-
-const messageStyles = css`
-  pre {
-    font-family: inherit;
-    margin: 0;
-    text-wrap: wrap;
-  }
-`;
+import { Fragment } from "react";
 
 const labelStyles = css`
   font-size: 0.9em;
@@ -33,26 +26,25 @@ export function Messages() {
       <Divider variant="dashed" />
       <Stack p="2rem">
         {_promptState.messages.map((message, i) => (
-          <div key={i} className={messageStyles}>
-            <Stack spacing="1rem">
-              <div className={labelStyles}>
-                {message.role === "user"
-                  ? "YOU"
-                  : message.role === "assistant"
-                  ? "AI"
-                  : "SYSTEM"}
-              </div>
-              <EditorContent
-                id={_promptState.id + "/" + i}
-                initialValue={message.content}
-                readOnly
-              />
-              {i === _promptState.messages.length - 1 &&
-              message.role === "assistant" ? (
-                <MessageActions messageContent={message.content} />
-              ) : null}
-            </Stack>
-          </div>
+          <Fragment key={i}>
+            <div className={labelStyles}>
+              {message.role === "user"
+                ? "YOU"
+                : message.role === "assistant"
+                ? "AI"
+                : "SYSTEM"}
+            </div>
+            <EditorContent
+              id={message.id}
+              initialValue={message.content}
+              readOnly
+              style={{ padding: 0 }}
+            />
+            {i === _promptState.messages.length - 1 &&
+            message.role === "assistant" ? (
+              <MessageActions messageContent={message.content} />
+            ) : null}
+          </Fragment>
         ))}
         {_promptState.errors.map((errorMessage, i) => (
           <Alert

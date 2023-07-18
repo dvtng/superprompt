@@ -2,6 +2,7 @@ import { parse } from "./parse";
 import { ASTWithLocation } from "./ast";
 import { PromptInput, getInputs } from "./input";
 import { PromptDoc } from "../prompt-doc";
+import { nanoid } from "nanoid";
 
 export type PromptState = {
   id: string;
@@ -18,9 +19,11 @@ export type PromptState = {
   isDirty: boolean;
   isSaved: boolean;
   isStuckToBottom: boolean;
+  unsentMessage: Omit<Message, "role">;
 };
 
 export type Message = {
+  id: string;
   role: "system" | "user" | "assistant";
   content: string;
 };
@@ -57,6 +60,10 @@ export function createPromptState(doc: PromptDoc, isSaved: boolean) {
     isDirty: false,
     isSaved,
     isStuckToBottom: false,
+    unsentMessage: {
+      id: nanoid(),
+      content: "",
+    },
   };
 
   if (promptState.content) {

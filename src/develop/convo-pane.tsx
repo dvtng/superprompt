@@ -2,13 +2,11 @@ import { css } from "@emotion/css";
 import { UnstyledButton } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import { IconArrowDown } from "@tabler/icons-react";
-import { CSSProperties, ReactNode, useCallback, useLayoutEffect } from "react";
+import { ReactNode, useCallback, useLayoutEffect } from "react";
 import { usePromptState } from "../context";
 import { useSnapshot } from "valtio";
 
 const convoStyles = css`
-  display: flex;
-  flex-direction: column;
   height: 100%;
   overflow: auto;
   position: relative;
@@ -17,13 +15,7 @@ const convoStyles = css`
 /**
  * Generic scrollable area that can autoscroll to the bottom
  */
-export function ConvoPane({
-  children,
-  style,
-}: {
-  children: ReactNode;
-  style?: CSSProperties;
-}) {
+export function ConvoPane({ children }: { children: ReactNode }) {
   const { scrollIntoView, targetRef, scrollableRef } =
     useScrollIntoView<HTMLDivElement>({ duration: 350 });
   const promptState = usePromptState();
@@ -49,7 +41,7 @@ export function ConvoPane({
   }, [onScroll]);
 
   return (
-    <div className={convoStyles} style={style}>
+    <div className={convoStyles}>
       <div
         ref={scrollableRef}
         className={convoStyles}

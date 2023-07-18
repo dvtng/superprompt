@@ -24,7 +24,7 @@ export function MessageActions({ messageContent }: { messageContent: string }) {
             key={i}
             variant="outline"
             onClick={() => {
-              runPrompt(promptState, apiKeyState, [node]);
+              runPrompt(promptState, apiKeyState, [node], true);
             }}
           >
             Run <Code sx={{ fontSize: "1em" }}>{node.text}</Code>

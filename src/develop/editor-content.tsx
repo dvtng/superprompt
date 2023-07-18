@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect } from "react";
+import { CSSProperties, ReactNode, useEffect } from "react";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import {
   BaseEditor,
@@ -18,7 +18,6 @@ import { usePromptState } from "../context";
 import { useSnapshot } from "valtio";
 import { getColorForInput } from "../core/prompt-state";
 import { useDerivedState } from "../use-derived-state";
-import { EditorPlaceholder } from "./editor-placeholder";
 
 type Paragraph = {
   type: "paragraph";
@@ -56,7 +55,6 @@ const styles = css`
   font-family: inherit;
   font-size: inherit;
   height: 100%;
-  margin-top: -1em;
   position: relative;
   width: 100%;
 
@@ -68,6 +66,14 @@ const styles = css`
     margin-block-start: 0.55em;
     margin-block-end: 0.55em;
   }
+
+  p:first-child {
+    margin-block-start: 0;
+  }
+
+  p:last-child {
+    margin-block-end: 0;
+  }
 `;
 
 export function EditorContent({
@@ -75,11 +81,21 @@ export function EditorContent({
   initialValue,
   onChange,
   readOnly = false,
+  style,
+  placeholder,
+  disabled,
+  autoFocus,
+  onSubmit,
 }: {
   id: string;
   initialValue: string;
   onChange?: (value: string) => void;
   readOnly?: boolean;
+  style?: CSSProperties;
+  placeholder?: ReactNode;
+  disabled?: boolean;
+  autoFocus?: boolean;
+  onSubmit?: () => void;
 }) {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
@@ -90,13 +106,13 @@ export function EditorContent({
   const theme = useMantineTheme();
 
   useEffect(() => {
-    if (!readOnly) {
+    if (autoFocus) {
       setTimeout(() => {
         ReactEditor.focus(editor);
       }, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   return (
     <Slate
@@ -113,8 +129,19 @@ export function EditorContent({
       }}
     >
       <div className={styles}>
-        {_promptState.content === "" ? <EditorPlaceholder /> : null}
+        {initialValue === "" ? (
+          <div style={{ position: "absolute", padding: "1rem 0", ...style }}>
+            {placeholder}
+          </div>
+        ) : null}
         <Editable
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+              onSubmit?.();
+            }
+          }}
+          disabled={disabled}
+          style={{ padding: "1rem 0", ...style }}
           readOnly={readOnly}
           renderElement={({ attributes, children }) => {
             return <p {...attributes}>{children}</p>;

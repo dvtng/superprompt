@@ -3,16 +3,28 @@ import { ConvoPane } from "./convo-pane";
 import { InputForm } from "./input-form";
 import { Messages } from "./messages";
 import { usePromptState } from "../context";
-import { CSSProperties } from "react";
+import { MessageBox } from "./message-box";
+import { Box } from "@mantine/core";
 
-export function ConvoView({ style }: { style?: CSSProperties }) {
+export function ConvoView() {
   const promptState = usePromptState();
   const _promptState = useSnapshot(promptState);
 
   return (
-    <ConvoPane style={style}>
-      {_promptState.content.length > 0 ? <InputForm /> : null}
-      <Messages />
-    </ConvoPane>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateRows: "1fr auto",
+        height: "100%",
+        overflow: "hidden",
+        width: "100%",
+      }}
+    >
+      <ConvoPane>
+        {_promptState.content.length > 0 ? <InputForm /> : null}
+        <Messages />
+      </ConvoPane>
+      {_promptState.messages.length > 0 ? <MessageBox /> : null}
+    </Box>
   );
 }

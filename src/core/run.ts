@@ -6,11 +6,13 @@ import { FunctionContext } from "./function/function-spec";
 import OpenAI from "openai";
 import { never } from "./never";
 import { getErrorMessage } from "./get-error-message";
+import { nanoid } from "nanoid";
 
 export async function runPrompt(
   promptState: PromptState,
   apiKeyState: ApiKeyState,
-  append?: ASTWithLocation
+  append?: ASTWithLocation,
+  appendError?: boolean
 ) {
   const openai = new OpenAI({ apiKey: apiKeyState.OPENAI });
   const options = getOptionsWithDefaults(promptState);
@@ -20,6 +22,7 @@ export async function runPrompt(
   async function generate(generatedInputName?: string) {
     if (prompt.trim()) {
       promptState.messages.push({
+        id: nanoid(),
         role: "user",
         content: prompt.trim(),
       });
@@ -27,15 +30,21 @@ export async function runPrompt(
     prompt = "";
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages: promptState.messages,
+      messages: promptState.messages
+        // Remove `id` from message before sending to the api
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .map(({ id, ...message }) => message),
       temperature: options.temperature,
       max_tokens: options.maxTokens === "inf" ? undefined : options.maxTokens,
       presence_penalty: options.presencePenalty,
       frequency_penalty: options.frequencyPenalty,
     });
-    const message = chatCompletion.choices[0].message as Message | undefined;
+    const message = chatCompletion.choices[0].message as
+      | Omit<Message, "id">
+      | undefined;
     if (message) {
-      promptState.messages.push(message);
+      // Add unique id to message from response
+      promptState.messages.push({ ...message, id: nanoid() });
       if (generatedInputName) {
         promptState.inputStates[generatedInputName] = {
           dataType: "string",
@@ -88,15 +97,15 @@ export async function runPrompt(
   try {
     promptState.isRunning = true;
     promptState.isStuckToBottom = true;
+    promptState.errors = [];
     if (append) {
       await runAST(append);
     } else {
       promptState.messages = [];
-      promptState.errors = [];
       await runAST(promptState.parsed);
     }
   } catch (e) {
-    if (append) {
+    if (appendError) {
       const errorMessage = getErrorMessage(e);
       runPrompt(promptState, apiKeyState, [
         {

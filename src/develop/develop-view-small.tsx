@@ -74,18 +74,20 @@ export function DevelopViewSmall({ mode }: { mode: DevelopViewMode }) {
               }
             }}
           >
-            <ConvoView
-              style={{
+            <Box
+              sx={{
                 background,
                 borderRadius: 8,
-                maxHeight: "calc(100% - 4.5rem)",
-                overflow: "auto",
+                height: "calc(100% - 4.5rem)",
+                overflow: "hidden",
                 position: "absolute",
                 transition: "200ms transform ease-out",
                 transform: `translateY(${isConvoOpen ? 0 : "100%"})`,
                 width: "100%",
               }}
-            />
+            >
+              <ConvoView />
+            </Box>
           </Box>
         </Box>
       )}
