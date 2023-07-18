@@ -8,7 +8,7 @@ import { DeleteDocButton } from "./delete-doc-button";
 
 export function EditorTitlebar() {
   const promptState = usePromptState();
-  const _promptState = useSnapshot(promptState);
+  const _promptState = useSnapshot(promptState, { sync: true });
   const inputRef = useRef<HTMLInputElement>(null);
   const [hasTitle, setHasTitle] = useDerivedState(
     () =>
