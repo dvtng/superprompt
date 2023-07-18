@@ -1,10 +1,7 @@
-import { Flex, Header, AppShell as MantineAppShell } from "@mantine/core";
+import { Header, AppShell as MantineAppShell } from "@mantine/core";
 import { Outlet, useLocation } from "react-router-dom";
-import { ColorSchemeToggle } from "./color-scheme-toggle";
-import { AppHomeLink } from "./app-home-link";
-import { HideOnMobile } from "./hide-on-mobile";
-import { OpenHelpModalButton } from "./help-modal";
 import { getBodyBgColor, useSetBodyStyles } from "./color";
+import { AppHeader } from "./app-header";
 
 export function AppShell() {
   const location = useLocation();
@@ -28,23 +25,7 @@ export function AppShell() {
             transition: "0.3s max-width ease-in-out",
           })}
         >
-          <Flex
-            align="center"
-            justify="space-between"
-            style={{ height: "100%" }}
-          >
-            <Flex align="center" gap="1rem">
-              <AppHomeLink />
-            </Flex>
-            <Flex gap="md" align="center">
-              <Flex gap="xs" align="center">
-                <OpenHelpModalButton />
-                <HideOnMobile>
-                  <ColorSchemeToggle />
-                </HideOnMobile>
-              </Flex>
-            </Flex>
-          </Flex>
+          <AppHeader />
         </Header>
       }
     >
