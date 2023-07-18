@@ -10,7 +10,10 @@ export function DocSaver({ idFromUrl }: { idFromUrl: string }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!_promptState.isDirty) {
+    const shouldSave =
+      _promptState.isDirty || (!_promptState.isSaved && _promptState.isRunning);
+
+    if (!shouldSave) {
       return;
     }
 
