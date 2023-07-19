@@ -1,6 +1,6 @@
 import { ASTWithLocation, FunctionCallNode, VariableNode } from "./ast";
 import { FUNCTIONS } from "./function";
-import { Message, PromptState, getOptionsWithDefaults } from "./prompt-state";
+import { PromptState, getOptionsWithDefaults } from "./prompt-state";
 import { ApiKeyState } from "./api-key-state";
 import { FunctionContext } from "./function/function-spec";
 import OpenAI from "openai";
