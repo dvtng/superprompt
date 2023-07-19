@@ -28,7 +28,9 @@ export async function runPrompt(
       });
     }
     prompt = "";
-    const chatCompletion = await openai.chat.completions.create({
+
+    const stream = await openai.chat.completions.create({
+      stream: true,
       model: "gpt-3.5-turbo",
       messages: promptState.messages
         // Remove `id` from message before sending to the api
@@ -39,18 +41,27 @@ export async function runPrompt(
       presence_penalty: options.presencePenalty,
       frequency_penalty: options.frequencyPenalty,
     });
-    const message = chatCompletion.choices[0].message as
-      | Omit<Message, "id">
-      | undefined;
-    if (message) {
-      // Add unique id to message from response
-      promptState.messages.push({ ...message, id: nanoid() });
-      if (generatedInputName) {
-        promptState.inputStates[generatedInputName] = {
-          dataType: "string",
-          value: message.content,
-        };
+
+    promptState.messages.push({
+      id: nanoid(),
+      role: "assistant",
+      content: "",
+    });
+
+    // Get pushed message so that it's the proxified object
+    const message = promptState.messages[promptState.messages.length - 1];
+    for await (const part of stream) {
+      const content = part.choices[0]?.delta?.content;
+      if (content) {
+        message.content += content;
       }
+    }
+
+    if (generatedInputName) {
+      promptState.inputStates[generatedInputName] = {
+        dataType: "string",
+        value: message.content,
+      };
     }
   }
 

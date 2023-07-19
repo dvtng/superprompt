@@ -18,6 +18,7 @@ import { usePromptState } from "../context";
 import { useSnapshot } from "valtio";
 import { getColorForInput } from "../core/prompt-state";
 import { useDerivedState } from "../use-derived-state";
+import { ContentP } from "./content-p";
 
 type Paragraph = {
   type: "paragraph";
@@ -60,19 +61,6 @@ const styles = css`
 
   > * {
     outline: none;
-  }
-
-  p {
-    margin-block-start: 0.55em;
-    margin-block-end: 0.55em;
-  }
-
-  p:first-child {
-    margin-block-start: 0;
-  }
-
-  p:last-child {
-    margin-block-end: 0;
   }
 `;
 
@@ -144,7 +132,7 @@ export function EditorContent({
           style={{ padding: "1rem 0", ...style }}
           readOnly={readOnly}
           renderElement={({ attributes, children }) => {
-            return <p {...attributes}>{children}</p>;
+            return <ContentP {...attributes}>{children}</ContentP>;
           }}
           renderLeaf={({ attributes, children, leaf }) => {
             const style: CSSProperties = {};

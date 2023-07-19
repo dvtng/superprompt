@@ -23,7 +23,7 @@ export function parseLine(prompt: string): ASTWithLocation {
       nodes.push({
         ...parsePlaceholder(currentSubstring),
         column,
-        length: currentSubstring.length + 2,
+        length: currentSubstring.length,
         text: currentSubstring,
       });
     } else if (nodeType === "directive") {
@@ -73,8 +73,9 @@ export function parseLine(prompt: string): ASTWithLocation {
       pushCurrentSubstring();
       column = i;
       nodeType = "placeholder";
-      currentSubstring = "";
+      currentSubstring = "{";
     } else if (char === "}" && !escaped && nodeType === "placeholder") {
+      currentSubstring += "}";
       pushCurrentSubstring();
       column = i + 1;
       nodeType = "text";
@@ -97,8 +98,10 @@ export function parseLine(prompt: string): ASTWithLocation {
 // Parse placeholder using nearley grammar
 function parsePlaceholder(placeholder: string): InvalidNode | PlaceholderNode {
   try {
+    const start = placeholder.startsWith("{") ? 1 : 0;
+    const end = placeholder.endsWith("}") ? -1 : undefined;
     const result = new Parser(Grammar.fromCompiled(grammar))
-      .feed(placeholder)
+      .feed(placeholder.slice(start, end))
       .finish();
     if (result.length === 0) {
       throw new Error("No parse results");

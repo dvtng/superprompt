@@ -4,8 +4,8 @@ import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
 import { IconX } from "@tabler/icons-react";
 import { MessageActions } from "./message-actions";
-import { EditorContent } from "./editor-content";
 import { Fragment } from "react";
+import { MessageContent } from "./message-content";
 
 const labelStyles = css`
   font-size: 0.9em;
@@ -34,12 +34,7 @@ export function Messages() {
                 ? "AI"
                 : "SYSTEM"}
             </div>
-            <EditorContent
-              id={message.id}
-              initialValue={message.content}
-              readOnly
-              style={{ padding: 0 }}
-            />
+            <MessageContent message={message} />
             {i === _promptState.messages.length - 1 &&
             message.role === "assistant" ? (
               <MessageActions messageContent={message.content} />
