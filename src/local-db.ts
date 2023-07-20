@@ -1,7 +1,7 @@
 import Dexie, { Table } from "dexie";
 import { PromptDoc } from "./prompt-doc";
 
-export class Db extends Dexie {
+export class LocalDb extends Dexie {
   docs!: Table<PromptDoc>;
 
   constructor() {
@@ -12,11 +12,7 @@ export class Db extends Dexie {
   }
 }
 
-export const db = new Db();
-
-export function createDoc(doc: PromptDoc) {
-  return db.docs.add(doc);
-}
+export const localDb = new LocalDb();
 
 export async function saveDoc(doc: PromptDoc) {
   const _doc = { ...doc };
@@ -25,9 +21,9 @@ export async function saveDoc(doc: PromptDoc) {
     _doc.createdAt = now;
   }
   _doc.updatedAt = now;
-  await db.docs.put(_doc);
+  await localDb.docs.put(_doc);
 }
 
 export async function deleteDoc(id: string) {
-  await db.docs.delete(id);
+  await localDb.docs.delete(id);
 }

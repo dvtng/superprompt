@@ -1,11 +1,11 @@
-import { Stack, Alert, Divider } from "@mantine/core";
+import { Stack, Divider } from "@mantine/core";
 import { usePromptState } from "../context";
 import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
-import { IconX } from "@tabler/icons-react";
 import { MessageActions } from "./message-actions";
 import { Fragment } from "react";
 import { MessageContent } from "./message-content";
+import { ErrorMessage } from "../error-message";
 
 const labelStyles = css`
   font-size: 0.9em;
@@ -42,14 +42,7 @@ export function Messages() {
           </Fragment>
         ))}
         {_promptState.errors.map((errorMessage, i) => (
-          <Alert
-            key={i}
-            icon={<IconX size="1.1rem" />}
-            color="red"
-            variant="outline"
-          >
-            {errorMessage}
-          </Alert>
+          <ErrorMessage key={i} error={errorMessage} />
         ))}
       </Stack>
     </>

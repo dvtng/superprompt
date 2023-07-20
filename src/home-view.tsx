@@ -2,6 +2,7 @@ import { Text, Stack, Box, Divider, Flex, Button } from "@mantine/core";
 import { IconBulb, IconPlus } from "@tabler/icons-react";
 import { Link, Navigate } from "react-router-dom";
 import { useDocList } from "./context";
+import { appState } from "./app-state";
 
 export function HomeView() {
   const docs = useDocList();
@@ -9,7 +10,7 @@ export function HomeView() {
   if (!docs) {
     return null;
   }
-  if (docs.length) {
+  if (appState.user || docs.length) {
     return <Navigate to="/me" replace={true} />;
   }
 
