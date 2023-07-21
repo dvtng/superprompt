@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 
 export type PromptState = {
   id: string;
+  nonce: number; // incremented to remote changes to force editor update
   title: string;
   content: string;
   inputs: PromptInput[];
@@ -48,6 +49,7 @@ export type Options = {
 export function createPromptState(doc: PromptDoc, isSaved: boolean) {
   const promptState: PromptState = {
     id: doc.id,
+    nonce: 0,
     title: doc.title,
     content: doc.content,
     inputs: [],

@@ -104,7 +104,7 @@ export function EditorContent({
 
   return (
     <Slate
-      key={id}
+      key={id + "/" + _promptState.nonce}
       editor={editor}
       initialValue={deserialize(initialValue)}
       onChange={(value) => {

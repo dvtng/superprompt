@@ -1,4 +1,6 @@
+import { updatePromptContent, updatePromptTitle } from "./core/prompt-state";
 import { db, saveDoc } from "./db";
+import { promptStates } from "./prompt-states";
 import { supabase } from "./supabase";
 
 // Naive sync implementation. Improve later.
@@ -10,8 +12,8 @@ export async function sync(userId: string) {
 
   // Save each doc locally, if it's newer than the local version
   await Promise.all(
-    data.map((doc) => {
-      return saveDoc(
+    data.map(async (doc) => {
+      const didSave = await saveDoc(
         {
           id: doc.id,
           ownerId: doc.owner_id,
@@ -25,6 +27,13 @@ export async function sync(userId: string) {
         },
         (existingDoc) => !existingDoc || doc.updated_at > existingDoc.updatedAt
       );
+
+      if (didSave && promptStates[doc.id]) {
+        const promptState = promptStates[doc.id];
+        promptState.nonce++;
+        updatePromptTitle(promptState, doc.title);
+        updatePromptContent(promptState, doc.content);
+      }
     })
   );
 
