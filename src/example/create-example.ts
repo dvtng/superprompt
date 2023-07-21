@@ -1,5 +1,5 @@
-import { PromptDoc } from "../prompt-doc";
+import { PartialPromptDoc, PromptDoc, getDocWithDefaults } from "../prompt-doc";
 
-export function createExample(doc: PromptDoc): PromptDoc {
-  return { ...doc, content: doc.content.trim() };
+export function createExample(doc: PartialPromptDoc): PromptDoc {
+  return getDocWithDefaults({ ...doc, content: doc.content?.trim() });
 }

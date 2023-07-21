@@ -1,6 +1,6 @@
 import { proxy } from "valtio";
 import { PromptState, createPromptState } from "./core/prompt-state";
-import { localDb } from "./local-db.ts";
+import { db } from "./db.ts";
 import { PromptDoc } from "./prompt-doc";
 import BLANK_DOC from "./example/lib/blank.ts";
 
@@ -17,7 +17,7 @@ export async function loadPromptState(
 ) {
   if (!promptStates[id] && !isLoadingDict[id]) {
     isLoadingDict[id] = true;
-    const docFromDb = await localDb.docs.get(id);
+    const docFromDb = await db.docs.get(id);
     promptStates[id] = createPromptState(
       docFromDb ?? { ...defaultDoc, id },
       Boolean(docFromDb)

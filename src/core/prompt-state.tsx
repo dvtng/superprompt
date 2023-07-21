@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 
 export type PromptState = {
   id: string;
-  title?: string;
+  title: string;
   content: string;
   inputs: PromptInput[];
   inputStates: Record<string, InputState>;
@@ -90,11 +90,7 @@ export function updatePromptTitle(promptState: PromptState, title: string) {
   }
 
   promptState.isDirty = true;
-  if (title) {
-    promptState.title = title;
-  } else {
-    delete promptState.title;
-  }
+  promptState.title = title;
 }
 
 function parseContent(promptState: PromptState) {

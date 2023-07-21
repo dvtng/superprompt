@@ -5,10 +5,12 @@ export type User = {
   email?: string;
 };
 
-export const ANON_USER = null;
+export type AnonUser = null;
+
+export const ANON_USER: AnonUser = null;
 
 const DEFAULT_APP_STATE = {
-  user: undefined as User | null | undefined,
+  user: undefined as User | AnonUser | undefined,
 };
 
 export type AppState = typeof DEFAULT_APP_STATE;
