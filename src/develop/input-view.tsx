@@ -3,7 +3,7 @@ import { getColorForInput } from "../core/prompt-state";
 import { PromptInput } from "../core/input";
 import { css } from "@emotion/css";
 import { FileInput, Textarea, useMantineTheme } from "@mantine/core";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 
 const styles = css`
   align-items: center;
@@ -35,7 +35,7 @@ const dotStyles = css`
 
 // Component that renders a label and an input for a placeholder node
 export function InputView({ input }: { input: PromptInput }) {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState, { sync: true });
   const inputState = _promptState.inputStates[input.name];
   const dataType = input.dataTypes[0];

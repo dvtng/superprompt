@@ -14,7 +14,7 @@ import { withHistory } from "slate-history";
 import { parse } from "../core/parse";
 import { useMantineTheme } from "@mantine/core";
 import { NodeType, visitNodes } from "../core/ast";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 import { useSnapshot } from "valtio";
 import { getColorForInput } from "../core/prompt-state";
 import { useDerivedState } from "../use-derived-state";
@@ -85,7 +85,7 @@ export function EditorContent({
   autoFocus?: boolean;
   onSubmit?: () => void;
 }) {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
   const [editor] = useDerivedState(
     () => withReact(withHistory(createEditor())),

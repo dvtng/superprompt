@@ -1,20 +1,17 @@
 import { Button, Flex, Input } from "@mantine/core";
 import { useDerivedState } from "../use-derived-state";
 import { usePromptState } from "../context";
-import { useSnapshot } from "valtio";
 import { useRef } from "react";
 import { updatePromptTitle } from "../core/prompt-state";
 import { DeleteDocButton } from "./delete-doc-button";
 
 export function EditorTitlebar() {
-  const promptState = usePromptState();
-  const _promptState = useSnapshot(promptState, { sync: true });
+  const promptState = usePromptState({ sync: true });
   const inputRef = useRef<HTMLInputElement>(null);
   const [hasTitle, setHasTitle] = useDerivedState(
     () =>
-      Boolean(_promptState.title) ||
-      document.activeElement === inputRef.current,
-    [_promptState.title]
+      Boolean(promptState.title) || document.activeElement === inputRef.current,
+    [promptState.title]
   );
 
   return (
@@ -41,12 +38,12 @@ export function EditorTitlebar() {
             },
           })}
           placeholder="Enter a title"
-          value={_promptState.title ?? ""}
+          value={promptState.title ?? ""}
           onChange={(e) => {
             updatePromptTitle(promptState, e.currentTarget.value);
           }}
           onBlur={() => {
-            if (!_promptState.title) {
+            if (!promptState.title) {
               setHasTitle(false);
             }
           }}

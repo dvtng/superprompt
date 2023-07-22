@@ -6,7 +6,7 @@ import { runPrompt } from "../core/run";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useRequestRequiredApiKeysModal } from "../api-key-modal";
 import { FormEvent } from "react";
-import { useApiKeyState, usePromptState } from "../context";
+import { useApiKeyState, usePromptStateContext } from "../context";
 import { OpenAdvancedOptionsModalButton } from "./advanced-options";
 import { getLayerBgColor } from "../color";
 
@@ -21,7 +21,7 @@ const requiredApiKeys = ["OPENAI"];
 
 export function InputForm() {
   const apiKeyState = useApiKeyState();
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
   const [apiKeysModal, requestRequiredApiKeys] =
     useRequestRequiredApiKeysModal(requiredApiKeys);

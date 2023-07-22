@@ -1,6 +1,6 @@
 import { Button, Flex, Modal, Slider, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 import { useSnapshot } from "valtio";
 import { defaultOptions } from "../core/prompt-state";
 
@@ -71,7 +71,7 @@ function OptionSlider({
   min: number;
   max: number;
 }) {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
   const optionValue =
     _promptState.options[optionKey] ?? defaultOptions[optionKey];

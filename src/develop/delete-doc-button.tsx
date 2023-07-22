@@ -4,15 +4,13 @@ import { IconTrash } from "@tabler/icons-react";
 import { usePromptState } from "../context";
 import { deleteDoc } from "../db";
 import { useNavigate } from "react-router-dom";
-import { useSnapshot } from "valtio";
 
 export function DeleteDocButton() {
   const [opened, { open, close }] = useDisclosure();
   const promptState = usePromptState();
-  const _promptState = useSnapshot(promptState);
   const navigate = useNavigate();
 
-  if (!_promptState.isSaved) {
+  if (!promptState.isSaved) {
     return null;
   }
 

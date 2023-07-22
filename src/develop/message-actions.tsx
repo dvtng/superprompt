@@ -2,10 +2,10 @@ import { useMemo } from "react";
 import { parse } from "../core/parse";
 import { Button, Code } from "@mantine/core";
 import { runPrompt } from "../core/run";
-import { useApiKeyState, usePromptState } from "../context";
+import { useApiKeyState, usePromptStateContext } from "../context";
 
 export function MessageActions({ messageContent }: { messageContent: string }) {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const apiKeyState = useApiKeyState();
   const nodesToEval = useMemo(() => {
     const ast = parse(messageContent);

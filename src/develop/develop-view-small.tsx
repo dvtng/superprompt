@@ -6,11 +6,11 @@ import { ConvoView } from "./convo-view";
 import { Editor } from "./editor";
 import { useDerivedState } from "../use-derived-state";
 import { IconArrowUp } from "@tabler/icons-react";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 import { useSnapshot } from "valtio";
 
 export function DevelopViewSmall({ mode }: { mode: DevelopViewMode }) {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
   const [isConvoOpen, setIsConvoOpen] = useDerivedState(
     () => false,

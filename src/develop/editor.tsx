@@ -1,5 +1,5 @@
 import { useSnapshot } from "valtio";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 import { EditorContent } from "./editor-content";
 import { updatePromptContent } from "../core/prompt-state";
 import { Box } from "@mantine/core";
@@ -8,7 +8,7 @@ import { getEditorBgColor } from "../color";
 import { EditorPlaceholder } from "./editor-placeholder";
 
 export function Editor() {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
 
   return (

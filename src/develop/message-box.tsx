@@ -1,5 +1,5 @@
 import { useSnapshot } from "valtio";
-import { useApiKeyState, usePromptState } from "../context";
+import { useApiKeyState, usePromptStateContext } from "../context";
 import { EditorContent } from "./editor-content";
 import { Box, Button } from "@mantine/core";
 import { IconSend } from "@tabler/icons-react";
@@ -9,7 +9,7 @@ import { parse } from "../core/parse";
 import { useState } from "react";
 
 export function MessageBox() {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
   const unsentMessage = _promptState.unsentMessage;
   const apiKeyState = useApiKeyState();

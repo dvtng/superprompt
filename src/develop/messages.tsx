@@ -1,5 +1,5 @@
 import { Stack, Divider } from "@mantine/core";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 import { useSnapshot } from "valtio";
 import { css } from "@emotion/css";
 import { MessageActions } from "./message-actions";
@@ -14,7 +14,7 @@ const labelStyles = css`
 `;
 
 export function Messages() {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
 
   if (_promptState.messages.length + _promptState.errors.length === 0) {

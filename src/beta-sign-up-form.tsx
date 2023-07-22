@@ -13,7 +13,7 @@ import {
 import { getErrorMessage } from "./core/get-error-message";
 import { IconCloud, IconPlus, IconSparkles, IconX } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-import { useProxy } from "./use-proxy";
+import { useProxyState } from "./use-proxy-state";
 
 const URL =
   "https://dvtng.us21.list-manage.com/subscribe/post?u=a4604d03f97e4065364b54bff&amp;id=4d2f34e5aa&amp;f_id=00695ce1f0";
@@ -34,12 +34,15 @@ export function BetaSignUpButton() {
 }
 
 export function BetaSignUpForm() {
-  const [_form, form] = useProxy(() => ({
-    email: "",
-    isSubmitting: false,
-    error: "",
-    isComplete: false,
-  }));
+  const form = useProxyState(
+    () => ({
+      email: "",
+      isSubmitting: false,
+      error: "",
+      isComplete: false,
+    }),
+    { sync: true }
+  );
 
   return (
     <form
@@ -93,12 +96,12 @@ export function BetaSignUpForm() {
           </List.Item>
         </List>
         <Text size="lg">Sign up to be the first to know.</Text>
-        {_form.error ? (
+        {form.error ? (
           <Alert icon={<IconX size="1.1rem" />} color="red" variant="outline">
-            {_form.error}
+            {form.error}
           </Alert>
         ) : null}
-        {_form.isComplete ? (
+        {form.isComplete ? (
           <Alert color="green" variant="filled">
             <Text size="md" sx={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
               Got it!
@@ -110,16 +113,16 @@ export function BetaSignUpForm() {
             <Input
               type="email"
               name="EMAIL"
-              value={_form.email}
+              value={form.email}
               onChange={(e) => (form.email = e.currentTarget.value)}
               placeholder="Your email"
               size="md"
               required
-              disabled={_form.isSubmitting}
+              disabled={form.isSubmitting}
             />
             <Button
               type="submit"
-              loading={_form.isSubmitting}
+              loading={form.isSubmitting}
               loaderProps={{ size: "1rem" }}
               size="md"
             >

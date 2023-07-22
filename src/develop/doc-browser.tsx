@@ -2,13 +2,13 @@ import { Stack, Flex, Title, Button, Divider, Box } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { DocPreview } from "./doc-preview";
-import { useDocList, usePromptState } from "../context";
+import { useDocList, usePromptStateContext } from "../context";
 import { useSnapshot } from "valtio";
 import { getLayerBgColor } from "../color";
 
 export function DocBrowser() {
   const docs = useDocList();
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
 
   return (

@@ -1,12 +1,10 @@
 import { Button, Modal } from "@mantine/core";
-import { useProxy } from "./use-proxy";
+import { useProxyState } from "./use-proxy-state";
 import { supabase } from "./supabase";
 import { IconBrandGoogle } from "@tabler/icons-react";
 
 export function SignInButton() {
-  const [_state, state] = useProxy({
-    isOpen: false,
-  });
+  const state = useProxyState({ isOpen: false });
 
   return (
     <>
@@ -19,7 +17,7 @@ export function SignInButton() {
         Sign in
       </Button>
       <Modal
-        opened={_state.isOpen}
+        opened={state.isOpen}
         onClose={() => (state.isOpen = false)}
         title="Sign in to superprompt"
       >

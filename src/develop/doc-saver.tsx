@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSnapshot } from "valtio";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 import { saveDoc } from "../db";
 
 export function DocSaver({ idFromUrl }: { idFromUrl: string }) {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
   const navigate = useNavigate();
 

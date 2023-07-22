@@ -2,12 +2,12 @@ import { useSnapshot } from "valtio";
 import { ConvoPane } from "./convo-pane";
 import { InputForm } from "./input-form";
 import { Messages } from "./messages";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 import { MessageBox } from "./message-box";
 import { Box } from "@mantine/core";
 
 export function ConvoView() {
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
 
   return (

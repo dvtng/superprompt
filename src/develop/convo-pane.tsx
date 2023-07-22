@@ -3,7 +3,7 @@ import { UnstyledButton } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import { IconArrowDown } from "@tabler/icons-react";
 import { ReactNode, useCallback, useLayoutEffect } from "react";
-import { usePromptState } from "../context";
+import { usePromptStateContext } from "../context";
 import { useSnapshot } from "valtio";
 
 const convoStyles = css`
@@ -18,7 +18,7 @@ const convoStyles = css`
 export function ConvoPane({ children }: { children: ReactNode }) {
   const { scrollIntoView, targetRef, scrollableRef } =
     useScrollIntoView<HTMLDivElement>({ duration: 350 });
-  const promptState = usePromptState();
+  const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
 
   const onScroll = useCallback(() => {
