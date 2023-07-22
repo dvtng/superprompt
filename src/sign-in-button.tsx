@@ -27,7 +27,7 @@ export function SignInButton() {
           leftIcon={<IconBrandGoogle size="1em" />}
           fullWidth
           onClick={async () => {
-            const { data, error } = await supabase.auth.signInWithOAuth({
+            await supabase.auth.signInWithOAuth({
               provider: "google",
               options: {
                 queryParams: {
@@ -37,7 +37,6 @@ export function SignInButton() {
                 redirectTo: location.href,
               },
             });
-            console.log({ data, error });
           }}
         >
           Sign in with Google

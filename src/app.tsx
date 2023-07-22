@@ -10,6 +10,7 @@ import { proxy } from "valtio";
 import { loadApiKeyState } from "./core/api-key-state";
 import { ApiKeyStateProvider, DocListProvider } from "./context";
 import { AutoSync } from "./auto-sync";
+import { ModalsProvider } from "@mantine/modals";
 
 export function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(() => {
@@ -36,12 +37,14 @@ export function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <DocListProvider>
-          <ApiKeyStateProvider value={apiKeyState}>
-            <AutoSync />
-            <RouterProvider router={router} />
-          </ApiKeyStateProvider>
-        </DocListProvider>
+        <ModalsProvider>
+          <DocListProvider>
+            <ApiKeyStateProvider value={apiKeyState}>
+              <AutoSync />
+              <RouterProvider router={router} />
+            </ApiKeyStateProvider>
+          </DocListProvider>
+        </ModalsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

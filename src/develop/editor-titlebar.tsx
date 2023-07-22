@@ -4,6 +4,7 @@ import { usePromptState } from "../context";
 import { useRef } from "react";
 import { updatePromptTitle } from "../core/prompt-state";
 import { DeleteDocButton } from "./delete-doc-button";
+import { ShareButton } from "./share-button";
 
 export function EditorTitlebar() {
   const promptState = usePromptState({ sync: true });
@@ -67,7 +68,10 @@ export function EditorTitlebar() {
           + Add title
         </Button>
       )}
-      <DeleteDocButton />
+      <Flex gap="sm" align="center">
+        <ShareButton />
+        <DeleteDocButton />
+      </Flex>
     </Flex>
   );
 }

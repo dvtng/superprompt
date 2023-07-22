@@ -21,6 +21,7 @@ export function DocSaver({ idFromUrl }: { idFromUrl: string }) {
       id: _promptState.id,
       content: _promptState.content,
       title: _promptState.title,
+      visibility: _promptState.visibility,
     });
 
     if (idFromUrl !== _promptState.id) {

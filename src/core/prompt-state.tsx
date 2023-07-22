@@ -9,6 +9,7 @@ export type PromptState = {
   nonce: number; // incremented to remote changes to force editor update
   title: string;
   content: string;
+  visibility: "public" | "private";
   inputs: PromptInput[];
   inputStates: Record<string, InputState>;
   parsed: ASTWithLocation;
@@ -52,6 +53,7 @@ export function createPromptState(doc: PromptDoc, isSaved: boolean) {
     nonce: 0,
     title: doc.title,
     content: doc.content,
+    visibility: doc.visibility,
     inputs: [],
     inputStates: {},
     parsed: [],
@@ -101,6 +103,19 @@ export function updatePromptTitle(
 
   promptState.isDirty = isDirty;
   promptState.title = title;
+}
+
+export function updateVisibility(
+  promptState: PromptState,
+  visibility: PromptDoc["visibility"],
+  isDirty = true
+) {
+  if (promptState.visibility === visibility) {
+    return;
+  }
+
+  promptState.isDirty = isDirty;
+  promptState.visibility = visibility;
 }
 
 function parseContent(promptState: PromptState) {

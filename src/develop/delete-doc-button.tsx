@@ -1,12 +1,11 @@
-import { ActionIcon, Button, Flex, Modal, Text } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { ActionIcon, Text } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { usePromptState } from "../context";
 import { deleteDoc } from "../db";
 import { useNavigate } from "react-router-dom";
+import { modals } from "@mantine/modals";
 
 export function DeleteDocButton() {
-  const [opened, { open, close }] = useDisclosure();
   const promptState = usePromptState();
   const navigate = useNavigate();
 
@@ -15,31 +14,21 @@ export function DeleteDocButton() {
   }
 
   return (
-    <>
-      <ActionIcon onClick={open}>
-        <IconTrash size="1rem" />
-      </ActionIcon>
-      <Modal
-        title={<Text size="lg">Permanently delete this prompt?</Text>}
-        opened={opened}
-        onClose={close}
-      >
-        <Flex gap="md">
-          <Button
-            style={{ minWidth: 100 }}
-            onClick={() => {
-              close();
-              navigate("/");
-              deleteDoc(promptState.id);
-            }}
-          >
-            Yes
-          </Button>
-          <Button style={{ minWidth: 100 }} variant="default" onClick={close}>
-            No
-          </Button>
-        </Flex>
-      </Modal>
-    </>
+    <ActionIcon
+      onClick={() => {
+        modals.openConfirmModal({
+          title: "Permanently delete this prompt?",
+          labels: { confirm: "Delete", cancel: "Cancel" },
+          children: <Text size="sm">This action cannot be undone.</Text>,
+          confirmProps: { color: "red" },
+          onConfirm: () => {
+            navigate("/");
+            deleteDoc(promptState.id);
+          },
+        });
+      }}
+    >
+      <IconTrash size="1em" />
+    </ActionIcon>
   );
 }
