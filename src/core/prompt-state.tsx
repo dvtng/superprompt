@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 export type PromptState = {
   id: string;
   nonce: number; // incremented to remote changes to force editor update
+  doc: PromptDoc;
   title: string;
   content: string;
   visibility: "public" | "private";
@@ -51,6 +52,7 @@ export function createPromptState(doc: PromptDoc, isSaved: boolean) {
   const promptState: PromptState = {
     id: doc.id,
     nonce: 0,
+    doc,
     title: doc.title,
     content: doc.content,
     visibility: doc.visibility,

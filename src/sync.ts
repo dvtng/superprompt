@@ -3,7 +3,8 @@ import { updatePromptContent, updatePromptTitle } from "./core/prompt-state";
 import { db, saveDoc } from "./db";
 import { debounce } from "./debounce";
 import { locals } from "./locals";
-import { promptStates } from "./prompt-states";
+import { fromRemoteDoc, toRemoteDoc } from "./prompt-doc";
+import { promptStateCache } from "./prompt-state-cache";
 import { supabase } from "./supabase";
 
 export const sync = debounce(doSync, 1000);
@@ -36,45 +37,34 @@ async function doSync() {
   await Promise.all(
     data.map(async (doc) => {
       const savedDoc = await saveDoc(
-        {
-          id: doc.id,
-          ownerId: doc.owner_id,
-          content: doc.content,
-          title: doc.title,
-          createdAt: doc.created_at,
-          updatedAt: doc.updated_at,
-          deleted: doc.deleted,
-          visibility: doc.visibility,
-          synced: true,
-        },
+        fromRemoteDoc(doc),
         (existingDoc) => !existingDoc || doc.updated_at > existingDoc.updatedAt
       );
 
-      if (savedDoc && promptStates[doc.id]) {
-        const promptState = promptStates[doc.id];
-        promptState.nonce++;
-        updatePromptTitle(promptState, doc.title, false);
-        updatePromptContent(promptState, doc.content, false);
+      if (savedDoc) {
+        const promptState = promptStateCache[doc.id]?.data;
+        if (promptState) {
+          promptState.nonce++;
+          updatePromptTitle(promptState, doc.title, false);
+          updatePromptContent(promptState, doc.content, false);
+        }
       }
     })
   );
 
   // Get all unsynced docs from the local DB
-  const unsyncedDocs = await db.docs.filter((doc) => !doc.synced).toArray();
+  const unsyncedDocs = await db.docs
+    .filter(
+      (doc) => !doc.synced && (doc.ownerId === null || doc.ownerId === userId)
+    )
+    .toArray();
 
   // Push them to the server
   for (const doc of unsyncedDocs) {
-    await supabase.from("docs").upsert({
-      id: doc.id,
-      owner_id: userId,
-      content: doc.content,
-      title: doc.title,
-      created_at: doc.createdAt,
-      updated_at: doc.updatedAt,
-      deleted: doc.deleted,
-      visibility: doc.visibility,
-    });
-    await db.docs.update(doc.id, { synced: true });
+    await supabase
+      .from("docs")
+      .upsert(toRemoteDoc({ ...doc, ownerId: userId }));
+    await db.docs.update(doc.id, { synced: true, ownerId: userId });
   }
 
   return true;

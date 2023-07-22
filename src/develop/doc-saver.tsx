@@ -22,6 +22,7 @@ export function DocSaver({ idFromUrl }: { idFromUrl: string }) {
       content: _promptState.content,
       title: _promptState.title,
       visibility: _promptState.visibility,
+      forkedFrom: _promptState.doc.forkedFrom,
     });
 
     if (idFromUrl !== _promptState.id) {

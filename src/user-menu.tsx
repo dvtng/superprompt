@@ -25,10 +25,8 @@ export function UserMenu() {
         <Menu.Label>{user.email}</Menu.Label>
         <Menu.Item
           icon={<IconRefresh size="1rem" />}
-          onClick={async () => {
-            if (appState.user?.id) {
-              sync(appState.user.id);
-            }
+          onClick={() => {
+            sync();
           }}
         >
           Sync

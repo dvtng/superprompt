@@ -27,6 +27,7 @@ export class Db extends Dexie {
             doc.deleted = false;
             doc.synced = false;
             doc.visibility = "private";
+            doc.forkedFrom = null;
           });
       });
   }
