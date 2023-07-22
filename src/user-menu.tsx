@@ -1,10 +1,9 @@
 import { useSnapshot } from "valtio";
 import { appState } from "./app-state";
 import { Avatar, Menu, UnstyledButton } from "@mantine/core";
-import { IconLogout, IconRefresh } from "@tabler/icons-react";
+import { IconLogout } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabase";
-import { sync } from "./sync";
 
 export function UserMenu() {
   const { user } = useSnapshot(appState);
@@ -23,14 +22,6 @@ export function UserMenu() {
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Label>{user.email}</Menu.Label>
-        <Menu.Item
-          icon={<IconRefresh size="1rem" />}
-          onClick={() => {
-            sync();
-          }}
-        >
-          Sync
-        </Menu.Item>
         <Menu.Item
           icon={<IconLogout size="1rem" />}
           onClick={async () => {
