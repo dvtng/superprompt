@@ -1,5 +1,17 @@
-import { Button, Input, Stack, Text } from "@mantine/core";
-import { IconShare2, IconWorld } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Button,
+  CopyButton,
+  Input,
+  Stack,
+  Text,
+} from "@mantine/core";
+import {
+  IconCheck,
+  IconCopy,
+  IconShare2,
+  IconWorld,
+} from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 import { usePromptState } from "../context";
 import { updateVisibility } from "../core/prompt-state";
@@ -23,7 +35,23 @@ export function ShareButton() {
             children: (
               <Stack>
                 <Text>Anyone with this link will be able to see it.</Text>
-                <Input value={location.href} readOnly />
+                <Input
+                  value={location.href}
+                  readOnly
+                  rightSection={
+                    <CopyButton value={location.href}>
+                      {({ copied, copy }) => (
+                        <ActionIcon onClick={copy} variant="subtle">
+                          {copied ? (
+                            <IconCheck size="1em" />
+                          ) : (
+                            <IconCopy size="1em" />
+                          )}
+                        </ActionIcon>
+                      )}
+                    </CopyButton>
+                  }
+                />
               </Stack>
             ),
             labels: { confirm: "Close", cancel: "Make private" },
