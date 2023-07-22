@@ -9,6 +9,7 @@ import { RouterProvider } from "react-router-dom";
 import { proxy } from "valtio";
 import { loadApiKeyState } from "./core/api-key-state";
 import { ApiKeyStateProvider, DocListProvider } from "./context";
+import { AutoSync } from "./auto-sync";
 
 export function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(() => {
@@ -37,6 +38,7 @@ export function App() {
       >
         <DocListProvider>
           <ApiKeyStateProvider value={apiKeyState}>
+            <AutoSync />
             <RouterProvider router={router} />
           </ApiKeyStateProvider>
         </DocListProvider>

@@ -1,5 +1,6 @@
 import Dexie, { Table } from "dexie";
 import { PartialPromptDoc, PromptDoc, getDocWithDefaults } from "./prompt-doc";
+import { sync } from "./sync";
 
 export class Db extends Dexie {
   docs!: Table<PromptDoc>;
@@ -34,14 +35,14 @@ export class Db extends Dexie {
 export const db = new Db();
 
 // Save doc with optional condition.
-// Returns boolean indicating whether a write operation occured.
+// Returns the updates made, or false if no update was made.
 export async function saveDoc(
   doc: PartialPromptDoc,
   condition: (existingDoc: PromptDoc | undefined) => boolean = () => true
-) {
+): Promise<PartialPromptDoc | false> {
   const now = new Date().toISOString();
 
-  return db.transaction("rw", db.docs, async () => {
+  const savedDoc = await db.transaction("rw", db.docs, async () => {
     const existingDoc = await db.docs.get(doc.id);
     if (existingDoc) {
       if (condition(existingDoc)) {
@@ -51,14 +52,22 @@ export async function saveDoc(
           ...doc,
         };
         await db.docs.update(doc.id, updates);
-        return true;
+        return updates;
       }
     } else if (condition(undefined)) {
-      await db.docs.put(getDocWithDefaults(doc));
-      return true;
+      const newDoc = getDocWithDefaults(doc);
+      await db.docs.put(newDoc);
+      return newDoc;
     }
     return false;
   });
+
+  const isLocalUpdate = savedDoc && !savedDoc.synced;
+  if (isLocalUpdate) {
+    sync();
+  }
+
+  return savedDoc;
 }
 
 export async function deleteDoc(id: string) {

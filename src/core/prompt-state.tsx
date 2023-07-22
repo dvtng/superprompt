@@ -75,23 +75,31 @@ export function createPromptState(doc: PromptDoc, isSaved: boolean) {
   return promptState;
 }
 
-export function updatePromptContent(promptState: PromptState, content: string) {
+export function updatePromptContent(
+  promptState: PromptState,
+  content: string,
+  isDirty = true
+) {
   if (promptState.content === content) {
     return;
   }
 
-  promptState.isDirty = true;
+  promptState.isDirty = isDirty;
   promptState.content = content;
 
   parseContent(promptState);
 }
 
-export function updatePromptTitle(promptState: PromptState, title: string) {
+export function updatePromptTitle(
+  promptState: PromptState,
+  title: string,
+  isDirty = true
+) {
   if (promptState.title === title) {
     return;
   }
 
-  promptState.isDirty = true;
+  promptState.isDirty = isDirty;
   promptState.title = title;
 }
 
