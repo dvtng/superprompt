@@ -3,6 +3,7 @@ import { ASTWithLocation } from "./ast";
 import { PromptInput, getInputs } from "./input";
 import { PromptDoc } from "../prompt-doc";
 import { nanoid } from "nanoid";
+import { appState } from "../app-state";
 
 export type PromptState = {
   id: string;
@@ -159,4 +160,11 @@ export function getOptionsWithDefaults(
     ...defaultOptions,
     ...promptState.options,
   };
+}
+
+export function isReadOnly(promptState: PromptState) {
+  return (
+    promptState.doc.ownerId !== null &&
+    promptState.doc.ownerId !== appState.user?.id
+  );
 }

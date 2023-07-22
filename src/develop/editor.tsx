@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
 import { usePromptStateContext } from "../context";
 import { EditorContent } from "./editor-content";
-import { updatePromptContent } from "../core/prompt-state";
+import { isReadOnly, updatePromptContent } from "../core/prompt-state";
 import { Box } from "@mantine/core";
 import { EditorTitlebar } from "./editor-titlebar";
 import { getEditorBgColor } from "../color";
@@ -10,6 +10,7 @@ import { EditorPlaceholder } from "./editor-placeholder";
 export function Editor() {
   const promptState = usePromptStateContext();
   const _promptState = useSnapshot(promptState);
+  const readOnly = isReadOnly(_promptState);
 
   return (
     <Box
@@ -29,6 +30,7 @@ export function Editor() {
           }}
           placeholder={<EditorPlaceholder />}
           autoFocus
+          readOnly={readOnly}
         />
       </div>
     </Box>

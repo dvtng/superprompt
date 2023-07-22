@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSnapshot } from "valtio";
 import { usePromptStateContext } from "../context";
 import { saveDoc } from "../db";
+import { isReadOnly } from "../core/prompt-state";
 
 export function DocSaver({ idFromUrl }: { idFromUrl: string }) {
   const promptState = usePromptStateContext();
@@ -10,6 +11,10 @@ export function DocSaver({ idFromUrl }: { idFromUrl: string }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (isReadOnly(_promptState)) {
+      return;
+    }
+
     const shouldSave =
       _promptState.isDirty || (!_promptState.isSaved && _promptState.isRunning);
 

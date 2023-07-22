@@ -21,46 +21,49 @@ export function usePromptStateCacheValue(id: string, defaultDoc?: PromptDoc) {
     return promptStateCache[id];
   }
 
-  promptStateCache[id] = {
-    loading: true,
-  };
-  loadPromptState(id, defaultDoc).then(
-    (promptState) => {
-      promptStateCache[id].loading = false;
-      promptStateCache[id].data = promptState;
-    },
-    (error) => {
-      promptStateCache[id].loading = false;
-      promptStateCache[id].error = error;
-    }
-  );
+  try {
+    loadPromptState(id, defaultDoc);
+  } catch (error) {
+    // Ignore
+  }
+
   return promptStateCache[id];
 }
 
-async function loadPromptState(id: string, defaultDoc?: PromptDoc) {
-  const docFromDb = await db.docs.get(id);
-  let promptState: PromptState;
-  if (docFromDb) {
-    promptState = createPromptState(docFromDb, true);
-  } else if (defaultDoc) {
-    promptState = createPromptState(forkFromDoc(id, defaultDoc), false);
-  } else {
-    const { data, error } = await supabase
-      .from("docs")
-      .select()
-      .eq("id", id)
-      .limit(1);
+export async function loadPromptState(id: string, defaultDoc?: PromptDoc) {
+  promptStateCache[id] = { loading: true };
 
-    if (error) {
-      throw error;
+  try {
+    const docFromDb = await db.docs.get(id);
+    let promptState: PromptState;
+    if (docFromDb) {
+      promptState = createPromptState(docFromDb, true);
+    } else if (defaultDoc) {
+      promptState = createPromptState(forkFromDoc(id, defaultDoc), false);
+    } else {
+      const { data, error } = await supabase
+        .from("docs")
+        .select()
+        .eq("id", id)
+        .limit(1);
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error(`That prompt could not be found.`);
+      }
+
+      promptState = createPromptState(fromRemoteDoc(data[0]), false);
     }
 
-    if (!data || data.length === 0) {
-      throw new Error(`That prompt could not be found.`);
-    }
-
-    promptState = createPromptState(fromRemoteDoc(data[0]), false);
+    promptStateCache[id].data = promptState;
+    return promptStateCache[id].data as PromptState;
+  } catch (error) {
+    promptStateCache[id].error = error;
+    throw error;
+  } finally {
+    promptStateCache[id].loading = false;
   }
-
-  return promptState;
 }
