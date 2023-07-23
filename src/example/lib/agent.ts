@@ -4,7 +4,6 @@ export default createExample({
   id: "agent",
   title: "AI agent",
   content: `
-@temperature 0
 You are a chat assistant. When you are asked a question you perform the following steps in a loop:
 - Plan: Create a step by step list of the remaining steps required to reach the answer. Make the steps as granular as possible.
 - Action: call one of the available tools. The tool call must be surrounded by curly braces.
