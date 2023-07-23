@@ -24,7 +24,7 @@ export function EditorTitlebar() {
       align="center"
       justify="space-between"
     >
-      <Flex align="center" gap="sm">
+      <Flex align="center" gap="sm" sx={{ width: "100%" }}>
         {readOnly ? <IconLock size="1.1rem" /> : null}
         {hasTitle || readOnly ? (
           <Input
