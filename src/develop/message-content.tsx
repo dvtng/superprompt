@@ -21,8 +21,8 @@ export function MessageContent({ message }: { message: Message }) {
 
   return (
     <Box sx={{ whiteSpace: "pre-wrap" }}>
-      {lines.map((line) => (
-        <ContentP>
+      {lines.map((line, i) => (
+        <ContentP key={i}>
           {line.map((node) => {
             return node.text;
           })}
