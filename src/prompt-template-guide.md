@@ -37,6 +37,14 @@ by placing them in a placeholder, e.g. `{now()}`.
 
 Please note that these are currently experimental and may change in the future.
 
+#### google(query)
+
+Searches Google with the given query.
+
+```
+{google("What is Apple's current stock price?")}
+```
+
 #### now()
 
 Returns the current date as a string.
