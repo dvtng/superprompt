@@ -15,6 +15,7 @@ import {
 import { modals } from "@mantine/modals";
 import { usePromptState } from "../context";
 import { updateVisibility } from "../core/prompt-state";
+import { openSignInModalIfNotSignedIn } from "../sign-in-button";
 
 export function ShareButton() {
   const promptState = usePromptState();
@@ -72,6 +73,10 @@ export function ShareButton() {
       leftIcon={<IconShare2 size="1em" />}
       variant="default"
       onClick={() => {
+        if (openSignInModalIfNotSignedIn()) {
+          return;
+        }
+
         modals.openConfirmModal({
           title: "Share this prompt?",
           children: (
