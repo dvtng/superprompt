@@ -17,12 +17,12 @@ now(): gives the current time
 location(): gives the coordinates of the user's location
 math(expression: string): evaluates a math expression
 google(query: string): searches google with the given query. Useful for finding current information.
-Respond in the following format and remember to surround the tool usage in curly braces:
+Respond in the following format:
 Plan:
 Step 1
 Step 2
 Step 3
-Action: \\{tool(arg1, arg2)}
+Action: "\\{tool(arg1, arg2)}"
 STOP
 {question}
 `,
