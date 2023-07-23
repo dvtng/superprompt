@@ -1,5 +1,5 @@
-import { Text, Stack, Box, Divider, Flex, Button } from "@mantine/core";
-import { IconBulb, IconPlus } from "@tabler/icons-react";
+import { Text, Stack, Box, Divider, Flex, Button, Group } from "@mantine/core";
+import { IconBrandGithub, IconBulb, IconPlus } from "@tabler/icons-react";
 import { Link, Navigate } from "react-router-dom";
 import { useDocList } from "./context";
 import { appState } from "./app-state";
@@ -67,7 +67,7 @@ export function HomeView() {
       <Text size="1.5rem" sx={{ fontFamily: "Nunito" }}>
         Prototype powerful AI systems with only a simple prompt editor.
       </Text>
-      <Box>
+      <Group>
         <Button
           size="xl"
           radius="xl"
@@ -77,7 +77,18 @@ export function HomeView() {
         >
           Create superprompt
         </Button>
-      </Box>
+        <Button
+          size="xl"
+          radius="xl"
+          color="gray"
+          leftIcon={<IconBrandGithub />}
+          component={Link}
+          to="https://github.com/dvtng/superprompt"
+          target="_blank"
+        >
+          Star on Github
+        </Button>
+      </Group>
       <Box
         sx={{
           overflow: "hidden",
