@@ -19,6 +19,7 @@ import { useSnapshot } from "valtio";
 import { getColorForInput } from "../core/prompt-state";
 import { useDerivedState } from "../use-derived-state";
 import { ContentP } from "./content-p";
+import { FUNCTIONS } from "../core/function";
 
 type Paragraph = {
   type: "paragraph";
@@ -150,6 +151,15 @@ export function EditorContent({
                   theme.colors[
                     getColorForInput(_promptState, leaf.identifier.name)
                   ][theme.colorScheme === "dark" ? 4 : 6];
+              } else if (
+                leaf.identifier.for === "functionCall" &&
+                leaf.identifier.name in FUNCTIONS
+              ) {
+                style.color =
+                  theme.colors[theme.primaryColor][
+                    theme.colorScheme === "dark" ? 3 : 6
+                  ];
+                style.fontStyle = "italic";
               } else {
                 style.fontStyle = "italic";
               }
