@@ -1,6 +1,6 @@
 import { Button, Divider, Stack, Title } from "@mantine/core";
 import { supabase } from "./supabase";
-import { IconBrandGoogle } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 import { appState } from "./app-state";
 import { modals } from "@mantine/modals";
 
@@ -33,7 +33,7 @@ export function openSignInModalIfNotSignedIn() {
         <Button
           variant="outline"
           size="md"
-          leftIcon={<IconBrandGoogle size="1em" />}
+          leftIcon={<IconBrandGoogle size="1.2em" />}
           fullWidth
           color="gray"
           onClick={async () => {
@@ -48,8 +48,41 @@ export function openSignInModalIfNotSignedIn() {
               },
             });
           }}
+          styles={{
+            label: {
+              display: "flex",
+              justifyContent: "center",
+              marginLeft: "-1.2em",
+              width: "100%",
+            },
+          }}
         >
           Sign in with Google
+        </Button>
+        <Button
+          variant="outline"
+          size="md"
+          leftIcon={<IconBrandGithub size="1.2em" />}
+          fullWidth
+          color="gray"
+          onClick={async () => {
+            await supabase.auth.signInWithOAuth({
+              provider: "github",
+              options: {
+                redirectTo: location.href,
+              },
+            });
+          }}
+          styles={{
+            label: {
+              display: "flex",
+              justifyContent: "center",
+              marginLeft: "-1.2em",
+              width: "100%",
+            },
+          }}
+        >
+          Sign in with Github
         </Button>
       </Stack>
     ),
